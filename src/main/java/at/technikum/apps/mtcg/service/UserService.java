@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.service;
 
+import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.repository.UserRepository;
 import at.technikum.apps.mtcg.entity.User;
 
@@ -9,9 +10,9 @@ import java.util.UUID;
 
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final DatabaseUserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(DatabaseUserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -28,7 +29,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User update(int updateId, User updatedTask) {
+    public User update(int updateId, User updatedUser) {
         return null;
     }
 

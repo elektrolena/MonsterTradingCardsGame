@@ -1,6 +1,7 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
-public class UserController implements Controller {
+public class UserController extends Controller {
 
     private final UserService userService;
 
@@ -54,7 +55,7 @@ public class UserController implements Controller {
         ObjectMapper objectmapper = new ObjectMapper();
         User user = null;
         try {
-            user = objectmapper.readvalue(request.getBody(), User.class)
+            user = objectmapper.readValue(request.getBody(), User.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
