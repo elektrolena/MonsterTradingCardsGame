@@ -62,6 +62,7 @@ public class DatabaseTaskRepository implements TaskRepository {
             pstmt.execute();
         } catch (SQLException e) {
             // THOUGHT: how do i handle exceptions (hint: look at the TaskApp)
+            throw new RuntimeException(e);
         }
 
         return task;

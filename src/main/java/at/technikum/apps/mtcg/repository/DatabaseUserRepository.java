@@ -19,7 +19,7 @@ public class DatabaseUserRepository {
     private final Database database = new Database();
 
     public List<User> findAll() {
-        List<User> tasks = new ArrayList<>();
+        List<User> users = new ArrayList<>();
 
         try (
                 Connection con = database.getConnection();
@@ -27,17 +27,17 @@ public class DatabaseUserRepository {
                 ResultSet rs = pstmt.executeQuery()
         ) {
             while (rs.next()) {
-                User task = new User(
+                User user = new User(
                         rs.getString("id"),
                         rs.getString("username"),
                         rs.getString("password")
                 );
-                tasks.add(task);
+                users.add(user);
             }
 
-            return tasks;
+            return users;
         } catch (SQLException e) {
-            return tasks;
+            return users;
         }
     }
 
@@ -51,18 +51,19 @@ public class DatabaseUserRepository {
                 PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
         ) {
             pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getUserName());
+            pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
 
             pstmt.execute();
         } catch (SQLException e) {
             // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
+
         }
 
         return user;
     }
 
-    public User delete(User task) {
+    public User delete(User user) {
         return null;
     }
 }
