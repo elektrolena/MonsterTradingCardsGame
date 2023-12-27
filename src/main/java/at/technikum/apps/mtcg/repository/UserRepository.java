@@ -9,26 +9,19 @@ import java.util.Optional;
 public class UserRepository {
 
     private final List<User> users;
+    private User user;
 
     public UserRepository() {
         this.users = new ArrayList<>();
     }
-    public List<User> findAll() {
-        return users;
-    }
 
-    public Optional<User> find(int id) {
-        return Optional.empty();
+    public Optional<User> find(String username) {
+        return Optional.ofNullable(user);
     }
 
     public User save(User user) {
         users.add(user);
 
-        return user;
-    }
-
-    public User delete(User user) {
-        // TODO
         return user;
     }
 }

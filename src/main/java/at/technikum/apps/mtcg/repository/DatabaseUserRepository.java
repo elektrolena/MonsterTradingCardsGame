@@ -14,6 +14,8 @@ import java.util.Optional;
 public class DatabaseUserRepository {
 
     private final String FIND_ALL_SQL = "SELECT * FROM users";
+    private final String FIND_SQL = "SELECT * FROM users WHERE username = ?";
+
     private final String SAVE_SQL = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
 
     private final Database database = new Database();
@@ -41,8 +43,33 @@ public class DatabaseUserRepository {
         }
     }
 
-    public Optional<User> find(int id) {
-        return Optional.empty();
+    public Optional<User> find(String username) {
+        Optional<User> user = Optional.empty();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(FIND_SQL);
+        ) {
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User foundUser = mapResultSetToUser(rs);
+                    user = Optional.of(foundUser);
+                }
+            }
+        } catch (SQLException e) {
+            return user;
+        }
+
+        return user;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId((rs.getString("id")));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        return user;
     }
 
     public User save(User user) {
@@ -61,9 +88,5 @@ public class DatabaseUserRepository {
         }
 
         return user;
-    }
-
-    public User delete(User user) {
-        return null;
     }
 }
