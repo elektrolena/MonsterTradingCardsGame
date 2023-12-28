@@ -10,7 +10,6 @@ import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
 import java.util.Optional;
 
 public class UserController extends Controller {
@@ -31,10 +30,12 @@ public class UserController extends Controller {
         String route = request.getRoute();
 
         if (route.matches("/users/\\w+")) {
+            String username = extractUsername(route);
             switch(request.getMethod()) {
                 case "GET":
-                    String username = extractUsername(route);
-                    return read(username, request);
+                    return read(username);
+                case "PUT":
+                    return update(username, request);
             }
         } else if (route.equals("/users")) {
             if(request.getMethod().equals("POST")) {
@@ -45,40 +46,7 @@ public class UserController extends Controller {
         return status(HttpStatus.BAD_REQUEST);
     }
 
-    private String extractUsername(String route) {
-        String[] routeParts = route.split("/");
-        return routeParts[2];
-    }
-
-
-    public Response create(Request request) {
-
-        ObjectMapper objectmapper = new ObjectMapper();
-        User user = null;
-        try {
-            user = objectmapper.readValue(request.getBody(), User.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        user = userService.save(user);
-
-        String taskJson = null;
-        try {
-            taskJson = objectmapper.writeValueAsString(user);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        Response response = new Response();
-        response.setStatus(HttpStatus.CREATED);
-        response.setContentType(HttpContentType.TEXT_PLAIN);
-        response.setBody(taskJson);
-
-        return response;
-    }
-
-    public Response read(String username, Request request) {
+    public Response read(String username) {
 
         Optional<User> userOptional= userService.find(username);
 
@@ -92,7 +60,6 @@ public class UserController extends Controller {
 
         User user = userOptional.get();
 
-        // dunno if I will need this as the return string should be "Data successfully retrieved"
         ObjectMapper objectMapper = new ObjectMapper();
         String tasksJson = null;
         try {
@@ -104,5 +71,82 @@ public class UserController extends Controller {
         response.setContentType(HttpContentType.APPLICATION_JSON);
         response.setBody(tasksJson);
         return response;
+    }
+
+    private Response update(String username, Request request) {
+        Optional<User> userOptional= userService.find(username);
+
+        Response response = new Response();
+        if(userOptional.isEmpty()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setContentType(HttpContentType.TEXT_PLAIN);
+            response.setBody("User '" + username + "' not found in app!");
+            return response;
+        }
+
+        User currentUser = userOptional.get();
+
+        ObjectMapper objectmapper = new ObjectMapper();
+        User updatedUser = null;
+        try {
+            updatedUser = objectmapper.readValue(request.getBody(), User.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        updatedUser = userService.update(currentUser, updatedUser);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String tasksJson = null;
+        try {
+            tasksJson = objectMapper.writeValueAsString(updatedUser);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        response.setStatus(HttpStatus.OK);
+        response.setContentType(HttpContentType.APPLICATION_JSON);
+        response.setBody(tasksJson);
+        return response;
+    }
+
+    public Response create(Request request) {
+
+        ObjectMapper objectmapper = new ObjectMapper();
+        User user = null;
+        try {
+            user = objectmapper.readValue(request.getBody(), User.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        Optional<User> userOptional= userService.find(user.getUsername());
+
+        Response response = new Response();
+        if(userOptional.isPresent()) {
+            response.setStatus(HttpStatus.NOT_FOUND);
+            response.setContentType(HttpContentType.TEXT_PLAIN);
+            response.setBody("User '" + user.getUsername() + "' is already taken!");
+            return response;
+        }
+
+        user = userService.save(user);
+
+        String taskJson = null;
+        try {
+            taskJson = objectmapper.writeValueAsString(user);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        response.setStatus(HttpStatus.CREATED);
+        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setBody(taskJson);
+
+        return response;
+    }
+
+    private String extractUsername(String route) {
+        String[] routeParts = route.split("/");
+        return routeParts[2];
     }
 }

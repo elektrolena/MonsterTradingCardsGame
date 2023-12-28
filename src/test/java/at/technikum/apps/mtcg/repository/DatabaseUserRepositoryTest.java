@@ -1,2 +1,4 @@
-package at.technikum.apps.mtcg.repository;public class DatabaseUserRepositoryTest {
+package at.technikum.apps.mtcg.repository;
+
+public class DatabaseUserRepositoryTest {
 }

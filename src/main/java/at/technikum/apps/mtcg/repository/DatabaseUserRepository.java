@@ -12,36 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class DatabaseUserRepository {
-
-    private final String FIND_ALL_SQL = "SELECT * FROM users";
     private final String FIND_SQL = "SELECT * FROM users WHERE username = ?";
-
-    private final String SAVE_SQL = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image) VALUES(?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
 
     private final Database database = new Database();
-
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
-
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(FIND_ALL_SQL);
-                ResultSet rs = pstmt.executeQuery()
-        ) {
-            while (rs.next()) {
-                User user = new User(
-                        rs.getString("id"),
-                        rs.getString("username"),
-                        rs.getString("password")
-                );
-                users.add(user);
-            }
-
-            return users;
-        } catch (SQLException e) {
-            return users;
-        }
-    }
 
     public Optional<User> find(String username) {
         Optional<User> user = Optional.empty();
@@ -69,6 +44,8 @@ public class DatabaseUserRepository {
         user.setId((rs.getString("id")));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
+        user.setBio(rs.getString("bio"));
+        user.setImage(rs.getString("image"));
         return user;
     }
 
@@ -85,6 +62,25 @@ public class DatabaseUserRepository {
         } catch (SQLException e) {
             // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
 
+        }
+
+        return user;
+    }
+
+    public User update(User user) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL);
+        ) {
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getBio());
+            pstmt.setString(4, user.getImage());
+            pstmt.setString(5, user.getId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            // Handle the exception (log it, throw a runtime exception, etc.)
         }
 
         return user;
