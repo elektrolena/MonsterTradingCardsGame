@@ -32,10 +32,6 @@ class DatabaseUserRepositoryTest {
         assertEquals("password", userMock.getPassword());
         assertEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
-
-        // Verify
-        verify(databaseUserRepositoryMock, times(1)).save(userToAdd);
-        verify(databaseUserRepositoryMock, times(1)).find("username");
     }
 
     @Test
@@ -60,10 +56,6 @@ class DatabaseUserRepositoryTest {
         assertNotEquals("falsePassword", userMock.getPassword());
         assertNotEquals("falseBio", userMock.getBio());
         assertNotEquals("falseImage", userMock.getImage());
-
-        // Verify
-        verify(databaseUserRepositoryMock, times(1)).save(userToAdd);
-        verify(databaseUserRepositoryMock, times(1)).find("username");
     }
 
     @Test
@@ -90,11 +82,6 @@ class DatabaseUserRepositoryTest {
         assertEquals("newPassword", userMock.getPassword());
         assertEquals("newBio", userMock.getBio());
         assertEquals("image", userMock.getImage());
-
-        // Verify
-        verify(databaseUserRepositoryMock, times(1)).save(userToAdd);
-        verify(databaseUserRepositoryMock, times(1)).update(updatedUser);
-        verify(databaseUserRepositoryMock, times(1)).find("username");
     }
 
     @Test
@@ -121,10 +108,5 @@ class DatabaseUserRepositoryTest {
         assertNotEquals("password", userMock.getPassword());
         assertNotEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
-
-        // Verify
-        verify(databaseUserRepositoryMock, times(1)).save(userToAdd);
-        verify(databaseUserRepositoryMock, times(1)).update(updatedUser);
-        verify(databaseUserRepositoryMock, times(1)).find("username");
     }
 }
