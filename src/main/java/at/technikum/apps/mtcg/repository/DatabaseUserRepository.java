@@ -35,7 +35,6 @@ public class DatabaseUserRepository {
         } catch (SQLException e) {
             return user;
         }
-
         return user;
     }
 
@@ -57,6 +56,8 @@ public class DatabaseUserRepository {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
+            pstmt.setString(4, user.getBio());
+            pstmt.setString(5, user.getImage());
 
             pstmt.execute();
         } catch (SQLException e) {
