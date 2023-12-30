@@ -14,16 +14,37 @@ public class UserServiceTest {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User originalUser = new User("","username", "password", "bio", "image");
+        User originalUser = new User("id","username", "password", "bio", "image");
         User updatedUser = new User("id","username", "newPassword", "newBio", "newImage");
 
-        when(userService.update(originalUser, updatedUser)).thenReturn(updatedUser);
+        when(userRepository.update(updatedUser)).thenReturn(updatedUser);
 
         // Act
         userService.update(originalUser, updatedUser);
 
         // Assert
         assertEquals("id", originalUser.getId());
+        assertEquals("username", originalUser.getUsername());
+        assertEquals("newPassword", originalUser.getPassword());
+        assertEquals("newBio", originalUser.getBio());
+        assertEquals("newImage", originalUser.getImage());
+    }
+
+    @Test
+    public void shouldNotUpdateId_whenUpdateUser() {
+        // Arrange
+        DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
+        UserService userService = new UserService(userRepository);
+        User originalUser = new User("id","username", "password", "bio", "image");
+        User updatedUser = new User("newId","username", "newPassword", "newBio", "newImage");
+
+        when(userRepository.update(updatedUser)).thenReturn(updatedUser);
+
+        // Act
+        userService.update(originalUser, updatedUser);
+
+        // Assert
+        assertNotEquals("newId", originalUser.getId());
         assertEquals("username", originalUser.getUsername());
         assertEquals("newPassword", originalUser.getPassword());
         assertEquals("newBio", originalUser.getBio());
@@ -52,7 +73,7 @@ public class UserServiceTest {
         UserService userService = new UserService(userRepository);
         User user = new User("","username", "password", "bio", "image");
 
-        when(userService.save(user)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
         // Act
         User savedUser = userService.save(user);

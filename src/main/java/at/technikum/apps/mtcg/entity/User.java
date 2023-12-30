@@ -8,8 +8,7 @@ public class User {
     private String bio;
     private String image;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String id, String username, String password, String bio, String image) {
         this.id = id;
@@ -57,20 +56,5 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public void updateFrom(User updatedUser) {
-        if (updatedUser.getUsername() != null) {
-            this.username = updatedUser.getUsername();
-        }
-        if (updatedUser.getPassword() != null) {
-            this.password = updatedUser.getPassword();
-        }
-        if (updatedUser.getBio() != null) {
-            this.bio = updatedUser.getBio();
-        }
-        if (updatedUser.getImage() != null) {
-            this.image = updatedUser.getImage();
-        }
     }
 }

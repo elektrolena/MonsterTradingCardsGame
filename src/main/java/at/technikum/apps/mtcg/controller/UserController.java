@@ -46,71 +46,51 @@ public class UserController extends Controller {
         return status(HttpStatus.BAD_REQUEST);
     }
 
+    // TODO: change username to token
     public Response read(String username) {
+        Optional<User> userOptional = userService.find(username);
 
-        Optional<User> userOptional= userService.find(username);
-
-        Response response = new Response();
         if(userOptional.isEmpty()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setContentType(HttpContentType.TEXT_PLAIN);
-            response.setBody("User '" + username + "' not found in app!");
-            return response;
+            return createFailureResponse("User not found in app!");
         }
 
         User user = userOptional.get();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String tasksJson = null;
-        try {
-            tasksJson = objectMapper.writeValueAsString(user);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        response.setStatus(HttpStatus.OK);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody(tasksJson);
-        return response;
+        return createSuccessJsonResponse(user, HttpStatus.OK);
     }
 
+    // TODO: change username to token
     private Response update(String username, Request request) {
-        Optional<User> userOptional= userService.find(username);
+        Optional<User> userOptional = userService.find(username);
 
-        Response response = new Response();
         if(userOptional.isEmpty()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setContentType(HttpContentType.TEXT_PLAIN);
-            response.setBody("User '" + username + "' not found in app!");
-            return response;
+            return createFailureResponse("User not found in app!");
         }
 
         User currentUser = userOptional.get();
 
-        ObjectMapper objectmapper = new ObjectMapper();
-        User updatedUser = null;
-        try {
-            updatedUser = objectmapper.readValue(request.getBody(), User.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        User updatedUser = getUserFromBody(request);
 
         updatedUser = userService.update(currentUser, updatedUser);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String tasksJson = null;
-        try {
-            tasksJson = objectMapper.writeValueAsString(updatedUser);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        response.setStatus(HttpStatus.OK);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody(tasksJson);
-        return response;
+        return createSuccessJsonResponse(updatedUser, HttpStatus.OK);
     }
 
     public Response create(Request request) {
 
+        User user = getUserFromBody(request);
+
+        Optional<User> userOptional= userService.find(user.getUsername());
+
+        if(userOptional.isPresent()) {
+            return createFailureResponse("Username is already taken!");
+        }
+
+        user = userService.save(user);
+
+        return createSuccessJsonResponse(user, HttpStatus.CREATED);
+    }
+
+    private User getUserFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();
         User user = null;
         try {
@@ -119,17 +99,12 @@ public class UserController extends Controller {
             throw new RuntimeException(e);
         }
 
-        Optional<User> userOptional= userService.find(user.getUsername());
+        return user;
+    }
 
+    private Response createSuccessJsonResponse(User user, HttpStatus status) {
         Response response = new Response();
-        if(userOptional.isPresent()) {
-            response.setStatus(HttpStatus.NOT_FOUND);
-            response.setContentType(HttpContentType.TEXT_PLAIN);
-            response.setBody("User '" + user.getUsername() + "' is already taken!");
-            return response;
-        }
-
-        user = userService.save(user);
+        ObjectMapper objectmapper = new ObjectMapper();
 
         String taskJson = null;
         try {
@@ -138,9 +113,19 @@ public class UserController extends Controller {
             throw new RuntimeException(e);
         }
 
-        response.setStatus(HttpStatus.CREATED);
-        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setStatus(status);
+        response.setContentType(HttpContentType.APPLICATION_JSON);
         response.setBody(taskJson);
+
+        return response;
+    }
+
+    private Response createFailureResponse(String body) {
+        Response response = new Response();
+
+        response.setStatus(HttpStatus.NOT_FOUND);
+        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setBody(body);
 
         return response;
     }
