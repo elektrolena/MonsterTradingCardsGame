@@ -8,6 +8,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserController extends Controller {
@@ -31,7 +32,7 @@ public class UserController extends Controller {
             String username = extractLastRoutePart(route);
             switch(request.getMethod()) {
                 case "GET":
-                    return read(username);
+                    return read(username, request);
                 case "PUT":
                     return update(username, request);
             }
@@ -44,8 +45,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    // TODO: change username to token
-    public Response read(String username) {
+    public Response read(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
@@ -53,11 +53,15 @@ public class UserController extends Controller {
         }
 
         User user = userOptional.get();
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
+
+        if(Objects.equals(request.getAuthorizationToken(), user.getToken())) {
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
+        }
+
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
     // TODO: add admin access?
-    // TODO: change username to token
     private Response update(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
@@ -67,11 +71,13 @@ public class UserController extends Controller {
 
         User currentUser = userOptional.get();
 
-        User updatedUser = getUserFromBody(request);
+        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken())) {
+            User updatedUser = getUserFromBody(request);
+            updatedUser = userService.update(currentUser, updatedUser);
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
+        }
 
-        updatedUser = userService.update(currentUser, updatedUser);
-
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
     public Response create(Request request) {

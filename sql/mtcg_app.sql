@@ -12,4 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     image VARCHAR(255)
     );
 
+DELETE FROM users;
+
 DROP TABLE users;
