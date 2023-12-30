@@ -7,42 +7,43 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class DatabaseUserRepository {
-
-    private final String FIND_ALL_SQL = "SELECT * FROM users";
-    private final String SAVE_SQL = "INSERT INTO users(id, username, password) VALUES(?, ?, ?)";
+    private final String FIND_SQL = "SELECT * FROM users WHERE username = ?";
+    private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image) VALUES(?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
 
     private final Database database = new Database();
 
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
+    public Optional<User> find(String username) {
+        Optional<User> user = Optional.empty();
 
         try (
                 Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(FIND_ALL_SQL);
-                ResultSet rs = pstmt.executeQuery()
+                PreparedStatement pstmt = con.prepareStatement(FIND_SQL);
         ) {
-            while (rs.next()) {
-                User user = new User(
-                        rs.getString("id"),
-                        rs.getString("username"),
-                        rs.getString("password")
-                );
-                users.add(user);
+            pstmt.setString(1, username);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User foundUser = mapResultSetToUser(rs);
+                    user = Optional.of(foundUser);
+                }
             }
-
-            return users;
         } catch (SQLException e) {
-            return users;
+            return user;
         }
+        return user;
     }
 
-    public Optional<User> find(int id) {
-        return Optional.empty();
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId((rs.getString("id")));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setBio(rs.getString("bio"));
+        user.setImage(rs.getString("image"));
+        return user;
     }
 
     public User save(User user) {
@@ -53,6 +54,8 @@ public class DatabaseUserRepository {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
+            pstmt.setString(4, user.getBio());
+            pstmt.setString(5, user.getImage());
 
             pstmt.execute();
         } catch (SQLException e) {
@@ -63,7 +66,22 @@ public class DatabaseUserRepository {
         return user;
     }
 
-    public User delete(User user) {
-        return null;
+    public User update(User user) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL);
+        ) {
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getBio());
+            pstmt.setString(4, user.getImage());
+            pstmt.setString(5, user.getId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            // Handle the exception (log it, throw a runtime exception, etc.)
+        }
+
+        return user;
     }
 }

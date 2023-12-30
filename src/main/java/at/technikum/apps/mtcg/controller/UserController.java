@@ -10,48 +10,87 @@ import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
+import java.util.Optional;
 
 public class UserController extends Controller {
 
     private final UserService userService;
+
 
     public UserController() {
         this.userService = new UserService(new DatabaseUserRepository());
     }
     @Override
     public boolean supports(String route) {
-        return route.equals("/users");
+        return route.matches("/users/\\w+") || route.equals("/users");
     }
 
     @Override
     public Response handle(Request request) {
+        String route = request.getRoute();
 
-        if(request.getRoute().equals("/users")) {
-            switch (request.getMethod()) {
-                case "GET": return readAll(request);
-                case "POST": return create(request);
+        if (route.matches("/users/\\w+")) {
+            String username = extractUsername(route);
+            switch(request.getMethod()) {
+                case "GET":
+                    return read(username);
+                case "PUT":
+                    return update(username, request);
             }
-
-            // THOUGHT: better 405
-            return status(HttpStatus.BAD_REQUEST);
+        } else if (route.equals("/users")) {
+            if(request.getMethod().equals("POST")) {
+                return create(request);
+            }
         }
 
-        String[] routeParts = request.getRoute().split("/");
-        int userId = Integer.parseInt(routeParts[2]);
-
-        switch (request.getMethod()) {
-            case "GET": return read(userId, request);
-            case "PUT": return update(userId, request);
-            case "DELETE": return delete(userId, request);
-        }
-
-        // THOUGHT: better 405
         return status(HttpStatus.BAD_REQUEST);
+    }
+
+    // TODO: change username to token
+    public Response read(String username) {
+        Optional<User> userOptional = userService.find(username);
+
+        if(userOptional.isEmpty()) {
+            return createFailureResponse("User not found in app!");
+        }
+
+        User user = userOptional.get();
+        return createSuccessJsonResponse(user, HttpStatus.OK);
+    }
+
+    // TODO: change username to token
+    private Response update(String username, Request request) {
+        Optional<User> userOptional = userService.find(username);
+
+        if(userOptional.isEmpty()) {
+            return createFailureResponse("User not found in app!");
+        }
+
+        User currentUser = userOptional.get();
+
+        User updatedUser = getUserFromBody(request);
+
+        updatedUser = userService.update(currentUser, updatedUser);
+
+        return createSuccessJsonResponse(updatedUser, HttpStatus.OK);
     }
 
     public Response create(Request request) {
 
+        User user = getUserFromBody(request);
+
+        Optional<User> userOptional= userService.find(user.getUsername());
+
+        if(userOptional.isPresent()) {
+            return createFailureResponse("Username is already taken!");
+        }
+
+        user = userService.save(user);
+
+        return createSuccessJsonResponse(user, HttpStatus.CREATED);
+    }
+
+    private User getUserFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();
         User user = null;
         try {
@@ -60,9 +99,12 @@ public class UserController extends Controller {
             throw new RuntimeException(e);
         }
 
-        // user = toObject(request.getBody(), User.class);
+        return user;
+    }
 
-        user = userService.save(user);
+    private Response createSuccessJsonResponse(User user, HttpStatus status) {
+        Response response = new Response();
+        ObjectMapper objectmapper = new ObjectMapper();
 
         String taskJson = null;
         try {
@@ -71,48 +113,25 @@ public class UserController extends Controller {
             throw new RuntimeException(e);
         }
 
-        Response response = new Response();
-        // THOUGHT: better status 201 Created
-        response.setStatus(HttpStatus.OK);
-        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setStatus(status);
+        response.setContentType(HttpContentType.APPLICATION_JSON);
         response.setBody(taskJson);
 
         return response;
-
-        // return json(user);
     }
 
-    public Response readAll(Request request) {
-        List<User> users = userService.findAll();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String tasksJson = null;
-        try {
-            tasksJson = objectMapper.writeValueAsString(users);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Object to JSON coming soon
-
+    private Response createFailureResponse(String body) {
         Response response = new Response();
-        // THOUGHT: better status 201 Created
-        response.setStatus(HttpStatus.OK);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody(tasksJson);
+
+        response.setStatus(HttpStatus.NOT_FOUND);
+        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setBody(body);
 
         return response;
     }
 
-    public Response read(int id, Request request) {
-        return null;
-    }
-
-    public Response update(int id, Request request) {
-        return null;
-    }
-
-    public Response delete(int id, Request request) {
-        return null;
+    private String extractUsername(String route) {
+        String[] routeParts = route.split("/");
+        return routeParts[2];
     }
 }
