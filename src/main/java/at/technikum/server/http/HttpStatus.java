@@ -6,7 +6,8 @@ public enum HttpStatus {
     CREATED(201, "Created"),
     BAD_REQUEST(400, "Bad Request"),
     UNAUTHORIZED_ACCESS(401, "Unauthorized Access"),
-    NOT_FOUND(404, "Not Found");
+    NOT_FOUND(404, "Not Found"),
+    ALREADY_EXISTS(409, "Already exists");
 
     private final int code;
     private final String message;

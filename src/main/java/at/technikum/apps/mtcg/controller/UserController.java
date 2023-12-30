@@ -7,9 +7,8 @@ import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserController extends Controller {
@@ -30,10 +29,10 @@ public class UserController extends Controller {
         String route = request.getRoute();
 
         if (route.matches("/users/\\w+")) {
-            String username = extractUsername(route);
+            String username = extractLastRoutePart(route);
             switch(request.getMethod()) {
                 case "GET":
-                    return read(username);
+                    return read(username, request);
                 case "PUT":
                     return update(username, request);
             }
@@ -43,36 +42,42 @@ public class UserController extends Controller {
             }
         }
 
-        return status(HttpStatus.BAD_REQUEST);
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    // TODO: change username to token
-    public Response read(String username) {
+    public Response read(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
-            return createFailureResponse("User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
         }
 
         User user = userOptional.get();
-        return createSuccessJsonResponse(user, HttpStatus.OK);
+
+        if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
+        }
+
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    // TODO: change username to token
+    // TODO: add admin access?
     private Response update(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
-            return createFailureResponse("User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
         }
 
         User currentUser = userOptional.get();
 
-        User updatedUser = getUserFromBody(request);
+        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
+            User updatedUser = getUserFromBody(request);
+            updatedUser = userService.update(currentUser, updatedUser);
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
+        }
 
-        updatedUser = userService.update(currentUser, updatedUser);
-
-        return createSuccessJsonResponse(updatedUser, HttpStatus.OK);
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
     public Response create(Request request) {
@@ -82,56 +87,11 @@ public class UserController extends Controller {
         Optional<User> userOptional= userService.find(user.getUsername());
 
         if(userOptional.isPresent()) {
-            return createFailureResponse("Username is already taken!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,"User with same username already registered!");
         }
 
         user = userService.save(user);
 
-        return createSuccessJsonResponse(user, HttpStatus.CREATED);
-    }
-
-    private User getUserFromBody(Request request) {
-        ObjectMapper objectmapper = new ObjectMapper();
-        User user = null;
-        try {
-            user = objectmapper.readValue(request.getBody(), User.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return user;
-    }
-
-    private Response createSuccessJsonResponse(User user, HttpStatus status) {
-        Response response = new Response();
-        ObjectMapper objectmapper = new ObjectMapper();
-
-        String taskJson = null;
-        try {
-            taskJson = objectmapper.writeValueAsString(user);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        response.setStatus(status);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody(taskJson);
-
-        return response;
-    }
-
-    private Response createFailureResponse(String body) {
-        Response response = new Response();
-
-        response.setStatus(HttpStatus.NOT_FOUND);
-        response.setContentType(HttpContentType.TEXT_PLAIN);
-        response.setBody(body);
-
-        return response;
-    }
-
-    private String extractUsername(String route) {
-        String[] routeParts = route.split("/");
-        return routeParts[2];
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, convertUserObjectToJson(user));
     }
 }

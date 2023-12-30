@@ -13,6 +13,8 @@ public class Request {
     // application/json, text/plain
     private String contentType;
 
+    private String authorizationToken;
+
     // 0, 17
     private int contentLength;
 
@@ -65,5 +67,13 @@ public class Request {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getAuthorizationToken() {
+        return authorizationToken;
+    }
+
+    public void setAuthorizationToken(String authorizationToken) {
+        this.authorizationToken = authorizationToken;
     }
 }
