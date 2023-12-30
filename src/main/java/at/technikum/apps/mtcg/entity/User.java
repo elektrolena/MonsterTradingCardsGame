@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.entity;
 public class User {
 
     private String id;
+    private String token;
     private String username;
     private String password;
     private String bio;
@@ -56,5 +57,13 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

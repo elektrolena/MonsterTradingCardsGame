@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.controller;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.UserService;
+import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
@@ -40,7 +41,7 @@ public class UserController extends Controller {
             }
         }
 
-        return status(HttpStatus.BAD_REQUEST);
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
     // TODO: change username to token
@@ -48,19 +49,20 @@ public class UserController extends Controller {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
-            return createFailureResponse("User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
         }
 
         User user = userOptional.get();
-        return createSuccessJsonResponse(user, HttpStatus.OK);
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
     }
 
+    // TODO: add admin access?
     // TODO: change username to token
     private Response update(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
-            return createFailureResponse("User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
         }
 
         User currentUser = userOptional.get();
@@ -69,7 +71,7 @@ public class UserController extends Controller {
 
         updatedUser = userService.update(currentUser, updatedUser);
 
-        return createSuccessJsonResponse(updatedUser, HttpStatus.OK);
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
     }
 
     public Response create(Request request) {
@@ -79,11 +81,11 @@ public class UserController extends Controller {
         Optional<User> userOptional= userService.find(user.getUsername());
 
         if(userOptional.isPresent()) {
-            return createFailureResponse("Username is already taken!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,"User with same username already registered!");
         }
 
         user = userService.save(user);
 
-        return createSuccessJsonResponse(user, HttpStatus.CREATED);
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, convertUserObjectToJson(user));
     }
 }

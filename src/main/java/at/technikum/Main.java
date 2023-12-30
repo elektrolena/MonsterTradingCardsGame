@@ -1,6 +1,5 @@
 package at.technikum;
 
-import at.technikum.apps.display.DisplayApp;
 import at.technikum.apps.mtcg.MtcgApp;
 import at.technikum.server.Server;
 

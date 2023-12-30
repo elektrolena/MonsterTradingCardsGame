@@ -14,16 +14,6 @@ public abstract class Controller {
 
     public abstract Response handle(Request request);
 
-    // TODO merge this method with create Response methods
-    protected Response status(HttpStatus httpStatus) {
-        Response response = new Response();
-        response.setStatus(httpStatus);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody("{ \"error\": \""+ httpStatus.getMessage() + "\"}");
-
-        return response;
-    }
-
     protected User getUserFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();
         User user = null;
@@ -36,8 +26,7 @@ public abstract class Controller {
         return user;
     }
 
-    protected Response createSuccessJsonResponse(User user, HttpStatus status) {
-        Response response = new Response();
+    protected String convertUserObjectToJson(User user) {
         ObjectMapper objectmapper = new ObjectMapper();
 
         String taskJson = null;
@@ -47,18 +36,14 @@ public abstract class Controller {
             throw new RuntimeException(e);
         }
 
-        response.setStatus(status);
-        response.setContentType(HttpContentType.APPLICATION_JSON);
-        response.setBody(taskJson);
-
-        return response;
+        return taskJson;
     }
 
-    protected Response createFailureResponse(String body) {
+    protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();
 
-        response.setStatus(HttpStatus.NOT_FOUND);
-        response.setContentType(HttpContentType.TEXT_PLAIN);
+        response.setStatus(status);
+        response.setContentType(contentType);
         response.setBody(body);
 
         return response;
