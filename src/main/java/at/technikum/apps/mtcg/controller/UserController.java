@@ -54,7 +54,7 @@ public class UserController extends Controller {
 
         User user = userOptional.get();
 
-        if(Objects.equals(request.getAuthorizationToken(), user.getToken())) {
+        if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
         }
 
@@ -71,7 +71,7 @@ public class UserController extends Controller {
 
         User currentUser = userOptional.get();
 
-        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken())) {
+        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
             User updatedUser = getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
