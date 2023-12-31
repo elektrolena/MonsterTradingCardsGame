@@ -45,7 +45,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    public Response read(String username, Request request) {
+    private Response read(String username, Request request) {
         Optional<User> userOptional = userService.find(username);
 
         if(userOptional.isEmpty()) {
@@ -80,7 +80,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    public Response create(Request request) {
+    private Response create(Request request) {
 
         User user = getUserFromBody(request);
 
