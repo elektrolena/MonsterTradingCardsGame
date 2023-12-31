@@ -15,6 +15,7 @@ public class DatabaseUserRepository {
     private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
     private final String VALIDATE_LOGIN = "SELECT * FROM users WHERE username = ? AND password = ?";
     private final String ADD_TOKEN = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
+    private final String DELETE_ALL_TOKENS = "UPDATE users SET token = NULL";
 
     private final Database database = new Database();
 
@@ -120,6 +121,17 @@ public class DatabaseUserRepository {
             pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
 
+            pstmt.execute();
+        } catch (SQLException e) {
+
+        }
+    }
+
+    public void deleteTokens() {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(DELETE_ALL_TOKENS)
+        ) {
             pstmt.execute();
         } catch (SQLException e) {
 
