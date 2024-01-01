@@ -14,8 +14,12 @@ public class UserService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> find(String username) {
-        return databaseUserRepository.find(username);
+    public Optional<User> findWithUsername(String username) {
+        return databaseUserRepository.findWithUsername(username);
+    }
+
+    public Optional<User> findWithToken(String token) {
+        return databaseUserRepository.findWithToken(token);
     }
 
     public User update(User user, User updatedUser) {

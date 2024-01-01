@@ -4,8 +4,9 @@ public class Card {
     private String id;
     private String name;
     private String element;
-    private static int damage;
+    private int damage;
     private String ownerId;
+    private String packageId;
 
     public String getId() {
         return id;
@@ -31,12 +32,12 @@ public class Card {
         this.element = element;
     }
 
-    public static int getDamage() {
+    public int getDamage() {
         return damage;
     }
 
-    public static void setDamage(int damage) {
-        Card.damage = damage;
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 
     public String getOwnerId() {
@@ -45,5 +46,13 @@ public class Card {
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public String getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(String packageId) {
+        this.packageId = packageId;
     }
 }

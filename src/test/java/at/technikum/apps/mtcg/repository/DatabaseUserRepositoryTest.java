@@ -19,11 +19,11 @@ class DatabaseUserRepositoryTest {
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
-        when(databaseUserRepositoryMock.find("username")).thenReturn(Optional.of(userToAdd));
+        when(databaseUserRepositoryMock.findWithUsername("username")).thenReturn(Optional.of(userToAdd));
 
         // Act
         databaseUserRepositoryMock.save(userToAdd);
-        Optional<User> retrievedUserMock = databaseUserRepositoryMock.find("username");
+        Optional<User> retrievedUserMock = databaseUserRepositoryMock.findWithUsername("username");
 
         // Assert
         assertTrue(retrievedUserMock.isPresent());
@@ -43,11 +43,11 @@ class DatabaseUserRepositoryTest {
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
-        when(databaseUserRepositoryMock.find("username")).thenReturn(Optional.of(userToAdd));
+        when(databaseUserRepositoryMock.findWithUsername("username")).thenReturn(Optional.of(userToAdd));
 
         // Act
         databaseUserRepositoryMock.save(userToAdd);
-        Optional<User> retrievedUserMock = databaseUserRepositoryMock.find("username");
+        Optional<User> retrievedUserMock = databaseUserRepositoryMock.findWithUsername("username");
 
         // Assert
         assertTrue(retrievedUserMock.isPresent());
@@ -68,12 +68,12 @@ class DatabaseUserRepositoryTest {
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
-        when(databaseUserRepositoryMock.find("username")).thenReturn(Optional.of(updatedUser));
+        when(databaseUserRepositoryMock.findWithUsername("username")).thenReturn(Optional.of(updatedUser));
 
         // Act
         databaseUserRepositoryMock.save(userToAdd);
         databaseUserRepositoryMock.update(updatedUser);
-        Optional<User> retrievedUpdatedUserMock = databaseUserRepositoryMock.find("username");
+        Optional<User> retrievedUpdatedUserMock = databaseUserRepositoryMock.findWithUsername("username");
 
         // Assert
         assertTrue(retrievedUpdatedUserMock.isPresent());
@@ -94,12 +94,12 @@ class DatabaseUserRepositoryTest {
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
-        when(databaseUserRepositoryMock.find("username")).thenReturn(Optional.of(updatedUser));
+        when(databaseUserRepositoryMock.findWithUsername("username")).thenReturn(Optional.of(updatedUser));
 
         // Act
         databaseUserRepositoryMock.save(userToAdd);
         databaseUserRepositoryMock.update(updatedUser);
-        Optional<User> retrievedUpdatedUserMock = databaseUserRepositoryMock.find("username");
+        Optional<User> retrievedUpdatedUserMock = databaseUserRepositoryMock.findWithUsername("username");
 
         // Assert
         assertTrue(retrievedUpdatedUserMock.isPresent());

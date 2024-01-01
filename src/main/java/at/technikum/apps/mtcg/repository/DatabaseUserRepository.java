@@ -10,22 +10,23 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class DatabaseUserRepository {
-    private final String FIND_SQL = "SELECT * FROM users WHERE username = ?";
+    private final String FIND_WITH_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
+    private final String FIND_WITH_TOKEN_SQL = "SELECT * FROM users WHERE token = ?";
     private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image) VALUES(?, ?, ?, ?, ?)";
     private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
-    private final String VALIDATE_LOGIN = "SELECT * FROM users WHERE username = ? AND password = ?";
-    private final String ADD_TOKEN = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
-    private final String DELETE_ALL_TOKENS = "UPDATE users SET token = NULL";
+    private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
+    private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
+    private final String DELETE_ALL_TOKENS_SQL = "UPDATE users SET token = NULL";
 
     private final Database database = new Database();
 
     // TODO: Handle SQL Exceptions
-    public Optional<User> find(String username) {
+    public Optional<User> findWithUsername(String username) {
         Optional<User> user = Optional.empty();
 
         try (
                 Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(FIND_SQL)
+                PreparedStatement pstmt = con.prepareStatement(FIND_WITH_USERNAME_SQL)
         ) {
             pstmt.setString(1, username);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -36,6 +37,26 @@ public class DatabaseUserRepository {
             }
         } catch (SQLException e) {
             return user;
+        }
+        return user;
+    }
+
+    public Optional<User> findWithToken(String token) {
+        Optional<User> user = Optional.empty();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(FIND_WITH_TOKEN_SQL)
+        ) {
+            pstmt.setString(1, token);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User foundUser = mapResultSetToUser(rs);
+                    user = Optional.of(foundUser);
+                }
+            }
+        } catch (SQLException e) {
+
         }
         return user;
     }
@@ -94,7 +115,7 @@ public class DatabaseUserRepository {
 
         try (
                 Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(VALIDATE_LOGIN)
+                PreparedStatement pstmt = con.prepareStatement(VALIDATE_LOGIN_SQL)
         ) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPassword());
@@ -115,7 +136,7 @@ public class DatabaseUserRepository {
     public void addToken(User user) {
         try (
                 Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(ADD_TOKEN)
+                PreparedStatement pstmt = con.prepareStatement(ADD_TOKEN_SQL)
         ) {
             pstmt.setString(1, user.getToken());
             pstmt.setString(2, user.getUsername());
@@ -130,7 +151,7 @@ public class DatabaseUserRepository {
     public void deleteTokens() {
         try (
                 Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(DELETE_ALL_TOKENS)
+                PreparedStatement pstmt = con.prepareStatement(DELETE_ALL_TOKENS_SQL)
         ) {
             pstmt.execute();
         } catch (SQLException e) {

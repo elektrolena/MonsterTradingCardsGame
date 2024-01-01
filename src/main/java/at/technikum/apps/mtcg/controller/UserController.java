@@ -15,7 +15,6 @@ public class UserController extends Controller {
 
     private final UserService userService;
 
-
     public UserController() {
         this.userService = new UserService(new DatabaseUserRepository());
     }
@@ -45,8 +44,9 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
+    // TODO: put all the logic into the service
     private Response read(String username, Request request) {
-        Optional<User> userOptional = userService.find(username);
+        Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
@@ -63,7 +63,7 @@ public class UserController extends Controller {
 
     // TODO: add admin access?
     private Response update(String username, Request request) {
-        Optional<User> userOptional = userService.find(username);
+        Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
@@ -84,7 +84,7 @@ public class UserController extends Controller {
 
         User user = getUserFromBody(request);
 
-        Optional<User> userOptional= userService.find(user.getUsername());
+        Optional<User> userOptional= userService.findWithUsername(user.getUsername());
 
         if(userOptional.isPresent()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,"User with same username already registered!");
