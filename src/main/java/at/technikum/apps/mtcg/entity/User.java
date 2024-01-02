@@ -8,15 +8,17 @@ public class User {
     private String password;
     private String bio;
     private String image;
+    private int coins;
 
     public User() {}
 
-    public User(String id, String username, String password, String bio, String image) {
+    public User(String id, String username, String password, String bio, String image, int coins) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.bio = bio;
         this.image = image;
+        this.coins = coins;
     }
 
     public String getId() {
@@ -65,5 +67,13 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
     }
 }

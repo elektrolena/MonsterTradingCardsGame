@@ -39,8 +39,13 @@ public class UserService {
         return databaseUserRepository.update(user);
     }
 
+    public void updateCoins(String userId, int sum) {
+        this.databaseUserRepository.updateCoins(userId, sum);
+    }
+
     public User save(User user) {
         user.setId(UUID.randomUUID().toString());
+        user.setCoins(20);
         return databaseUserRepository.save(user);
     }
 }

@@ -12,8 +12,9 @@ import java.util.Optional;
 public class DatabaseUserRepository {
     private final String FIND_WITH_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
     private final String FIND_WITH_TOKEN_SQL = "SELECT * FROM users WHERE token = ?";
-    private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image) VALUES(?, ?, ?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image, coins) VALUES(?, ?, ?, ?, ?, ?)";
     private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
+    private final String UPDATE_COINS_SQL = "UPDATE users SET coins = ? WHERE id = ?";
     private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
     private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
     private final String DELETE_ALL_TOKENS_SQL = "UPDATE users SET token = NULL";
@@ -21,6 +22,26 @@ public class DatabaseUserRepository {
     private final Database database = new Database();
 
     // TODO: Handle SQL Exceptions
+    public User save(User user) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
+        ) {
+            pstmt.setString(1, user.getId());
+            pstmt.setString(2, user.getUsername());
+            pstmt.setString(3, user.getPassword());
+            pstmt.setString(4, user.getBio());
+            pstmt.setString(5, user.getImage());
+            pstmt.setInt(6, user.getCoins());
+
+            pstmt.execute();
+        } catch (SQLException e) {
+            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
+
+        }
+        return user;
+    }
+
     public Optional<User> findWithUsername(String username) {
         Optional<User> user = Optional.empty();
 
@@ -69,25 +90,7 @@ public class DatabaseUserRepository {
         user.setPassword(rs.getString("password"));
         user.setBio(rs.getString("bio"));
         user.setImage(rs.getString("image"));
-        return user;
-    }
-
-    public User save(User user) {
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
-        ) {
-            pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getUsername());
-            pstmt.setString(3, user.getPassword());
-            pstmt.setString(4, user.getBio());
-            pstmt.setString(5, user.getImage());
-
-            pstmt.execute();
-        } catch (SQLException e) {
-            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
-
-        }
+        user.setCoins((rs.getInt("coins")));
         return user;
     }
 
@@ -108,6 +111,20 @@ public class DatabaseUserRepository {
         }
 
         return user;
+    }
+
+    public void updateCoins(String userId, int sum) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(UPDATE_COINS_SQL)
+        ) {
+            pstmt.setInt(1, sum);
+            pstmt.setString(2, userId);
+
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Optional<User> validateLogin(User user) {

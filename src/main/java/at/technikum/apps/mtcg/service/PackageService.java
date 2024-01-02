@@ -1,7 +1,9 @@
 package at.technikum.apps.mtcg.service;
 
 import at.technikum.apps.mtcg.entity.Card;
+import at.technikum.apps.mtcg.entity.Package;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
+import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import at.technikum.server.http.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,9 +14,11 @@ import java.util.UUID;
 public class PackageService {
 
     private final DatabaseCardRepository databaseCardRepository;
+    private final DatabasePackageRepository databasePackageRepository;
 
-    public PackageService(DatabaseCardRepository databaseCardRepository) {
+    public PackageService(DatabaseCardRepository databaseCardRepository, DatabasePackageRepository databasePackageRepository) {
         this.databaseCardRepository = databaseCardRepository;
+        this.databasePackageRepository = databasePackageRepository;
     }
 
     public boolean save(Request request) {
@@ -26,15 +30,20 @@ public class PackageService {
             }
         }
 
-        String packageId = UUID.randomUUID().toString();
+        Package cardPackage = new Package();
+        cardPackage.setId(UUID.randomUUID().toString());
+        cardPackage.setPrice(5);
+
+        this.databasePackageRepository.savePackage(cardPackage);
 
         for (Card card : cards) {
-            card.setPackageId(packageId);
+            card.setPackageId(cardPackage.getId());
             this.databaseCardRepository.save(card);
         }
 
         return true;
     }
+
     private Card[] getCardsFromBody(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
         Card[] cards = null;

@@ -55,7 +55,7 @@ public class UserController extends Controller {
         User user = userOptional.get();
 
         if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -74,7 +74,7 @@ public class UserController extends Controller {
         if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
             User updatedUser = getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(updatedUser));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(updatedUser));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -92,6 +92,6 @@ public class UserController extends Controller {
 
         user = userService.save(user);
 
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, convertUserObjectToJson(user));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, convertObjectToJson(user));
     }
 }
