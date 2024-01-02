@@ -13,18 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
     coins INT
     );
 
-DELETE FROM users;
-
-DROP TABLE users;
-
 CREATE TABLE IF NOT EXISTS packages (
     id VARCHAR(255) PRIMARY KEY,
     price Int
 );
-
-DELETE FROM packages;
-
-DROP TABLE packages;
 
 CREATE TABLE IF NOT EXISTS cards (
     id VARCHAR(255) PRIMARY KEY,
@@ -37,6 +29,10 @@ CREATE TABLE IF NOT EXISTS cards (
     FOREIGN KEY (packageId_fk) REFERENCES packages(id) ON DELETE SET NULL
 );
 
+DELETE FROM users;
+DELETE FROM packages;
 DELETE FROM cards;
 
+DROP TABLE users;
+DROP TABLE packages;
 DROP TABLE cards;

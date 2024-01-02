@@ -1,8 +1,9 @@
 package at.technikum.apps.mtcg.controller;
 
-import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.entity.Package;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
+import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.TransactionService;
 import at.technikum.apps.mtcg.service.UserService;
@@ -20,7 +21,7 @@ public class TransactionController extends Controller {
 
     public TransactionController() {
         this.userService = new UserService(new DatabaseUserRepository());
-        this.transactionService = new TransactionService(new DatabaseCardRepository());
+        this.transactionService = new TransactionService(new DatabaseCardRepository(), new DatabasePackageRepository());
     }
 
     @Override
@@ -43,15 +44,14 @@ public class TransactionController extends Controller {
         }
 
         User user = optionalUser.get();
-        System.out.println(user.getUsername());
-        System.out.println(user.getCoins());
         if(user.getCoins() < 5) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Not enough money for buying a card package.");
         }
-        Card[] cardPackage = this.transactionService.buyPackage(user, userService);
-        if(cardPackage == null) {
+        Optional<Package> cardPackage = this.transactionService.buyPackage(user, userService);
+        if(cardPackage.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "No card package available for buying.");
+        } else {
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectArrayToJson(cardPackage.get().getCards()));
         }
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 }

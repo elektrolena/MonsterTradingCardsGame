@@ -2,6 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
+import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.PackageService;
 import at.technikum.apps.mtcg.service.UserService;
@@ -19,7 +20,7 @@ public class PackageController extends Controller {
     private final PackageService packageService;
     public PackageController() {
         this.userService = new UserService(new DatabaseUserRepository());
-        this.packageService = new PackageService(new DatabaseCardRepository());
+        this.packageService = new PackageService(new DatabaseCardRepository(), new DatabasePackageRepository());
     }
 
     @Override

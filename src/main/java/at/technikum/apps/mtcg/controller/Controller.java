@@ -42,6 +42,19 @@ public abstract class Controller {
         return taskJson;
     }
 
+    protected String convertObjectArrayToJson(Object[] objects) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String json = null;
+        try {
+            json = objectMapper.writeValueAsString(objects);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return json;
+    }
+
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();
 

@@ -22,6 +22,26 @@ public class DatabaseUserRepository {
     private final Database database = new Database();
 
     // TODO: Handle SQL Exceptions
+    public User save(User user) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
+        ) {
+            pstmt.setString(1, user.getId());
+            pstmt.setString(2, user.getUsername());
+            pstmt.setString(3, user.getPassword());
+            pstmt.setString(4, user.getBio());
+            pstmt.setString(5, user.getImage());
+            pstmt.setInt(6, user.getCoins());
+
+            pstmt.execute();
+        } catch (SQLException e) {
+            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
+
+        }
+        return user;
+    }
+
     public Optional<User> findWithUsername(String username) {
         Optional<User> user = Optional.empty();
 
@@ -71,26 +91,6 @@ public class DatabaseUserRepository {
         user.setBio(rs.getString("bio"));
         user.setImage(rs.getString("image"));
         user.setCoins((rs.getInt("coins")));
-        return user;
-    }
-
-    public User save(User user) {
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
-        ) {
-            pstmt.setString(1, user.getId());
-            pstmt.setString(2, user.getUsername());
-            pstmt.setString(3, user.getPassword());
-            pstmt.setString(4, user.getBio());
-            pstmt.setString(5, user.getImage());
-            pstmt.setInt(6, user.getCoins());
-
-            pstmt.execute();
-        } catch (SQLException e) {
-            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
-
-        }
         return user;
     }
 
