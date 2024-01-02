@@ -29,29 +29,20 @@ public class PackageController extends Controller {
 
     @Override
     public Response handle(Request request) {
-        String route = request.getRoute();
-
-        if (route.equals("/packages")) {
-            if (request.getMethod().equals("POST")) {
-                return createPackage(request);
-            }
+        if (request.getMethod().equals("POST")) {
+            return createPackage(request);
         }
-
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
     // TODO: move logic into service?
     private Response createPackage(Request request) {
-        if(request.getAuthorizationToken() == null) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
-        Optional<User> userOptional = userService.findWithToken(request.getAuthorizationToken());
-
-        if(userOptional.isEmpty()) {
+        Optional <User> optionalUser = checkForAuthorizedRequest(request, userService);
+        if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
         }
 
-        User admin = userOptional.get();
+        User admin = optionalUser.get();
 
         if(!Objects.equals(admin.getUsername(), "admin")) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Provided user is not 'admin'.");

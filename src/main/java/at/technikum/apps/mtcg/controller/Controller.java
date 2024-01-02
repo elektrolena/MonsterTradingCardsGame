@@ -1,12 +1,15 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Optional;
 
 public abstract class Controller {
 
@@ -26,12 +29,12 @@ public abstract class Controller {
         return user;
     }
 
-    protected String convertUserObjectToJson(User user) {
+    protected String convertObjectToJson(Object object) {
         ObjectMapper objectmapper = new ObjectMapper();
 
         String taskJson = null;
         try {
-            taskJson = objectmapper.writeValueAsString(user);
+            taskJson = objectmapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -47,6 +50,14 @@ public abstract class Controller {
         response.setBody(body);
 
         return response;
+    }
+
+    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) {
+        if(request.getAuthorizationToken() == null) {
+            return Optional.empty();
+        }
+
+        return userService.findWithToken(request.getAuthorizationToken());
     }
 
     protected String extractLastRoutePart(String route) {

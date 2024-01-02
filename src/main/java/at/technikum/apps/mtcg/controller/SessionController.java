@@ -26,14 +26,9 @@ public class SessionController extends Controller {
 
     @Override
     public Response handle(Request request) {
-        String route = request.getRoute();
-
-        if (route.equals("/sessions")) {
-            if (request.getMethod().equals("POST")) {
-                return start(request);
-            }
+        if (request.getMethod().equals("POST")) {
+            return start(request);
         }
-
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
@@ -43,7 +38,7 @@ public class SessionController extends Controller {
         Optional<User> foundUser = sessionService.login(user);
         if(foundUser.isPresent()) {
             user = foundUser.get();
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertUserObjectToJson(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, "Invalid username/password provided.");
