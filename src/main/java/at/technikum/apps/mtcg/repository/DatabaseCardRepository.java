@@ -54,6 +54,10 @@ public class DatabaseCardRepository {
         }
     }
 
+    public Card[] buyPackage(User user) {
+        return null;
+    }
+
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         Card card = new Card();
         card.setId((rs.getString("id")));
