@@ -4,6 +4,7 @@ package at.technikum.server.http;
 public enum HttpStatus {
     OK(200, "OK"),
     CREATED(201, "Created"),
+    NO_CONTENT(204, "No Content"),
     BAD_REQUEST(400, "Bad Request"),
     UNAUTHORIZED_ACCESS(401, "Unauthorized Access"),
     FORBIDDEN(403, "Forbidden Access"),

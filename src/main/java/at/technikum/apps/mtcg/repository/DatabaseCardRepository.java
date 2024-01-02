@@ -8,12 +8,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DatabaseCardRepository {
     private final String FIND_WITH_ID_SQL = "SELECT * FROM cards WHERE id = ?";
     private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?)";
     private final String GET_CARDS_FROM_PACKAGE_SQL = "SELECT * FROM cards WHERE packageId_fk = ? LIMIT 5";
+    private final String GET_CARDS_FROM_USER_SQL = "SELECT * FROM cards WHERE ownerId_fk = ?";
     private final String UPDATE_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
 
     private final Database database = new Database();
@@ -57,8 +60,8 @@ public class DatabaseCardRepository {
         return card;
     }
 
-    public Card[] getCardsFromPackage(String packageId) {
-        Card[] cards = new Card[5];
+    public List<Card> getCardsFromPackage(String packageId) {
+        List<Card> cards = new ArrayList<>();
 
         try (
                 Connection con = database.getConnection();
@@ -69,8 +72,7 @@ public class DatabaseCardRepository {
             try (ResultSet rs = pstmt.executeQuery()) {
                 int index = 0;
                 while (rs.next() && index < 5) {
-                    Card card = mapResultSetToCard(rs);
-                    cards[index] = card;
+                    cards.add(mapResultSetToCard(rs));
                     index++;
                 }
             }
@@ -80,7 +82,29 @@ public class DatabaseCardRepository {
         return cards;
     }
 
-    public void updateCardsOwner(Card[] cards, String userId) {
+    public Optional<List<Card>> getCardsFromUser(String userId) {
+        List<Card> cards = new ArrayList<>();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(GET_CARDS_FROM_USER_SQL)
+        ) {
+            pstmt.setString(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    cards.add(mapResultSetToCard(rs));
+                }
+            }
+        } catch (SQLException e) {
+            // Handle SQLException
+        }
+
+        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
+    }
+
+
+    public void updateCardsOwner(List<Card> cards, String userId) {
         try (Connection con = database.getConnection()) {
             for (Card card : cards) {
                 try (PreparedStatement pstmt = con.prepareStatement(UPDATE_OWNER_SQL)) {
