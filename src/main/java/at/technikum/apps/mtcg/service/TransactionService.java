@@ -3,9 +3,6 @@ package at.technikum.apps.mtcg.service;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
-import at.technikum.server.http.Request;
-
-import java.util.Optional;
 
 public class TransactionService {
     private final DatabaseCardRepository databaseCardRepository;
@@ -14,9 +11,12 @@ public class TransactionService {
         this.databaseCardRepository = databaseCardRepository;
     }
 
-    public Card[] buyPackage(User user) {
+    public Card[] buyPackage(User user, UserService userService) {
         Card[] cardPackage;
         cardPackage = databaseCardRepository.buyPackage(user);
+        if(cardPackage.length == 5) {
+            userService.updateCoins(user.getId(), user.getCoins() - 5);
+        }
         return null;
     }
 }

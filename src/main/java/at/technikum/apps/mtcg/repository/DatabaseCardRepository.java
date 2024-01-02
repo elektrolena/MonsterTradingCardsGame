@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.repository;
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.entity.Package;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +13,8 @@ import java.util.Optional;
 
 public class DatabaseCardRepository {
     private final String FIND_WITH_ID_SQL = "SELECT * FROM cards WHERE id = ?";
-    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, ownerId, packageId) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String SAVE_PACKAGE_SQL = "INSERT INTO packages(id, price) VALUES (?, ?)";
 
     private final Database database = new Database();
 
@@ -50,7 +52,21 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
+
+        }
+    }
+
+    public void savePackage(Package cardPackage) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(SAVE_PACKAGE_SQL)
+        ) {
+            pstmt.setString(1, cardPackage.getId());
+            pstmt.setInt(2, cardPackage.getPrice());
+
+            pstmt.execute();
+        } catch (SQLException e) {
+            e.getMessage();
         }
     }
 

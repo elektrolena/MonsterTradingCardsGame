@@ -43,10 +43,12 @@ public class TransactionController extends Controller {
         }
 
         User user = optionalUser.get();
+        System.out.println(user.getUsername());
+        System.out.println(user.getCoins());
         if(user.getCoins() < 5) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Not enough money for buying a card package.");
         }
-        Card[] cardPackage = this.transactionService.buyPackage(user);
+        Card[] cardPackage = this.transactionService.buyPackage(user, userService);
         if(cardPackage == null) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "No card package available for buying.");
         }

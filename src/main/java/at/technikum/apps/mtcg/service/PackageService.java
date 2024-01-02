@@ -1,6 +1,7 @@
 package at.technikum.apps.mtcg.service;
 
 import at.technikum.apps.mtcg.entity.Card;
+import at.technikum.apps.mtcg.entity.Package;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.server.http.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,10 +27,14 @@ public class PackageService {
             }
         }
 
-        String packageId = UUID.randomUUID().toString();
+        Package cardPackage = new Package();
+        cardPackage.setId(UUID.randomUUID().toString());
+        cardPackage.setPrice(5);
+
+        this.databaseCardRepository.savePackage(cardPackage);
 
         for (Card card : cards) {
-            card.setPackageId(packageId);
+            card.setPackageId(cardPackage.getId());
             this.databaseCardRepository.save(card);
         }
 

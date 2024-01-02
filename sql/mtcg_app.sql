@@ -17,13 +17,24 @@ DELETE FROM users;
 
 DROP TABLE users;
 
+CREATE TABLE IF NOT EXISTS packages (
+    id VARCHAR(255) PRIMARY KEY,
+    price Int
+);
+
+DELETE FROM packages;
+
+DROP TABLE packages;
+
 CREATE TABLE IF NOT EXISTS cards (
     id VARCHAR(255) PRIMARY KEY,
     name VARCHAR(255),
     element VARCHAR(255),
     damage INT,
-    ownerId VARCHAR(255),
-    packageId VARCHAR(255)
+    ownerId_fk VARCHAR(255),
+    packageId_fk VARCHAR(255),
+    FOREIGN KEY (ownerId_fk) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (packageId_fk) REFERENCES packages(id) ON DELETE SET NULL
 );
 
 DELETE FROM cards;
