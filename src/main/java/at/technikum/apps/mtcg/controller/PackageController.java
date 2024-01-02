@@ -56,7 +56,7 @@ public class PackageController extends Controller {
         if(!Objects.equals(admin.getUsername(), "admin")) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Provided user is not 'admin'.");
         }
-        if(Objects.equals(admin.getToken(), "admin-mtcgToken") && Objects.equals(request.getAuthorizationToken(), admin.getToken())) {
+        if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
             if(packageService.save(request)) {
                 return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, "Package and cards successfully created.");
             } else {

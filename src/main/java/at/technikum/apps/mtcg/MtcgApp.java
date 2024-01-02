@@ -1,9 +1,6 @@
 package at.technikum.apps.mtcg;
 
-import at.technikum.apps.mtcg.controller.Controller;
-import at.technikum.apps.mtcg.controller.PackageController;
-import at.technikum.apps.mtcg.controller.SessionController;
-import at.technikum.apps.mtcg.controller.UserController;
+import at.technikum.apps.mtcg.controller.*;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.server.ServerApplication;
 import at.technikum.server.http.HttpContentType;
@@ -22,6 +19,7 @@ public class MtcgApp implements ServerApplication {
         controllers.add(new UserController());
         controllers.add(new SessionController());
         controllers.add(new PackageController());
+        controllers.add(new TransactionController());
 
         DatabaseUserRepository userRepository = new DatabaseUserRepository();
         userRepository.deleteTokens();
