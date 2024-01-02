@@ -51,7 +51,7 @@ public class TransactionController extends Controller {
         if(cardPackage.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "No card package available for buying.");
         } else {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectArrayToJson(cardPackage.get().getCards()));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(cardPackage.get().getCards()));
         }
     }
 }

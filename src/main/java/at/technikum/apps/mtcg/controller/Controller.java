@@ -9,6 +9,7 @@ import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 public abstract class Controller {
@@ -42,18 +43,19 @@ public abstract class Controller {
         return taskJson;
     }
 
-    protected String convertObjectArrayToJson(Object[] objects) {
+    protected <T> String convertObjectListToJson(List<T> objectList) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         String json = null;
         try {
-            json = objectMapper.writeValueAsString(objects);
+            json = objectMapper.writeValueAsString(objectList);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
         return json;
     }
+
 
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();

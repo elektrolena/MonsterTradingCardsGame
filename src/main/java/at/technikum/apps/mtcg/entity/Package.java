@@ -1,13 +1,15 @@
 package at.technikum.apps.mtcg.entity;
 
+import java.util.List;
+
 public class Package {
     private String id;
     private int price;
-    private Card[] cards;
+    private List<Card> cards;
 
     public Package() {}
 
-    public Package(String id, int price, Card[] cards) {
+    public Package(String id, int price, List<Card> cards) {
         this.id = id;
         this.price = price;
         this.cards = cards;
@@ -29,11 +31,11 @@ public class Package {
         this.price = price;
     }
 
-    public Card[] getCards() {
+    public List<Card> getCards() {
         return cards;
     }
 
-    public void setCards(Card[] cards) {
+    public void setCards(List<Card> cards) {
         this.cards = cards;
     }
 }
