@@ -14,10 +14,11 @@ import java.util.Optional;
 
 public class DatabaseCardRepository {
     private final String FIND_WITH_ID_SQL = "SELECT * FROM cards WHERE id = ?";
-    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_CARDS_FROM_PACKAGE_SQL = "SELECT * FROM cards WHERE packageId_fk = ? LIMIT 5";
     private final String GET_CARDS_FROM_USER_SQL = "SELECT * FROM cards WHERE ownerId_fk = ?";
     private final String UPDATE_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
+    private final String GET_DECK = "SELECT * FROM cards WHERE deck = 1 AND ownerId_fk = ?";
 
     private final Database database = new Database();
 
@@ -31,8 +32,9 @@ public class DatabaseCardRepository {
             pstmt.setString(2, card.getName());
             pstmt.setString(3, card.getElement());
             pstmt.setInt(4, card.getDamage());
-            pstmt.setString(5, card.getOwnerId());
-            pstmt.setString(6, card.getPackageId());
+            pstmt.setInt(5, card.getInDeck());
+            pstmt.setString(6, card.getOwnerId());
+            pstmt.setString(7, card.getPackageId());
 
             pstmt.execute();
         } catch (SQLException e) {
@@ -119,12 +121,32 @@ public class DatabaseCardRepository {
         }
     }
 
+    public Optional<List<Card>> getDeck(String userId) {
+        List<Card> cards = new ArrayList<>();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(GET_DECK)
+        ) {
+            pstmt.setString(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    cards.add(mapResultSetToCard(rs));
+                }
+            }
+        } catch (SQLException e) {
+
+        }
+        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
+    }
+
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         Card card = new Card();
         card.setId((rs.getString("id")));
         card.setName((rs.getString("name")));
         card.setElement(rs.getString("element"));
         card.setDamage(rs.getInt("damage"));
+        card.setInDeck(rs.getInt("in_deck"));
         card.setOwnerId(rs.getString("ownerId_fk"));
         card.setPackageId(rs.getString("packageId_fk"));
         return card;

@@ -5,6 +5,7 @@ public class Card {
     private String name;
     private String element;
     private int damage;
+    private int inDeck;
     private String ownerId;
     private String packageId;
 
@@ -40,6 +41,14 @@ public class Card {
         this.damage = damage;
     }
 
+    public int getInDeck() {
+        return inDeck;
+    }
+
+    public void setInDeck(int inDeck) {
+        this.inDeck = inDeck;
+    }
+
     public String getOwnerId() {
         return ownerId;
     }
@@ -55,4 +64,5 @@ public class Card {
     public void setPackageId(String packageId) {
         this.packageId = packageId;
     }
+
 }

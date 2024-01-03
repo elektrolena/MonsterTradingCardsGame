@@ -2,7 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseDeckRepository;
+import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
@@ -20,7 +20,7 @@ public class DeckController extends Controller {
     private final UserService userService;
 
     public DeckController() {
-        this.deckService = new DeckService(new DatabaseDeckRepository());
+        this.deckService = new DeckService(new DatabaseCardRepository());
         this.userService = new UserService(new DatabaseUserRepository());
     }
 
@@ -34,7 +34,7 @@ public class DeckController extends Controller {
         if(request.getMethod().equals("GET")) {
             return getDeck(request);
         } else if(request.getMethod().equals("PUT")) {
-            return updateDeck(request);
+            return null;
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
