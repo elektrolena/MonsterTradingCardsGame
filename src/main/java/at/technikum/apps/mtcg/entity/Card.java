@@ -9,6 +9,12 @@ public class Card {
     private String ownerId;
     private String packageId;
 
+    public Card() {}
+
+    public Card(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

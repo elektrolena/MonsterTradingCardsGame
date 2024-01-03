@@ -63,7 +63,7 @@ public class DeckController extends Controller {
 
         User user = optionalUser.get();
 
-        switch(this.deckService.updateDeck(request, user)) {
+        switch(this.deckService.updateDeck(user, getCardsFromBody(request))) {
             case 200:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, "The deck has been successfully configured.");
             case 400:

@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
@@ -7,6 +8,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -28,6 +30,19 @@ public abstract class Controller {
         }
 
         return user;
+    }
+
+    protected Card[] getCardsFromBody(Request request) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Card[] cards = null;
+        try {
+            JsonNode jsonNode = objectMapper.readTree(request.getBody());
+            cards = objectMapper.treeToValue(jsonNode, Card[].class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return cards;
     }
 
     protected String convertObjectToJson(Object object) {
