@@ -14,7 +14,6 @@ public class SessionController extends Controller {
 
     private final SessionService sessionService;
 
-
     public SessionController() {
         this.sessionService = new SessionService(new DatabaseUserRepository());
     }
