@@ -26,7 +26,7 @@ public class DeckController extends Controller {
 
     @Override
     public boolean supports(String route) {
-        return route.equals("/deck");
+        return route.equals("/deck") || route.equals("/deck?format=plain");
     }
 
     @Override
@@ -49,7 +49,12 @@ public class DeckController extends Controller {
         Optional<List<Card>> deck = this.deckService.getDeck(user);
 
         if(deck.isPresent()) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(deck.get()));
+            if(request.getRoute().equals("/deck")) {
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(deck.get()));
+            } else {
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, convertObjectListToPlainText(deck.get()));
+            }
+
         } else {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "The request was fine, but the deck doesn't have any cards.");
         }

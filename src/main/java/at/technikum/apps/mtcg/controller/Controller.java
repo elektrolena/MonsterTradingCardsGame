@@ -71,6 +71,32 @@ public abstract class Controller {
         return json;
     }
 
+    public <T> String convertObjectListToPlainText(List<T> objectList) {
+        StringBuilder responseBody = new StringBuilder();
+
+        if (objectList == null || objectList.isEmpty()) {
+            return "The request was fine, but the deck doesn't have any cards.";
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Object[] objectsArray = objectList.toArray();
+        try {
+            JsonNode jsonNode = objectMapper.valueToTree(objectsArray);
+
+            Card[] cards = objectMapper.treeToValue(jsonNode, Card[].class);
+
+            for (Card card : cards) {
+                responseBody.append("  CardId: ").append(card.getId()).append("\r\n");
+                responseBody.append("    Name: ").append(card.getName()).append("\r\n");
+                responseBody.append("    Damage: ").append(card.getDamage()).append("\r\n");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return responseBody.toString();
+    }
 
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();
