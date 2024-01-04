@@ -9,16 +9,22 @@ public class User {
     private String bio;
     private String image;
     private int coins;
+    private int elo;
+    private int wins;
+    private int losses;
 
     public User() {}
 
-    public User(String id, String username, String password, String bio, String image, int coins) {
+    public User(String id, String username, String password, String bio, String image, int coins, int elo, int wins, int losses) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.bio = bio;
         this.image = image;
         this.coins = coins;
+        this.elo = elo;
+        this.wins = wins;
+        this.losses = losses;
     }
 
     public String getId() {
@@ -75,5 +81,29 @@ public class User {
 
     public void setCoins(int coins) {
         this.coins = coins;
+    }
+
+    public int getElo() {
+        return elo;
+    }
+
+    public void setElo(int elo) {
+        this.elo = elo;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
     }
 }
