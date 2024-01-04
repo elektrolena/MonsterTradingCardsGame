@@ -10,7 +10,10 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     bio VARCHAR(255),
     image VARCHAR(255),
-    coins INT
+    coins INT,
+    elo INT,
+    wins INT,
+    losses INT
     );
 
 CREATE TABLE IF NOT EXISTS packages (

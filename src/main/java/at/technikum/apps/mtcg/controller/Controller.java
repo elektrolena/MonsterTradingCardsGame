@@ -10,6 +10,7 @@ import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,29 @@ public abstract class Controller {
         return cards;
     }
 
+    protected static String convertStringToJson(String inputString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        ObjectNode jsonNode = objectMapper.createObjectNode();
+
+        String[] lines = inputString.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(": ");
+            if (parts.length == 2) {
+                String key = parts[0].trim();
+                String value = parts[1].trim();
+                jsonNode.put(key, value);
+            }
+        }
+
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TODO: change outputs to required outputs
     protected String convertObjectToJson(Object object) {
         ObjectMapper objectmapper = new ObjectMapper();
 

@@ -46,6 +46,13 @@ public class UserService {
     public User save(User user) {
         user.setId(UUID.randomUUID().toString());
         user.setCoins(20);
+        user.setElo(100);
+        user.setWins(0);
+        user.setLosses(0);
         return databaseUserRepository.save(user);
+    }
+
+    public String getUserStats(User user) {
+        return "Username: " + user.getUsername() + "\n   Elo: " + user.getElo() + "\n   Wins: " + user.getWins() + "\n   Losses: " + user.getLosses();
     }
 }
