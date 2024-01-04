@@ -16,6 +16,7 @@ public class UserController extends Controller {
     private final UserService userService;
 
     public UserController() {
+        super();
         this.userService = new UserService(new DatabaseUserRepository());
     }
     @Override
@@ -55,7 +56,7 @@ public class UserController extends Controller {
         User user = userOptional.get();
 
         if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -72,9 +73,9 @@ public class UserController extends Controller {
         User currentUser = userOptional.get();
 
         if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
-            User updatedUser = getUserFromBody(request);
+            User updatedUser = this.parser.getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(updatedUser));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -82,7 +83,7 @@ public class UserController extends Controller {
 
     private Response create(Request request) {
 
-        User user = getUserFromBody(request);
+        User user = this.parser.getUserFromBody(request);
 
         Optional<User> userOptional= userService.findWithUsername(user.getUsername());
 
@@ -92,6 +93,6 @@ public class UserController extends Controller {
 
         user = userService.save(user);
 
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, convertObjectToJson(user));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, this.parser.getUserCredentials(user));
     }
 }

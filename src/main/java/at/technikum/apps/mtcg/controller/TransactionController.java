@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.entity.Package;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
@@ -12,6 +13,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.util.List;
 import java.util.Optional;
 
 public class TransactionController extends Controller {
@@ -20,6 +22,7 @@ public class TransactionController extends Controller {
     private final TransactionService transactionService;
 
     public TransactionController() {
+        super();
         this.userService = new UserService(new DatabaseUserRepository());
         this.transactionService = new TransactionService(new DatabaseCardRepository(), new DatabasePackageRepository());
     }
@@ -51,7 +54,7 @@ public class TransactionController extends Controller {
         if(cardPackage.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "No card package available for buying.");
         } else {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(cardPackage.get().getCards()));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(cardPackage.get().getCards()));
         }
     }
 }

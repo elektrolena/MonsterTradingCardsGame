@@ -15,6 +15,7 @@ public class SessionController extends Controller {
     private final SessionService sessionService;
 
     public SessionController() {
+        super();
         this.sessionService = new SessionService(new DatabaseUserRepository());
     }
 
@@ -32,12 +33,12 @@ public class SessionController extends Controller {
     }
 
     private Response start(Request request) {
-        User user = getUserFromBody(request);
+        User user = this.parser.getUserFromBody(request);
 
         Optional<User> foundUser = sessionService.login(user);
         if(foundUser.isPresent()) {
             user = foundUser.get();
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, "Invalid username/password provided.");

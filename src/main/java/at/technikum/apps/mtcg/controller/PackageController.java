@@ -19,6 +19,7 @@ public class PackageController extends Controller {
     private final UserService userService;
     private final PackageService packageService;
     public PackageController() {
+        super();
         this.userService = new UserService(new DatabaseUserRepository());
         this.packageService = new PackageService(new DatabaseCardRepository(), new DatabasePackageRepository());
     }
@@ -36,9 +37,8 @@ public class PackageController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    // TODO: move logic into service?
     private Response createPackage(Request request) {
-        Optional <User> optionalUser = checkForAuthorizedRequest(request, userService);
+        Optional <User> optionalUser = checkForAuthorizedRequest(request, this.userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
         }
@@ -49,7 +49,7 @@ public class PackageController extends Controller {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Provided user is not 'admin'.");
         }
         if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
-            if(packageService.save(getCardsFromBody(request))) {
+            if(this.packageService.save(this.parser.getCardsFromBody(request))) {
                 return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, "Package and cards successfully created.");
             } else {
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, "At least one card in the package already exists.");
