@@ -1,12 +1,15 @@
 package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DatabaseUserRepository {
@@ -18,6 +21,7 @@ public class DatabaseUserRepository {
     private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
     private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
     private final String DELETE_ALL_TOKENS_SQL = "UPDATE users SET token = NULL";
+    private final String GET_USER_SCOREBOARD_SQL = "SELECT * FROM users ORDER BY elo DESC";
 
     private final Database database = new Database();
 
@@ -180,5 +184,24 @@ public class DatabaseUserRepository {
         } catch (SQLException e) {
 
         }
+    }
+
+    public List<User> getUserScoreBoard() {
+        List<User> users = new ArrayList<>();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(GET_USER_SCOREBOARD_SQL)
+        ) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            // Handle SQLException
+        }
+
+        return users;
     }
 }

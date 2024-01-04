@@ -21,13 +21,19 @@ public class StatsController extends Controller {
 
     @Override
     public boolean supports(String route) {
-        return route.equals("/stats");
+        return route.equals("/stats") || route.equals("/scoreboard");
     }
 
     @Override
     public Response handle(Request request) {
-        if(request.getMethod().equals("GET")) {
-            return getUserStats(request);
+        if(request.getRoute().equals("/stats")) {
+            if(request.getMethod().equals("GET")) {
+                return getUserStats(request);
+            }
+        } else if(request.getRoute().equals("/scoreboard")) {
+            if(request.getMethod().equals("GET")) {
+                return getScoreBoard(request);
+            }
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
@@ -40,5 +46,15 @@ public class StatsController extends Controller {
 
         User user = optionalUser.get();
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserStats(user));
+    }
+
+    private Response getScoreBoard(Request request) {
+        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
+        if(optionalUser.isEmpty()){
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
+        }
+
+        User user = optionalUser.get();
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUsers(this.userService.getUserScoreBoard()));
     }
 }
