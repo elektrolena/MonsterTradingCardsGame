@@ -52,7 +52,7 @@ public class UserService {
         return databaseUserRepository.save(user);
     }
 
-    public User getUserStats(User user) {
-        return user;
+    public String getUserStats(User user) {
+        return "Username: " + user.getUsername() + "\n   Elo: " + user.getElo() + "\n   Wins: " + user.getWins() + "\n   Losses: " + user.getLosses();
     }
 }

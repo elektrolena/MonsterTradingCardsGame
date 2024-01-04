@@ -38,8 +38,6 @@ public class StatsController extends Controller {
         }
 
         User user = optionalUser.get();
-
-        user = this.userService.getUserStats(user);
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectToJson(user));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertStringToJson(this.userService.getUserStats(user)));
     }
 }
