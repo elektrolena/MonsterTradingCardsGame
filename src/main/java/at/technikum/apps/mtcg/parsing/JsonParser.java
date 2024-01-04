@@ -38,7 +38,7 @@ public class JsonParser {
     }
 
     public String getUserCredentials(User user) {
-        return convertStringToJson(createUserStatsString(user));
+        return convertStringToJson(createUserCredentialsString(user));
     }
 
     public String getUserData(User user) {
@@ -56,6 +56,9 @@ public class JsonParser {
     public String getCardsPlain(List<Card> cards) {
         return createCardArrayString(cards);
     }
+    public String getUsers(List<User> users) {
+        return convertStringToJson(createUserStatsArrayString(users));
+    }
 
     private String createUserCredentialsString(User user) {
         return "Username: " + user.getUsername() + "\nPassword: " + user.getPassword();
@@ -67,6 +70,19 @@ public class JsonParser {
 
     private String createUserStatsString(User user) {
         return "Username: " + user.getUsername() + "\nElo: " + user.getElo() + "\nWins: " + user.getWins() + "\nLosses: " + user.getLosses();
+    }
+
+    private String createUserStatsArrayString(List<User> users) {
+        StringBuilder userString = new StringBuilder();
+
+        for (User user : users) {
+            userString.append("Username: ").append(user.getUsername()).append("\n");
+            userString.append("Elo: ").append(user.getElo()).append("\n");
+            userString.append("Wins: ").append(user.getWins()).append("\n");
+            userString.append("Losses: ").append(user.getLosses()).append("\n\n");
+        }
+
+        return userString.toString();
     }
 
     private String createCardArrayString(List<Card> cards) {

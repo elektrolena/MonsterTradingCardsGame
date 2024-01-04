@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.service;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +53,7 @@ public class UserService {
         return databaseUserRepository.save(user);
     }
 
-    public String getUserStats(User user) {
-        return "Username: " + user.getUsername() + "\n   Elo: " + user.getElo() + "\n   Wins: " + user.getWins() + "\n   Losses: " + user.getLosses();
+    public List<User> getUserScoreBoard() {
+        return databaseUserRepository.getUserScoreBoard();
     }
 }
