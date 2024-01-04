@@ -20,6 +20,7 @@ public class DeckController extends Controller {
     private final UserService userService;
 
     public DeckController() {
+        super();
         this.deckService = new DeckService(new DatabaseCardRepository());
         this.userService = new UserService(new DatabaseUserRepository());
     }
@@ -50,9 +51,9 @@ public class DeckController extends Controller {
 
         if(deck.isPresent()) {
             if(request.getRoute().equals("/deck")) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(deck.get()));
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(deck.get()));
             } else {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, convertObjectListToPlainText(deck.get()));
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.parser.getCardsPlain(deck.get()));
             }
 
         } else {
@@ -68,7 +69,7 @@ public class DeckController extends Controller {
 
         User user = optionalUser.get();
 
-        switch(this.deckService.updateDeck(user, getCardsFromBody(request))) {
+        switch(this.deckService.updateDeck(user, this.parser.getCardsFromBody(request))) {
             case 200:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, "The deck has been successfully configured.");
             case 400:

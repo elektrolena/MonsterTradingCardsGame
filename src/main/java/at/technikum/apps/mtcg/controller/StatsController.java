@@ -15,6 +15,7 @@ public class StatsController extends Controller {
     private final UserService userService;
 
     public StatsController() {
+        super();
         this.userService = new UserService(new DatabaseUserRepository());
     }
 
@@ -38,6 +39,6 @@ public class StatsController extends Controller {
         }
 
         User user = optionalUser.get();
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertStringToJson(this.userService.getUserStats(user)));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserStats(user));
     }
 }

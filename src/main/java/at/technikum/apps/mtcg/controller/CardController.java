@@ -20,6 +20,7 @@ public class CardController extends Controller {
     private final CardService cardService;
 
     public CardController() {
+        super();
         this.userService = new UserService(new DatabaseUserRepository());
         this.cardService = new CardService(new DatabaseCardRepository());
     }
@@ -31,7 +32,7 @@ public class CardController extends Controller {
 
     @Override
     public Response handle(Request request) {
-        if(request.getMethod() == "GET") {
+        if(request.getMethod().equals("GET")) {
             return getAllCards(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
@@ -47,7 +48,7 @@ public class CardController extends Controller {
 
         Optional<List<Card>> cards = this.cardService.getAllCardsFromUser(user.getId());
         if(cards.isPresent()) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, convertObjectListToJson(cards.get()));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(cards.get()));
         } else {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, "The request was fine, but the user doesn't have any cards.");
         }
