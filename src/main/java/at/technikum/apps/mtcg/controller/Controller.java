@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
@@ -7,6 +8,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -28,6 +30,19 @@ public abstract class Controller {
         }
 
         return user;
+    }
+
+    protected Card[] getCardsFromBody(Request request) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Card[] cards = null;
+        try {
+            JsonNode jsonNode = objectMapper.readTree(request.getBody());
+            cards = objectMapper.treeToValue(jsonNode, Card[].class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return cards;
     }
 
     protected String convertObjectToJson(Object object) {
@@ -56,6 +71,32 @@ public abstract class Controller {
         return json;
     }
 
+    public <T> String convertObjectListToPlainText(List<T> objectList) {
+        StringBuilder responseBody = new StringBuilder();
+
+        if (objectList == null || objectList.isEmpty()) {
+            return "The request was fine, but the deck doesn't have any cards.";
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Object[] objectsArray = objectList.toArray();
+        try {
+            JsonNode jsonNode = objectMapper.valueToTree(objectsArray);
+
+            Card[] cards = objectMapper.treeToValue(jsonNode, Card[].class);
+
+            for (Card card : cards) {
+                responseBody.append("  CardId: ").append(card.getId()).append("\r\n");
+                responseBody.append("    Name: ").append(card.getName()).append("\r\n");
+                responseBody.append("    Damage: ").append(card.getDamage()).append("\r\n");
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return responseBody.toString();
+    }
 
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();

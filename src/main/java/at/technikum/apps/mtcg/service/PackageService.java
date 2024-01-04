@@ -21,8 +21,7 @@ public class PackageService {
         this.databasePackageRepository = databasePackageRepository;
     }
 
-    public boolean save(Request request) {
-        Card[] cards = getCardsFromBody(request);
+    public boolean save(Card[] cards) {
 
         for(Card card : cards) {
             if(this.databaseCardRepository.findWithId(card.getId()).isPresent()) {
@@ -42,18 +41,5 @@ public class PackageService {
         }
 
         return true;
-    }
-
-    private Card[] getCardsFromBody(Request request) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Card[] cards = null;
-        try {
-            JsonNode jsonNode = objectMapper.readTree(request.getBody());
-            cards = objectMapper.treeToValue(jsonNode, Card[].class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        return cards;
     }
 }

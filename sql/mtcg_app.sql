@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS cards (
     name VARCHAR(255),
     element VARCHAR(255),
     damage INT,
+    in_deck INT,
     ownerId_fk VARCHAR(255),
     packageId_fk VARCHAR(255),
     FOREIGN KEY (ownerId_fk) REFERENCES users(id) ON DELETE CASCADE,

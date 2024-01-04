@@ -49,7 +49,7 @@ public class PackageController extends Controller {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Provided user is not 'admin'.");
         }
         if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
-            if(packageService.save(request)) {
+            if(packageService.save(getCardsFromBody(request))) {
                 return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, "Package and cards successfully created.");
             } else {
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, "At least one card in the package already exists.");
