@@ -46,7 +46,7 @@ public class UserController extends Controller {
     }
 
     // TODO: put all the logic into the service
-    private Response read(String username, Request request) {
+    Response read(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -63,7 +63,7 @@ public class UserController extends Controller {
     }
 
     // TODO: add admin access?
-    private Response update(String username, Request request) {
+    Response update(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -81,7 +81,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    private Response create(Request request) {
+    Response create(Request request) {
 
         User user = this.parser.getUserFromBody(request);
 

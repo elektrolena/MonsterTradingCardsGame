@@ -15,7 +15,7 @@ class DatabaseUserRepositoryTest {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image");
+        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
@@ -32,6 +32,10 @@ class DatabaseUserRepositoryTest {
         assertEquals("password", userMock.getPassword());
         assertEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
+        assertEquals(20, userMock.getCoins());
+        assertEquals(100, userMock.getElo());
+        assertEquals(0, userMock.getWins());
+        assertEquals(0, userMock.getLosses());
     }
 
     @Test
@@ -39,7 +43,7 @@ class DatabaseUserRepositoryTest {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image");
+        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
@@ -56,6 +60,10 @@ class DatabaseUserRepositoryTest {
         assertNotEquals("falsePassword", userMock.getPassword());
         assertNotEquals("falseBio", userMock.getBio());
         assertNotEquals("falseImage", userMock.getImage());
+        assertNotEquals(0, userMock.getCoins());
+        assertNotEquals(0, userMock.getElo());
+        assertNotEquals(10, userMock.getWins());
+        assertNotEquals(20, userMock.getLosses());
     }
 
     @Test
@@ -63,8 +71,8 @@ class DatabaseUserRepositoryTest {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image");
-        User updatedUser = new User("id", "username", "newPassword", "newBio", "image");
+        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id", "username", "newPassword", "newBio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
@@ -82,6 +90,10 @@ class DatabaseUserRepositoryTest {
         assertEquals("newPassword", userMock.getPassword());
         assertEquals("newBio", userMock.getBio());
         assertEquals("image", userMock.getImage());
+        assertEquals(20, userMock.getCoins());
+        assertEquals(100, userMock.getElo());
+        assertEquals(0, userMock.getWins());
+        assertEquals(0, userMock.getLosses());
     }
 
     @Test
@@ -89,8 +101,8 @@ class DatabaseUserRepositoryTest {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image");
-        User updatedUser = new User("id", "username", "newPassword", "newBio", "image");
+        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id", "username", "newPassword", "newBio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
@@ -108,5 +120,9 @@ class DatabaseUserRepositoryTest {
         assertNotEquals("password", userMock.getPassword());
         assertNotEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
+        assertEquals(20, userMock.getCoins());
+        assertEquals(100, userMock.getElo());
+        assertEquals(0, userMock.getWins());
+        assertEquals(0, userMock.getLosses());
     }
 }

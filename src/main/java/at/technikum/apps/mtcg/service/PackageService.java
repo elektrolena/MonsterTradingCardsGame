@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class PackageService {
@@ -24,22 +25,25 @@ public class PackageService {
     public boolean save(Card[] cards) {
 
         for(Card card : cards) {
-            if(this.databaseCardRepository.findWithId(card.getId()).isPresent()) {
+            Optional<Card> existingCard = this.databaseCardRepository.findWithId(card.getId());
+            if (existingCard.isPresent()) {
                 return false;
             }
         }
 
-        Package cardPackage = new Package();
-        cardPackage.setId(UUID.randomUUID().toString());
-        cardPackage.setPrice(5);
+        if (cards.length > 0) {
+            Package cardPackage = new Package();
+            cardPackage.setId(UUID.randomUUID().toString());
+            cardPackage.setPrice(5);
 
-        this.databasePackageRepository.savePackage(cardPackage);
+            this.databasePackageRepository.savePackage(cardPackage);
 
-        for (Card card : cards) {
-            card.setPackageId(cardPackage.getId());
-            this.databaseCardRepository.save(card);
+            for (Card card : cards) {
+                card.setPackageId(cardPackage.getId());
+                this.databaseCardRepository.save(card);
+            }
+            return true;
         }
-
-        return true;
+        return false;
     }
 }

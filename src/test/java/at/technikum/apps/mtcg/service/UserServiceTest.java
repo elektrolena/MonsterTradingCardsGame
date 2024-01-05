@@ -14,8 +14,8 @@ public class UserServiceTest {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User originalUser = new User("id","username", "password", "bio", "image");
-        User updatedUser = new User("id","username", "newPassword", "newBio", "newImage");
+        User originalUser = new User("id","username", "password", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id","username", "newPassword", "newBio", "newImage", 20, 100, 0, 0);
 
         when(userRepository.update(updatedUser)).thenReturn(updatedUser);
 
@@ -28,15 +28,19 @@ public class UserServiceTest {
         assertEquals("newPassword", originalUser.getPassword());
         assertEquals("newBio", originalUser.getBio());
         assertEquals("newImage", originalUser.getImage());
+        assertEquals(20, originalUser.getCoins());
+        assertEquals(100, originalUser.getElo());
+        assertEquals(0, originalUser.getWins());
+        assertEquals(0, originalUser.getLosses());
     }
 
     @Test
-    public void shouldNotUpdateId_whenUpdateUser() {
+    public void shouldNotUpdateIdCoinsWinsLosses_whenUpdateUser() {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User originalUser = new User("id","username", "password", "bio", "image");
-        User updatedUser = new User("newId","username", "newPassword", "newBio", "newImage");
+        User originalUser = new User("id","username", "password", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("newId","username", "newPassword", "newBio", "newImage", 0, 500, 10, 5);
 
         when(userRepository.update(updatedUser)).thenReturn(updatedUser);
 
@@ -49,6 +53,10 @@ public class UserServiceTest {
         assertEquals("newPassword", originalUser.getPassword());
         assertEquals("newBio", originalUser.getBio());
         assertEquals("newImage", originalUser.getImage());
+        assertEquals(20, originalUser.getCoins());
+        assertEquals(100, originalUser.getElo());
+        assertEquals(0, originalUser.getWins());
+        assertEquals(0, originalUser.getLosses());
     }
 
     @Test
@@ -56,8 +64,8 @@ public class UserServiceTest {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User user = new User("","username", "password", "bio", "image");
-        User updatedUser = new User("id","username", "newPassword", "newBio", "newImage");
+        User user = new User("","username", "password", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id","username", "newPassword", "newBio", "newImage", 20, 100, 0, 0);
 
         // Act
         userService.update(user, updatedUser);
@@ -71,7 +79,7 @@ public class UserServiceTest {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User user = new User("","username", "password", "bio", "image");
+        User user = new User("","username", "password", "bio", "image", 20, 100, 0, 0);
 
         when(userRepository.save(user)).thenReturn(user);
 
@@ -84,13 +92,17 @@ public class UserServiceTest {
         assertEquals("password", savedUser.getPassword());
         assertEquals("bio", savedUser.getBio());
         assertEquals("image", savedUser.getImage());
+        assertEquals(20, savedUser.getCoins());
+        assertEquals(100, savedUser.getElo());
+        assertEquals(0, savedUser.getWins());
+        assertEquals(0, savedUser.getLosses());
     }
     @Test
     void shouldCallUserRepository_whenSaveUser() {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
-        User user = new User("","username", "password", "bio", "image");
+        User user = new User("","username", "password", "bio", "image", 20, 100, 0, 0);
 
         // Act
         userService.save(user);
