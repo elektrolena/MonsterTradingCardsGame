@@ -24,6 +24,7 @@ public class MtcgApp implements ServerApplication {
         controllers.add(new DeckController());
         controllers.add(new StatsController());
         controllers.add(new BattleController());
+        controllers.add(new TradingController());
 
         DatabaseUserRepository userRepository = new DatabaseUserRepository();
         userRepository.deleteTokens();
