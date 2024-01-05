@@ -15,6 +15,16 @@ public class Card {
         this.id = id;
     }
 
+    public Card(String id, String name, String element, int damage, int inDeck, String ownerId, String packageId) {
+        this.id = id;
+        this.name = name;
+        this.element = element;
+        this.damage = damage;
+        this.inDeck = inDeck;
+        this.ownerId = ownerId;
+        this.packageId = packageId;
+    }
+
     public String getId() {
         return id;
     }
