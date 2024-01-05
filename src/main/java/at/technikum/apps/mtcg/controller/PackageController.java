@@ -37,7 +37,7 @@ public class PackageController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response createPackage(Request request) {
+    Response createPackage(Request request) {
         Optional <User> optionalUser = checkForAuthorizedRequest(request, this.userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

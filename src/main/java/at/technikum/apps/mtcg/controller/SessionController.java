@@ -32,7 +32,7 @@ public class SessionController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response start(Request request) {
+    Response start(Request request) {
         User user = this.parser.getUserFromBody(request);
 
         Optional<User> foundUser = sessionService.login(user);
