@@ -2,7 +2,6 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Card;
-import at.technikum.apps.mtcg.entity.Package;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +20,7 @@ public class DatabaseCardRepository {
     private final String GET_DECK = "SELECT * FROM cards WHERE in_deck = 1 AND ownerId_fk = ?";
     private final String CHECK_FOR_OWNERSHIP = "SELECT * FROM cards WHERE id = ? AND ownerId_fk = ?";
     private final String ADD_CARD_TO_DECK = "UPDATE cards SET in_deck = 1 WHERE id = ?";
+    private final String IS_IN_DECK_SQL = "SELECT * FROM cards WHERE id = ? AND in_deck = 1";
 
     private final Database database = new Database();
 
@@ -175,6 +175,21 @@ public class DatabaseCardRepository {
         } catch (SQLException e) {
 
         }
+    }
+
+    public boolean isInDeck(String cardId) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(IS_IN_DECK_SQL)
+        ) {
+            pstmt.setString(1, cardId);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+
+        }
+        return false;
     }
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {

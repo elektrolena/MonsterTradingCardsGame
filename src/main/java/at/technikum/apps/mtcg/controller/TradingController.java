@@ -2,6 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseTradingRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.TradingService;
@@ -21,12 +22,12 @@ public class TradingController extends Controller {
 
     public TradingController() {
         this.userService = new UserService(new DatabaseUserRepository());
-        this.tradingService = new TradingService(new DatabaseTradingRepository());
+        this.tradingService = new TradingService(new DatabaseCardRepository(), new DatabaseTradingRepository());
     }
 
     @Override
     public boolean supports(String route) {
-        return route.equals("/tradings") || route.equals("/tradings/\\w+");
+        return route.equals("/tradings") || route.equals("/tradings/^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$");
     }
 
     @Override
@@ -41,13 +42,14 @@ public class TradingController extends Controller {
             if(request.getMethod().equals("GET")){
                 return getOpenTradingDeals();
             } else if(request.getMethod().equals("POST")) {
-                return createTradingDeal(request, user);
+                return openTradingDeal(request, user);
             }
-        } else if(request.getRoute().equals("/tradings/\\w+")) {
+        } else if(request.getRoute().equals("/tradings/^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            String tradeDealId = extractLastRoutePart(request.getRoute());
             if(request.getMethod().equals("DELETE")) {
-                return deleteTradingDeal(request, user);
+                return deleteTradingDeal(request, user, tradeDealId);
             } else if(request.getMethod().equals("POST")) {
-                return finishTradingDeal(request, user);
+                return finishTradingDeal(request, user, tradeDealId);
             }
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
@@ -61,15 +63,24 @@ public class TradingController extends Controller {
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getTradingDeals(openTradingDeals.get()));
     }
 
-    private Response createTradingDeal(Request request, User user) {
+    private Response openTradingDeal(Request request, User user) {
+        switch(this.tradingService.openTradingDeal(this.parser.getTradingDealFromBody(request), user)) {
+            case 201:
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.CREATED, "Trading deal successfully created.");
+            case 403:
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "The deal contains a card that is not owned by the user or locked in the deck.");
+            case 409:
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, "A deal with this deal ID already exists.");
+            default:
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
+        }
+    }
+
+    private Response deleteTradingDeal(Request request, User user, String tradeDealId) {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response deleteTradingDeal(Request request, User user) {
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
-    }
-
-    private Response finishTradingDeal(Request request, User user) {
+    private Response finishTradingDeal(Request request, User user, String tradeDealId) {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 }
