@@ -1,21 +1,27 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.repository.DatabaseTradingRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.service.TradingService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.util.List;
 import java.util.Optional;
 
 public class TradingController extends Controller {
 
     private final UserService userService;
+    private final TradingService tradingService;
 
     public TradingController() {
         this.userService = new UserService(new DatabaseUserRepository());
+        this.tradingService = new TradingService(new DatabaseTradingRepository());
     }
 
     @Override
@@ -33,7 +39,7 @@ public class TradingController extends Controller {
 
         if(request.getRoute().equals("/tradings")){
             if(request.getMethod().equals("GET")){
-                return getOpenTradingDeals(request, user);
+                return getOpenTradingDeals();
             } else if(request.getMethod().equals("POST")) {
                 return createTradingDeal(request, user);
             }
@@ -47,9 +53,12 @@ public class TradingController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response getOpenTradingDeals(Request request, User user) {
-
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
+    private Response getOpenTradingDeals() {
+        Optional<List<TradingDeal>> openTradingDeals = this.tradingService.getAllTradingDeals();
+        if(openTradingDeals.isEmpty()) {
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, "The request was fine, but there are no trading deals available.");
+        }
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getTradingDeals(openTradingDeals.get()));
     }
 
     private Response createTradingDeal(Request request, User user) {

@@ -24,7 +24,6 @@ public class DatabaseCardRepository {
 
     private final Database database = new Database();
 
-
     public void save(Card card) {
         try (
                 Connection con = database.getConnection();

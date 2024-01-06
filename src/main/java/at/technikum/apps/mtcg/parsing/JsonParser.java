@@ -1,6 +1,7 @@
 package at.technikum.apps.mtcg.parsing;
 
 import at.technikum.apps.mtcg.entity.Card;
+import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.server.http.Request;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,6 +38,18 @@ public class JsonParser {
         return cards;
     }
 
+    public TradingDeal getTradingDealFromBody(Request request) {
+        ObjectMapper objectmapper = new ObjectMapper();
+        TradingDeal tradingDeal = null;
+        try {
+            tradingDeal = objectmapper.readValue(request.getBody(), TradingDeal.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return tradingDeal;
+    }
+
     public String getUserCredentials(User user) {
         return convertStringToJson(createUserCredentialsString(user));
     }
@@ -49,6 +62,10 @@ public class JsonParser {
         return convertStringToJson(createUserStatsString(user));
     }
 
+    public String getUsers(List<User> users) {
+        return convertStringToJson(createUserStatsArrayString(users));
+    }
+
     public String getCards(List<Card> cards) {
         return convertStringToJson(createCardArrayString(cards));
     }
@@ -56,8 +73,9 @@ public class JsonParser {
     public String getCardsPlain(List<Card> cards) {
         return createCardArrayString(cards);
     }
-    public String getUsers(List<User> users) {
-        return convertStringToJson(createUserStatsArrayString(users));
+
+    public String getTradingDeals(List<TradingDeal> tradingDeals) {
+        return convertStringToJson(createTradingsArrayString(tradingDeals));
     }
 
     private String createUserCredentialsString(User user) {
@@ -95,6 +113,19 @@ public class JsonParser {
         }
 
         return cardString.toString();
+    }
+
+    private String createTradingsArrayString(List<TradingDeal> tradings) {
+        StringBuilder tradingString = new StringBuilder();
+
+        for(TradingDeal tradingDeal : tradings) {
+            tradingString.append("TradingId: ").append(tradingDeal.getId()).append("\n");
+            tradingString.append("CardToTrade: ").append(tradingDeal.getCardId()).append("\n");
+            tradingString.append("Type: ").append(tradingDeal.getDesiredType()).append("\n");
+            tradingString.append("MinimumDamage: ").append(tradingDeal.getDesiredDamage()).append("\n\n");
+        }
+
+        return tradingString.toString();
     }
 
     private String convertStringToJson(String inputString) {

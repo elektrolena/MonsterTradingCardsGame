@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS tradings (
     userId_fk VARCHAR(255),
     cardId_fk VARCHAR(255),
     desiredType VARCHAR(255),
-    desiredDamage VARCHAR(255),
+    desiredDamage INT,
     FOREIGN KEY (cardId_fk) REFERENCES cards(id) ON DELETE CASCADE,
     FOREIGN KEY (userId_fk) REFERENCES users(id) ON DELETE CASCADE
 );
