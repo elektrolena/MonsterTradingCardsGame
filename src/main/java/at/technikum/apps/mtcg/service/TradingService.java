@@ -2,10 +2,12 @@ package at.technikum.apps.mtcg.service;
 
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseTradingRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class TradingService {
@@ -30,5 +32,22 @@ public class TradingService {
         this.databaseTradingRepository.saveTradingDeal(tradingDeal);
 
         return 201;
+    }
+
+    public int deleteOpenTradingDeal(String tradingDealId, User user) {
+        Optional<TradingDeal> foundDeal = this.databaseTradingRepository.getTradingDeal(tradingDealId);
+        if(foundDeal.isEmpty()) {
+            return 404;
+        }
+        TradingDeal tradingDeal = foundDeal.get();
+        if(!Objects.equals(tradingDeal.getUserId(), user.getId())) {
+            return 403;
+        }
+        this.databaseTradingRepository.deleteTradingDeal(tradingDealId);
+        return 200;
+    }
+
+    public int finishTradingDeal(Card offeredCard, User offeringUser, String tradeDealId) {
+        return 200;
     }
 }

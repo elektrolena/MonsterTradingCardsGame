@@ -25,6 +25,19 @@ public class JsonParser {
         return user;
     }
 
+    public Card getCardFromBody(Request request) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Card cards = null;
+        try {
+            JsonNode jsonNode = objectMapper.readTree(request.getBody());
+            cards = objectMapper.treeToValue(jsonNode, Card.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return cards;
+    }
+
     public Card[] getCardsFromBody(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
         Card[] cards = null;

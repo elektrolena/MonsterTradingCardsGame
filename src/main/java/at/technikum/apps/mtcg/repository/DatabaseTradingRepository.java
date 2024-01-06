@@ -1,6 +1,7 @@
 package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
+import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.TradingDeal;
 
 import java.sql.Connection;
@@ -13,8 +14,10 @@ import java.util.Optional;
 
 public class DatabaseTradingRepository {
     private final String GET_ALL_TRADINGDEALS_SQL = "SELECT * FROM tradings";
+    private final String GET_TRADINGDEAL_SQL = "SELECT * FROM tradings WHERE id = ?";
     private final String DOES_TRADING_DEAL_EXIST_SQL = "SELECT * FROM tradings WHERE id = ?";
     private final String SAVE_TRADING_DEAL_SQL = "INSERT INTO tradings(id, userId_fk, cardId_fk, desiredType, desiredDamage) VALUES (?, ?, ?, ?, ?)";
+    private final String DELETE_TRADING_DEAL_SQL = "DELETE FROM tradings WHERE id = ?";
     private final Database database = new Database();
 
     public Optional<List<TradingDeal>> getAllTradingDeals() {
@@ -34,6 +37,26 @@ public class DatabaseTradingRepository {
         }
 
         return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
+    }
+
+    public Optional<TradingDeal> getTradingDeal(String tradingDealId) {
+        Optional<TradingDeal> tradingDeal = Optional.empty();
+
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(GET_TRADINGDEAL_SQL)
+        ) {
+            pstmt.setString(1, tradingDealId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    TradingDeal foundDeal= mapResultSetToTradingDeal(rs);
+                    tradingDeal = Optional.of(foundDeal);
+                }
+            }
+        } catch (SQLException e) {
+
+        }
+        return tradingDeal;
     }
 
     public boolean doesTradingDealExist(String tradingDealId) {
@@ -64,6 +87,19 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
+
+        }
+    }
+
+    public void deleteTradingDeal(String tradingDealId) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(DELETE_TRADING_DEAL_SQL)
+        ) {
+            pstmt.setString(1, tradingDealId);
+
+            pstmt.execute();
+        } catch(SQLException e) {
 
         }
     }
