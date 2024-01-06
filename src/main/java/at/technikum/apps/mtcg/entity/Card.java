@@ -4,6 +4,7 @@ public class Card {
     private String id;
     private String name;
     private String element;
+    private String type;
     private int damage;
     private int inDeck;
     private String ownerId;
@@ -15,10 +16,11 @@ public class Card {
         this.id = id;
     }
 
-    public Card(String id, String name, String element, int damage, int inDeck, String ownerId, String packageId) {
+    public Card(String id, String name, String element, String type, int damage, int inDeck, String ownerId, String packageId) {
         this.id = id;
         this.name = name;
         this.element = element;
+        this.type = type;
         this.damage = damage;
         this.inDeck = inDeck;
         this.ownerId = ownerId;
@@ -47,6 +49,14 @@ public class Card {
 
     public void setElement(String element) {
         this.element = element;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getDamage() {
@@ -80,5 +90,4 @@ public class Card {
     public void setPackageId(String packageId) {
         this.packageId = packageId;
     }
-
 }

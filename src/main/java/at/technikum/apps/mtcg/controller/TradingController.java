@@ -48,6 +48,7 @@ public class TradingController extends Controller {
     }
 
     private Response getOpenTradingDeals(Request request, User user) {
+
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 

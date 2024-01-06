@@ -21,7 +21,7 @@ public class PackageServiceTest {
         PackageService packageService = new PackageService(databaseCardRepository, databasePackageRepository);
 
         Card[] cards = new Card[1];
-        Card card = new Card("id", "name", "element", 50, 1, "ownerId", "packageId");
+        Card card = new Card("id", "name", "element", "type", 50, 1, "ownerId", "packageId");
         cards[0] = card;
 
         when(databaseCardRepository.findWithId(card.getId())).thenReturn(Optional.empty());
@@ -41,7 +41,7 @@ public class PackageServiceTest {
         PackageService packageService = new PackageService(databaseCardRepository, databasePackageRepository);
 
         Card[] cards = new Card[1];
-        Card card = new Card("id", "name", "element", 50, 1, "ownerId", "packageId");
+        Card card = new Card("id", "name", "element", "type", 50, 1, "ownerId", "packageId");
         cards[0] = card;
         
         when(databaseCardRepository.findWithId(card.getId())).thenReturn(Optional.of(card));

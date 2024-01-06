@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class DatabaseCardRepository {
     private final String FIND_WITH_ID_SQL = "SELECT * FROM cards WHERE id = ?";
-    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, type, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private final String GET_CARDS_FROM_PACKAGE_SQL = "SELECT * FROM cards WHERE packageId_fk = ? LIMIT 5";
     private final String GET_CARDS_FROM_USER_SQL = "SELECT * FROM cards WHERE ownerId_fk = ?";
     private final String UPDATE_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
@@ -33,10 +33,11 @@ public class DatabaseCardRepository {
             pstmt.setString(1, card.getId());
             pstmt.setString(2, card.getName());
             pstmt.setString(3, card.getElement());
-            pstmt.setInt(4, card.getDamage());
-            pstmt.setInt(5, card.getInDeck());
-            pstmt.setString(6, card.getOwnerId());
-            pstmt.setString(7, card.getPackageId());
+            pstmt.setString(4, card.getType());
+            pstmt.setInt(5, card.getDamage());
+            pstmt.setInt(6, card.getInDeck());
+            pstmt.setString(7, card.getOwnerId());
+            pstmt.setString(8, card.getPackageId());
 
             pstmt.execute();
         } catch (SQLException e) {
@@ -179,9 +180,10 @@ public class DatabaseCardRepository {
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         Card card = new Card();
-        card.setId((rs.getString("id")));
-        card.setName((rs.getString("name")));
+        card.setId(rs.getString("id"));
+        card.setName(rs.getString("name"));
         card.setElement(rs.getString("element"));
+        card.setType(rs.getString("type"));
         card.setDamage(rs.getInt("damage"));
         card.setInDeck(rs.getInt("in_deck"));
         card.setOwnerId(rs.getString("ownerId_fk"));
