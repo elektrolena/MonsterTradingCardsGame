@@ -47,7 +47,18 @@ public class TradingService {
         return 200;
     }
 
-    public int finishTradingDeal(Card offeredCard, User offeringUser, String tradeDealId) {
+    public int finishTradingDeal(Card offeredCard, User offeringUser, String tradingDealId) {
+        Optional<TradingDeal> foundDeal = this.databaseTradingRepository.getTradingDeal(tradingDealId);
+        if(foundDeal.isEmpty()) {
+            return 404;
+        }
+        TradingDeal tradingDeal = foundDeal.get();
+        if(this.databaseCardRepository.checkForOwnership(offeredCard.getId(), offeringUser.getId()).isEmpty() || this.databaseCardRepository.isInDeck(offeredCard.getId()) || Objects.equals(offeringUser.getId(), tradingDeal.getUserId()) || !Objects.equals(offeredCard.getType(), tradingDeal.getDesiredType()) || !Objects.equals(offeredCard.getDamage(), tradingDeal.getDesiredDamage())) {
+            return 403;
+        }
+        this.databaseCardRepository.updateCardOwner(offeredCard.getId(), tradingDeal.getUserId());
+        this.databaseCardRepository.updateCardOwner(tradingDeal.getCardId(), offeringUser.getId());
+        this.databaseTradingRepository.deleteTradingDeal(tradingDealId);
         return 200;
     }
 }

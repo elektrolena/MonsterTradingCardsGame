@@ -1,7 +1,6 @@
 package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
-import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.TradingDeal;
 
 import java.sql.Connection;
@@ -33,7 +32,7 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-            // Handle SQLException
+            e.printStackTrace();
         }
 
         return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
@@ -54,7 +53,7 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return tradingDeal;
     }
@@ -69,7 +68,7 @@ public class DatabaseTradingRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return false;
     }
@@ -87,7 +86,7 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -100,7 +99,7 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch(SQLException e) {
-
+            e.printStackTrace();
         }
     }
 

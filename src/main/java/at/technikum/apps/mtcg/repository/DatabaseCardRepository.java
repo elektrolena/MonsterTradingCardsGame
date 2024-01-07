@@ -16,7 +16,7 @@ public class DatabaseCardRepository {
     private final String SAVE_SQL = "INSERT INTO cards(id, name, element, type, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private final String GET_CARDS_FROM_PACKAGE_SQL = "SELECT * FROM cards WHERE packageId_fk = ? LIMIT 5";
     private final String GET_CARDS_FROM_USER_SQL = "SELECT * FROM cards WHERE ownerId_fk = ?";
-    private final String UPDATE_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
+    private final String UPDATE_CARD_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
     private final String GET_DECK = "SELECT * FROM cards WHERE in_deck = 1 AND ownerId_fk = ?";
     private final String CHECK_FOR_OWNERSHIP = "SELECT * FROM cards WHERE id = ? AND ownerId_fk = ?";
     private final String ADD_CARD_TO_DECK = "UPDATE cards SET in_deck = 1 WHERE id = ?";
@@ -40,7 +40,7 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -59,7 +59,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return card;
     }
@@ -81,7 +81,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return cards;
     }
@@ -101,25 +101,23 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            // Handle SQLException
+            e.printStackTrace();
         }
 
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
+    public void updateCardOwner(String cardId, String userId) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(UPDATE_CARD_OWNER_SQL)
+        ) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, cardId);
 
-    public void updateCardsOwner(List<Card> cards, String userId) {
-        try (Connection con = database.getConnection()) {
-            for (Card card : cards) {
-                try (PreparedStatement pstmt = con.prepareStatement(UPDATE_OWNER_SQL)) {
-                    pstmt.setString(1, userId);
-                    pstmt.setString(2, card.getId());
-
-                    pstmt.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            // Handle SQLException
+            pstmt.execute();
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -137,7 +135,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
@@ -159,7 +157,7 @@ public class DatabaseCardRepository {
             }
 
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return card;
     }
@@ -173,7 +171,7 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -187,7 +185,7 @@ public class DatabaseCardRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return false;
     }
