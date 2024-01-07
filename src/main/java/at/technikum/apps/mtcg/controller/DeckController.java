@@ -2,8 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
@@ -16,10 +15,10 @@ public class DeckController extends Controller {
     private final DeckService deckService;
     private final UserService userService;
 
-    public DeckController() {
-        super();
-        this.deckService = new DeckService(new DatabaseCardRepository());
-        this.userService = new UserService(new DatabaseUserRepository());
+    public DeckController(JsonParser parser, DeckService deckService, UserService userService) {
+        super(parser);
+        this.deckService = deckService;
+        this.userService = userService;
     }
 
     @Override

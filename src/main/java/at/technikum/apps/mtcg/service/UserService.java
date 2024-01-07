@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.service;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.entity.User;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,11 @@ public class UserService {
             user.setImage(updatedUser.getImage());
         }
 
-        return databaseUserRepository.update(user);
+        try {
+            return databaseUserRepository.update(user);
+        } catch(SQLException e) {
+            return null;
+        }
     }
 
     public void updateCoins(String userId, int sum) {

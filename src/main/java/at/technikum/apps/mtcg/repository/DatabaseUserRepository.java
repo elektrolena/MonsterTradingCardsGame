@@ -1,7 +1,6 @@
 package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
-import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 
 import java.sql.Connection;
@@ -103,7 +102,7 @@ public class DatabaseUserRepository {
         return user;
     }
 
-    public User update(User user) {
+    public User update(User user) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL)
@@ -116,7 +115,7 @@ public class DatabaseUserRepository {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
 
         return user;

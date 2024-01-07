@@ -1,4 +1,7 @@
 package at.technikum.apps.mtcg.controller;
+import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.TransactionService;
+import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
@@ -12,7 +15,9 @@ public class UserControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidUserRoute() {
         // Arrange
-        UserController userController = new UserController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(parser, userService);
         String firstRoute = "/users";
         String secondRoute = "/users/username";
         boolean doesSupportFirstRoute = false;
@@ -30,7 +35,9 @@ public class UserControllerTest {
     @Test
     public void shouldNotSupportRoute_WhenInvalidUserRoute() {
         // Arrange
-        UserController userController = new UserController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(parser, userService);
         String route = "/sessions";
         boolean doesSupport = false;
 
@@ -44,7 +51,9 @@ public class UserControllerTest {
     @Test
     public void shouldSupportRequestMethod_WhenValidUserMethod() {
         // Arrange
-        UserController userController = spy(new UserController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        UserController userController = spy(new UserController(parser, userService));
         Request getRequest = mock(Request.class);
         Request putRequest = mock(Request.class);
         Request postRequest = mock(Request.class);
@@ -78,7 +87,9 @@ public class UserControllerTest {
     @Test
     public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() {
         // Arrange
-        UserController userController = spy(new UserController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        UserController userController = spy(new UserController(parser, userService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
         String username = "username";

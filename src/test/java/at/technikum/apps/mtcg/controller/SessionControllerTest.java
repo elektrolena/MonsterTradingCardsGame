@@ -1,5 +1,7 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.SessionService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,9 @@ public class SessionControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidSessionRoute() {
         // Arrange
-        SessionController sessionController = new SessionController();
+        JsonParser parser = mock(JsonParser.class);
+        SessionService sessionService = mock(SessionService.class);
+        SessionController sessionController = new SessionController(parser, sessionService);
         String route = "/sessions";
         boolean doesSupport = false;
 
@@ -26,7 +30,9 @@ public class SessionControllerTest {
     @Test
     public void shouldNotSupportRoute_WhenInvalidSessionRoute() {
         // Arrange
-        SessionController sessionController = new SessionController();
+        JsonParser parser = mock(JsonParser.class);
+        SessionService sessionService = mock(SessionService.class);
+        SessionController sessionController = new SessionController(parser, sessionService);
         String route = "/users";
         boolean doesSupport = false;
 
@@ -40,7 +46,9 @@ public class SessionControllerTest {
     @Test
     public void shouldSupportRequestMethod_WhenValidSessionMethod() {
         // Arrange
-        SessionController sessionController = spy(new SessionController());
+        JsonParser parser = mock(JsonParser.class);
+        SessionService sessionService = mock(SessionService.class);
+        SessionController sessionController = spy(new SessionController(parser, sessionService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
@@ -58,7 +66,9 @@ public class SessionControllerTest {
     @Test
     public void shouldNotSupportRequestMethod_WhenInValidSessionMethod() {
         // Arrange
-        SessionController sessionController = spy(new SessionController());
+        JsonParser parser = mock(JsonParser.class);
+        SessionService sessionService = mock(SessionService.class);
+        SessionController sessionController = spy(new SessionController(parser, sessionService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

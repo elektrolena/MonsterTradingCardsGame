@@ -2,9 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
-import at.technikum.apps.mtcg.repository.DatabaseTradingRepository;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.TradingService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
@@ -17,9 +15,10 @@ public class TradingController extends Controller {
     private final UserService userService;
     private final TradingService tradingService;
 
-    public TradingController() {
-        this.userService = new UserService(new DatabaseUserRepository());
-        this.tradingService = new TradingService(new DatabaseCardRepository(), new DatabaseTradingRepository());
+    public TradingController(JsonParser parser, UserService userService, TradingService tradingService) {
+        super(parser);
+        this.userService = userService;
+        this.tradingService = tradingService;
     }
 
     @Override

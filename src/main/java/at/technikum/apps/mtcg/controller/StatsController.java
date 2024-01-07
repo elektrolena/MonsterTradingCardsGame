@@ -1,7 +1,7 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
@@ -14,9 +14,9 @@ public class StatsController extends Controller {
 
     private final UserService userService;
 
-    public StatsController() {
-        super();
-        this.userService = new UserService(new DatabaseUserRepository());
+    public StatsController(JsonParser parser, UserService userService) {
+        super(parser);
+        this.userService = userService;
     }
 
     @Override

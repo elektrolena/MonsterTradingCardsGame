@@ -1,7 +1,7 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
@@ -12,9 +12,9 @@ public class UserController extends Controller {
 
     private final UserService userService;
 
-    public UserController() {
-        super();
-        this.userService = new UserService(new DatabaseUserRepository());
+    public UserController(JsonParser parser, UserService userService) {
+        super(parser);
+        this.userService = userService;
     }
     @Override
     public boolean supports(String route) {
@@ -70,10 +70,11 @@ public class UserController extends Controller {
         if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
+            if(updatedUser != null) {
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
+            }
         }
-
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.INTERNAL_ERROR, HttpStatus.INTERNAL_ERROR.getMessage());
     }
 
     Response create(Request request) {

@@ -1,5 +1,8 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.SessionService;
+import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
@@ -13,7 +16,9 @@ public class StatsControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidStatsRoute() {
         // Arrange
-        StatsController statsController = new StatsController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        StatsController statsController = new StatsController(parser, userService);
         String firstRoute = "/stats";
         String secondRoute = "/scoreboard";
 
@@ -32,7 +37,9 @@ public class StatsControllerTest {
     @Test
     public void shouldNotSupportRoute_WhenInvalidStatsRoute() {
         // Arrange
-        StatsController statsController = new StatsController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        StatsController statsController = new StatsController(parser, userService);
         String route = "/scores";
         boolean doesSupport = false;
 
@@ -46,7 +53,9 @@ public class StatsControllerTest {
     @Test
     public void shouldSupportRequestMethod_WhenValidStatsMethod() {
         // Arrange
-        StatsController statsController = spy(new StatsController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        StatsController statsController = spy(new StatsController(parser, userService));
         Request getStatsRequest = mock(Request.class);
         Request getScoreBoardRequest = mock(Request.class);
         Response response = mock(Response.class);
@@ -72,7 +81,9 @@ public class StatsControllerTest {
     @Test
     public void shouldNotSupportRequestMethod_WhenInValidStatsMethod() {
         // Arrange
-        StatsController statsController = spy(new StatsController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        StatsController statsController = spy(new StatsController(parser, userService));
         Request getStatsRequest = mock(Request.class);
         Request getScoreBoardRequest = mock(Request.class);
         Response response = mock(Response.class);

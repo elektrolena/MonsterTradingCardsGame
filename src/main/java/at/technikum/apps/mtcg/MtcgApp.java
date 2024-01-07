@@ -8,23 +8,16 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MtcgApp implements ServerApplication {
 
-    private List<Controller> controllers = new ArrayList<>();
+    private final List<Controller> controllers;
 
     public MtcgApp() {
-        controllers.add(new UserController());
-        controllers.add(new SessionController());
-        controllers.add(new PackageController());
-        controllers.add(new TransactionController());
-        controllers.add(new CardController());
-        controllers.add(new DeckController());
-        controllers.add(new StatsController());
-        controllers.add(new BattleController());
-        controllers.add(new TradingController());
+        Injector injector = new Injector();
+
+        this.controllers = injector.createController();
 
         DatabaseUserRepository userRepository = new DatabaseUserRepository();
         userRepository.deleteTokens();

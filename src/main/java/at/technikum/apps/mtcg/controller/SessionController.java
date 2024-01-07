@@ -1,7 +1,7 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.SessionService;
 import at.technikum.server.http.*;
 
@@ -11,9 +11,9 @@ public class SessionController extends Controller {
 
     private final SessionService sessionService;
 
-    public SessionController() {
-        super();
-        this.sessionService = new SessionService(new DatabaseUserRepository());
+    public SessionController(JsonParser parser, SessionService sessionService) {
+        super(parser);
+        this.sessionService = sessionService;
     }
 
     @Override

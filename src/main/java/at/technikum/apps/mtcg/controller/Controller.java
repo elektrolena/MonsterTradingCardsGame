@@ -14,8 +14,8 @@ public abstract class Controller {
 
     protected final JsonParser parser;
 
-    protected Controller() {
-        this.parser = new JsonParser();
+    protected Controller(JsonParser parser) {
+        this.parser = parser;
     }
 
     public abstract boolean supports(String route);

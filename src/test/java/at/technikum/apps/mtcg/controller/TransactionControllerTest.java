@@ -1,5 +1,8 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.TransactionService;
+import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
@@ -13,7 +16,10 @@ public class TransactionControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidTransactionRoute() {
         // Arrange
-        TransactionController transactionController = new TransactionController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        TransactionService transactionService = mock(TransactionService.class);
+        TransactionController transactionController = new TransactionController(parser, userService, transactionService);
         String route = "/transactions/packages";
         boolean doesSupport = false;
 
@@ -27,7 +33,10 @@ public class TransactionControllerTest {
     @Test
     public void shouldNotSupportRoute_WhenInvalidTransactionRoute() {
         // Arrange
-        TransactionController transactionController = new TransactionController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        TransactionService transactionService = mock(TransactionService.class);
+        TransactionController transactionController = new TransactionController(parser, userService, transactionService);
         String route = "/packages";
         boolean doesSupport = false;
 
@@ -41,7 +50,10 @@ public class TransactionControllerTest {
     @Test
     public void shouldSupportRequestMethod_WhenValidTransactionMethod() {
         // Arrange
-        TransactionController transactionController = spy(new TransactionController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        TransactionService transactionService = mock(TransactionService.class);
+        TransactionController transactionController = spy(new TransactionController(parser, userService, transactionService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
@@ -59,7 +71,10 @@ public class TransactionControllerTest {
     @Test
     public void shouldNotSupportRequestMethod_WhenInValidTransactionMethod() {
         // Arrange
-        TransactionController transactionController = spy(new TransactionController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        TransactionService transactionService = mock(TransactionService.class);
+        TransactionController transactionController = spy(new TransactionController(parser, userService, transactionService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

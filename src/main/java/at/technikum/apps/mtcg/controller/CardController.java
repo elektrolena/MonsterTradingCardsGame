@@ -2,8 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.CardService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
@@ -16,10 +15,10 @@ public class CardController extends Controller {
     private final UserService userService;
     private final CardService cardService;
 
-    public CardController() {
-        super();
-        this.userService = new UserService(new DatabaseUserRepository());
-        this.cardService = new CardService(new DatabaseCardRepository());
+    public CardController(JsonParser parser, UserService userService, CardService cardService) {
+        super(parser);
+        this.userService = userService;
+        this.cardService = cardService;
     }
 
     @Override
