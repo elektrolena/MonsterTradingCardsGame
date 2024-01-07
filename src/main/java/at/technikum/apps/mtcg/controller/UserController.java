@@ -58,7 +58,6 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    // TODO: add admin access?
     Response update(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
@@ -68,7 +67,7 @@ public class UserController extends Controller {
 
         User currentUser = userOptional.get();
 
-        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
+        if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
