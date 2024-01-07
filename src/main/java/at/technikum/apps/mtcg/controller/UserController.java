@@ -3,10 +3,7 @@ package at.technikum.apps.mtcg.controller;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.UserService;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -45,12 +42,11 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    // TODO: put all the logic into the service
     Response read(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NOT_FOUND_USER.getStatusMessage());
         }
 
         User user = userOptional.get();
@@ -67,7 +63,7 @@ public class UserController extends Controller {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,"User not found in app!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,HttpStatusMessage.NOT_FOUND_USER.getStatusMessage());
         }
 
         User currentUser = userOptional.get();
@@ -88,7 +84,7 @@ public class UserController extends Controller {
         Optional<User> userOptional= userService.findWithUsername(user.getUsername());
 
         if(userOptional.isPresent()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,"User with same username already registered!");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,HttpStatusMessage.ALREADY_EXISTS_USER.getStatusMessage());
         }
 
         user = userService.save(user);

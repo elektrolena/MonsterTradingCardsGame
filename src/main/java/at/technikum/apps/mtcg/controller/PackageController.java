@@ -6,10 +6,7 @@ import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.PackageService;
 import at.technikum.apps.mtcg.service.UserService;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -46,13 +43,13 @@ public class PackageController extends Controller {
         User admin = optionalUser.get();
 
         if(!Objects.equals(admin.getUsername(), "admin")) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "Provided user is not 'admin'.");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_PACKAGE.getStatusMessage());
         }
         if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
             if(this.packageService.save(this.parser.getCardsFromBody(request))) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, "Package and cards successfully created.");
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, HttpStatusMessage.CREATED_PACKAGE.getStatusMessage());
             } else {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, "At least one card in the package already exists.");
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, HttpStatusMessage.ALREADY_EXISTS_PACKAGE.getStatusMessage());
             }
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());

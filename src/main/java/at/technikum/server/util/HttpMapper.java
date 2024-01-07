@@ -22,7 +22,10 @@ public class HttpMapper {
             request.setAuthorizationToken(request.getAuthorizationToken().split(" ")[1]);
         }
 
-        // THOUGHT: don't do the content parsing in this method
+        return parseContent(httpRequest, request);
+    }
+
+    private static Request parseContent(String httpRequest, Request request) {
         String contentLengthHeader = getHttpHeader("Content-Length", httpRequest);
         if (null == contentLengthHeader) {
             return request;
