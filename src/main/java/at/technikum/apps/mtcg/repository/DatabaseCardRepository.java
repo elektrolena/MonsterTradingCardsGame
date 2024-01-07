@@ -2,7 +2,6 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Card;
-import at.technikum.apps.mtcg.entity.Package;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,16 +13,16 @@ import java.util.Optional;
 
 public class DatabaseCardRepository {
     private final String FIND_WITH_ID_SQL = "SELECT * FROM cards WHERE id = ?";
-    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private final String SAVE_SQL = "INSERT INTO cards(id, name, element, type, damage, in_deck, ownerId_fk, packageId_fk) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private final String GET_CARDS_FROM_PACKAGE_SQL = "SELECT * FROM cards WHERE packageId_fk = ? LIMIT 5";
     private final String GET_CARDS_FROM_USER_SQL = "SELECT * FROM cards WHERE ownerId_fk = ?";
-    private final String UPDATE_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
+    private final String UPDATE_CARD_OWNER_SQL = "UPDATE cards SET ownerId_fk = ? WHERE id = ?";
     private final String GET_DECK = "SELECT * FROM cards WHERE in_deck = 1 AND ownerId_fk = ?";
     private final String CHECK_FOR_OWNERSHIP = "SELECT * FROM cards WHERE id = ? AND ownerId_fk = ?";
     private final String ADD_CARD_TO_DECK = "UPDATE cards SET in_deck = 1 WHERE id = ?";
+    private final String IS_IN_DECK_SQL = "SELECT * FROM cards WHERE id = ? AND in_deck = 1";
 
     private final Database database = new Database();
-
 
     public void save(Card card) {
         try (
@@ -33,14 +32,15 @@ public class DatabaseCardRepository {
             pstmt.setString(1, card.getId());
             pstmt.setString(2, card.getName());
             pstmt.setString(3, card.getElement());
-            pstmt.setInt(4, card.getDamage());
-            pstmt.setInt(5, card.getInDeck());
-            pstmt.setString(6, card.getOwnerId());
-            pstmt.setString(7, card.getPackageId());
+            pstmt.setString(4, card.getType());
+            pstmt.setInt(5, card.getDamage());
+            pstmt.setInt(6, card.getInDeck());
+            pstmt.setString(7, card.getOwnerId());
+            pstmt.setString(8, card.getPackageId());
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -59,7 +59,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return card;
     }
@@ -81,7 +81,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return cards;
     }
@@ -101,25 +101,23 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            // Handle SQLException
+            e.printStackTrace();
         }
 
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
+    public void updateCardOwner(String cardId, String userId) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(UPDATE_CARD_OWNER_SQL)
+        ) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, cardId);
 
-    public void updateCardsOwner(List<Card> cards, String userId) {
-        try (Connection con = database.getConnection()) {
-            for (Card card : cards) {
-                try (PreparedStatement pstmt = con.prepareStatement(UPDATE_OWNER_SQL)) {
-                    pstmt.setString(1, userId);
-                    pstmt.setString(2, card.getId());
-
-                    pstmt.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            // Handle SQLException
+            pstmt.execute();
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -137,7 +135,7 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
@@ -159,7 +157,7 @@ public class DatabaseCardRepository {
             }
 
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return card;
     }
@@ -173,15 +171,31 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
+    }
+
+    public boolean isInDeck(String cardId) {
+        try (
+                Connection con = database.getConnection();
+                PreparedStatement pstmt = con.prepareStatement(IS_IN_DECK_SQL)
+        ) {
+            pstmt.setString(1, cardId);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {
         Card card = new Card();
-        card.setId((rs.getString("id")));
-        card.setName((rs.getString("name")));
+        card.setId(rs.getString("id"));
+        card.setName(rs.getString("name"));
         card.setElement(rs.getString("element"));
+        card.setType(rs.getString("type"));
         card.setDamage(rs.getInt("damage"));
         card.setInDeck(rs.getInt("in_deck"));
         card.setOwnerId(rs.getString("ownerId_fk"));

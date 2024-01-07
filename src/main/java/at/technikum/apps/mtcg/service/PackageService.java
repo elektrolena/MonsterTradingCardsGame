@@ -40,10 +40,30 @@ public class PackageService {
 
             for (Card card : cards) {
                 card.setPackageId(cardPackage.getId());
+                card.setElement(parseElementFromName(card.getName()));
+                card.setType(parseTypeFromName(card.getName()));
                 this.databaseCardRepository.save(card);
             }
             return true;
         }
         return false;
+    }
+
+    private String parseElementFromName(String name) {
+        if (name.contains("Water")) {
+            return "water";
+        } else if (name.contains("Fire")) {
+            return "fire";
+        } else {
+            return null;
+        }
+    }
+
+    private String parseTypeFromName(String name) {
+        if(name.contains("Spell")) {
+            return "spell";
+        } else {
+            return "monster";
+        }
     }
 }

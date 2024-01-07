@@ -43,8 +43,7 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            // THOUGHT: how do I handle exceptions (hint: look at the TaskApp)
-
+            e.printStackTrace();
         }
         return user;
     }
@@ -64,7 +63,7 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            return user;
+            e.printStackTrace();
         }
         return user;
     }
@@ -84,7 +83,7 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return user;
     }
@@ -117,7 +116,7 @@ public class DatabaseUserRepository {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            // Handle the exception (log it, throw a runtime exception, etc.)
+            e.printStackTrace();
         }
 
         return user;
@@ -133,7 +132,7 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -154,7 +153,7 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            return userToReturn;
+            e.printStackTrace();
         }
 
         return userToReturn;
@@ -171,7 +170,7 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -182,7 +181,7 @@ public class DatabaseUserRepository {
         ) {
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -199,7 +198,7 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            // Handle SQLException
+            e.printStackTrace();
         }
 
         return users;

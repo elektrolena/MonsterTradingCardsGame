@@ -26,7 +26,7 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.getMessage();
+            e.printStackTrace();
         }
     }
     public Optional<Package> getPackage() {
@@ -43,7 +43,7 @@ public class DatabasePackageRepository {
                 }
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return cardPackage;
     }
@@ -57,7 +57,7 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
