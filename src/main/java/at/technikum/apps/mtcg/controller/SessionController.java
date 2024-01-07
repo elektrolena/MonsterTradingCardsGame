@@ -3,10 +3,7 @@ package at.technikum.apps.mtcg.controller;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.SessionService;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.util.Optional;
 
@@ -41,6 +38,6 @@ public class SessionController extends Controller {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
         }
 
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, "Invalid username/password provided.");
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatusMessage.UNAUTHORIZED_SESSION.getStatusMessage());
     }
 }

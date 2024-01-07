@@ -6,10 +6,7 @@ import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.CardService;
 import at.technikum.apps.mtcg.service.UserService;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +47,7 @@ public class CardController extends Controller {
         if(cards.isPresent()) {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(cards.get()));
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, "The request was fine, but the user doesn't have any cards.");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_CARD.getStatusMessage());
         }
     }
 }

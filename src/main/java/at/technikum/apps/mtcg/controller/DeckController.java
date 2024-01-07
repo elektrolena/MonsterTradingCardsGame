@@ -6,10 +6,7 @@ import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +54,7 @@ public class DeckController extends Controller {
             }
 
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, "The request was fine, but the deck doesn't have any cards.");
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
         }
     }
 
@@ -71,11 +68,11 @@ public class DeckController extends Controller {
 
         switch(this.deckService.updateDeck(user, this.parser.getCardsFromBody(request))) {
             case 200:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, "The deck has been successfully configured.");
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_DECK.getStatusMessage());
             case 400:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, "The provided deck did not include the required amount of cards.");
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatusMessage.BAD_REQUEST_DECK.getStatusMessage());
             case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, "At least one of the provided cards does not belong to the user or is not available.");
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_DECK.getStatusMessage());
             default:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
         }
