@@ -4,13 +4,15 @@ import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
 
     @Test
-    public void shouldUpdateUser_whenUpdateUser() {
+    public void shouldUpdateUser_whenUpdateUser() throws SQLException {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
@@ -35,7 +37,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateIdCoinsWinsLosses_whenUpdateUser() {
+    public void shouldNotUpdateIdCoinsWinsLosses_whenUpdateUser() throws SQLException {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
@@ -60,7 +62,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldCallUserRepository_whenUpdateUser() {
+    void shouldCallUserRepository_whenUpdateUser() throws SQLException {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
@@ -75,7 +77,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldSetUserId_whenSaveUser() {
+    void shouldSetUserId_whenSaveUser() throws SQLException {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);
@@ -98,7 +100,7 @@ public class UserServiceTest {
         assertEquals(0, savedUser.getLosses());
     }
     @Test
-    void shouldCallUserRepository_whenSaveUser() {
+    void shouldCallUserRepository_whenSaveUser() throws SQLException {
         // Arrange
         DatabaseUserRepository userRepository = mock(DatabaseUserRepository.class);
         UserService userService = new UserService(userRepository);

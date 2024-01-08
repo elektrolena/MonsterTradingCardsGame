@@ -8,6 +8,8 @@ import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -50,7 +52,7 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidPackageMethod() {
+    public void shouldSupportRequestMethod_WhenValidPackageMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -71,7 +73,7 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidPackaeMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidPackaeMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

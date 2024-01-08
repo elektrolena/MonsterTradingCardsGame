@@ -7,6 +7,8 @@ import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -51,7 +53,7 @@ public class StatsControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidStatsMethod() {
+    public void shouldSupportRequestMethod_WhenValidStatsMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -79,7 +81,7 @@ public class StatsControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidStatsMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidStatsMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

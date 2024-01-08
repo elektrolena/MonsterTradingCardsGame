@@ -7,6 +7,8 @@ import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -48,7 +50,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidCardMethod() {
+    public void shouldSupportRequestMethod_WhenValidCardMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -69,7 +71,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

@@ -39,20 +39,16 @@ public class BattleController extends Controller {
     }
 
     Response battle(Request request) throws SQLException {
-        try {
-            Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-            if (optionalUser.isEmpty()) {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-            }
-            User user = optionalUser.get();
-            Optional<List<Card>> retrievedDeck = this.deckService.getDeck(user);
-            if (retrievedDeck.isEmpty()) {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
-            }
-            List<Card> deck = retrievedDeck.get();
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.battleService.createBattleLog(user, userService, deck));
-        } catch (Exception e) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.INTERNAL_ERROR, "An internal server error occurred.");
+        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
+        if (optionalUser.isEmpty()) {
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
         }
+        User user = optionalUser.get();
+        Optional<List<Card>> retrievedDeck = this.deckService.getDeck(user);
+        if (retrievedDeck.isEmpty()) {
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
+        }
+        List<Card> deck = retrievedDeck.get();
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.battleService.createBattleLog(user, userService, deck));
     }
 }

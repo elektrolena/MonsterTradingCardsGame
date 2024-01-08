@@ -6,6 +6,8 @@ import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -49,7 +51,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidUserMethod() {
+    public void shouldSupportRequestMethod_WhenValidUserMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -85,7 +87,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

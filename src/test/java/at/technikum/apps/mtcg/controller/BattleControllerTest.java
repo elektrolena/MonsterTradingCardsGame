@@ -8,6 +8,8 @@ import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -22,7 +24,7 @@ public class BattleControllerTest {
         DeckService deckService = mock(DeckService.class);
         BattleService battleService = mock(BattleService.class);
         BattleController battleController = new BattleController(parser, userService, battleService, deckService);
-        String route = "/battle";
+        String route = "/battles";
         boolean doesSupport = false;
 
         // Act
@@ -51,7 +53,7 @@ public class BattleControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidBattleMethod() {
+    public void shouldSupportRequestMethod_WhenValidBattleMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -61,7 +63,7 @@ public class BattleControllerTest {
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
-        when(request.getMethod()).thenReturn("GET");
+        when(request.getMethod()).thenReturn("POST");
 
         doReturn(response).when(battleController).battle(request);
 
@@ -73,7 +75,7 @@ public class BattleControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() throws SQLException {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -83,7 +85,7 @@ public class BattleControllerTest {
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
-        when(request.getMethod()).thenReturn("POST");
+        when(request.getMethod()).thenReturn("GET");
 
         doReturn(response).when(battleController).battle(request);
 
