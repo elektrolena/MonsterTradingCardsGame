@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.service;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class SessionService {
@@ -13,7 +14,7 @@ public class SessionService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> login(User user) {
+    public Optional<User> login(User user) throws SQLException {
         Optional<User> foundUser = databaseUserRepository.validateLogin(user);
 
         if(foundUser.isPresent()) {

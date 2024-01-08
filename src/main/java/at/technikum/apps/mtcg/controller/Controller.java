@@ -8,6 +8,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public abstract class Controller {
@@ -20,7 +21,7 @@ public abstract class Controller {
 
     public abstract boolean supports(String route);
 
-    public abstract Response handle(Request request);
+    public abstract Response handle(Request request) throws SQLException;
 
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();
@@ -32,7 +33,7 @@ public abstract class Controller {
         return response;
     }
 
-    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) {
+    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) throws SQLException {
         if(request.getAuthorizationToken() == null) {
             return Optional.empty();
         }

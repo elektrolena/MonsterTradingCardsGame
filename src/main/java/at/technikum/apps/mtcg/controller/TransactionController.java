@@ -7,6 +7,7 @@ import at.technikum.apps.mtcg.service.TransactionService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionController extends Controller {
@@ -26,14 +27,14 @@ public class TransactionController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws SQLException {
         if(request.getMethod().equals("POST")) {
             return buyPackage(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response buyPackage(Request request) {
+    Response buyPackage(Request request) throws SQLException {
         Optional <User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

@@ -6,6 +6,7 @@ import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionService {
@@ -17,7 +18,7 @@ public class TransactionService {
         this.databasePackageRepository = databasePackageRepository;
     }
 
-    public Optional<Package> buyPackage(User user, UserService userService) {
+    public Optional<Package> buyPackage(User user, UserService userService) throws SQLException {
         Optional<Package> cardPackage = Optional.empty();
         cardPackage = databasePackageRepository.getPackage();
         if(cardPackage.isPresent()) {

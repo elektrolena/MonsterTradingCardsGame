@@ -4,6 +4,7 @@ import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +16,11 @@ public class DeckService {
         this.cardRepository = cardRepository;
     }
 
-    public Optional<List<Card>> getDeck(User user) {
+    public Optional<List<Card>> getDeck(User user) throws SQLException {
         return this.cardRepository.getDeck(user.getId());
     }
 
-    public int updateDeck(User user, Card[] cards) {
+    public int updateDeck(User user, Card[] cards) throws SQLException {
         if(cards.length != 4) {
             return 400;
         }

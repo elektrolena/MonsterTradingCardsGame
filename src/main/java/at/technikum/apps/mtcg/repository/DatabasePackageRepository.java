@@ -16,7 +16,7 @@ public class DatabasePackageRepository {
 
     private final Database database = new Database();
 
-    public void savePackage(Package cardPackage) {
+    public void savePackage(Package cardPackage) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_PACKAGE_SQL)
@@ -26,10 +26,10 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
-    public Optional<Package> getPackage() {
+    public Optional<Package> getPackage() throws SQLException {
         Optional<Package> cardPackage = Optional.empty();
 
         try (
@@ -43,12 +43,12 @@ public class DatabasePackageRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return cardPackage;
     }
 
-    public void deletePackage(String packageId) {
+    public void deletePackage(String packageId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DELETE_PACKAGE_SQL)
@@ -57,7 +57,7 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 

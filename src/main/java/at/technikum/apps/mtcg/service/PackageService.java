@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class PackageService {
         this.databasePackageRepository = databasePackageRepository;
     }
 
-    public boolean save(Card[] cards) {
+    public boolean save(Card[] cards) throws SQLException {
 
         for(Card card : cards) {
             Optional<Card> existingCard = this.databaseCardRepository.findWithId(card.getId());

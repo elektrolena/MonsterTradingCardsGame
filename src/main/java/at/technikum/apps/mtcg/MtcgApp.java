@@ -8,19 +8,18 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MtcgApp implements ServerApplication {
 
-    private final List<Controller> controllers;
+    private List<Controller> controllers = new ArrayList<>();
 
     public MtcgApp() {
         Injector injector = new Injector();
 
         this.controllers = injector.createController();
-
-        DatabaseUserRepository userRepository = new DatabaseUserRepository();
-        userRepository.deleteTokens();
     }
 
     @Override
@@ -31,7 +30,16 @@ public class MtcgApp implements ServerApplication {
                 continue;
             }
 
-            return controller.handle(request);
+            try {
+                return controller.handle(request);
+            } catch(SQLException e) {
+                Response response = new Response();
+                response.setStatus(HttpStatus.INTERNAL_ERROR);
+                response.setContentType(HttpContentType.TEXT_PLAIN);
+                response.setBody("Internal Server Error. Please try again later.");
+
+                return response;
+            }
         }
 
         Response response = new Response();

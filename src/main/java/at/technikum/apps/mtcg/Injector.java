@@ -12,6 +12,7 @@ import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.service.*;
 import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.pbkdf2.Pack;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,7 @@ public class Injector {
     Dependency Injection via constructor injection.
      */
     public List<Controller> createController() {
+
         List<Controller> controllerList = new ArrayList<>();
 
         // battle
@@ -49,6 +51,10 @@ public class Injector {
 
         // JsonParser
         JsonParser jsonParser = new JsonParser();
+
+        // TODO: ask if there is a better place for this
+        // delete all Session Tokens
+        databaseUserRepository.deleteTokens();
 
         // controllers
         controllerList.add(new UserController(jsonParser, userService));

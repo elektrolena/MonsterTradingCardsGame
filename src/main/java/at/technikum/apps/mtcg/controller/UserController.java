@@ -5,6 +5,7 @@ import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,7 +23,7 @@ public class UserController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws SQLException {
         String route = request.getRoute();
 
         if (route.matches("/users/\\w+")) {
@@ -42,7 +43,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response read(String username, Request request) {
+    Response read(String username, Request request) throws SQLException {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -58,7 +59,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    Response update(String username, Request request) {
+    Response update(String username, Request request) throws SQLException {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -77,7 +78,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.INTERNAL_ERROR, HttpStatus.INTERNAL_ERROR.getMessage());
     }
 
-    Response create(Request request) {
+    Response create(Request request) throws SQLException {
 
         User user = this.parser.getUserFromBody(request);
 

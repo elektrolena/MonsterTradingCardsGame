@@ -19,7 +19,7 @@ public class DatabaseTradingRepository {
     private final String DELETE_TRADING_DEAL_SQL = "DELETE FROM tradings WHERE id = ?";
     private final Database database = new Database();
 
-    public Optional<List<TradingDeal>> getAllTradingDeals() {
+    public Optional<List<TradingDeal>> getAllTradingDeals() throws SQLException {
         List<TradingDeal> tradingDeals = new ArrayList<>();
 
         try (
@@ -32,13 +32,13 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
 
         return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
     }
 
-    public Optional<TradingDeal> getTradingDeal(String tradingDealId) {
+    public Optional<TradingDeal> getTradingDeal(String tradingDealId) throws SQLException {
         Optional<TradingDeal> tradingDeal = Optional.empty();
 
         try (
@@ -53,12 +53,12 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return tradingDeal;
     }
 
-    public boolean doesTradingDealExist(String tradingDealId) {
+    public boolean doesTradingDealExist(String tradingDealId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DOES_TRADING_DEAL_EXIST_SQL)
@@ -68,12 +68,11 @@ public class DatabaseTradingRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
-        return false;
     }
 
-    public void saveTradingDeal(TradingDeal tradingDeal) {
+    public void saveTradingDeal(TradingDeal tradingDeal) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_TRADING_DEAL_SQL)
@@ -86,11 +85,11 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public void deleteTradingDeal(String tradingDealId) {
+    public void deleteTradingDeal(String tradingDealId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DELETE_TRADING_DEAL_SQL)
@@ -99,7 +98,7 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch(SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 

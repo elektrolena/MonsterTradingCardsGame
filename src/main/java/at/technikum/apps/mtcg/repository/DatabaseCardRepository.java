@@ -24,7 +24,7 @@ public class DatabaseCardRepository {
 
     private final Database database = new Database();
 
-    public void save(Card card) {
+    public void save(Card card) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
@@ -40,11 +40,11 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public Optional<Card> findWithId(String id) {
+    public Optional<Card> findWithId(String id) throws SQLException {
         Optional<Card> card = Optional.empty();
 
         try (
@@ -59,12 +59,12 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return card;
     }
 
-    public List<Card> getCardsFromPackage(String packageId) {
+    public List<Card> getCardsFromPackage(String packageId) throws SQLException {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -81,12 +81,12 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return cards;
     }
 
-    public Optional<List<Card>> getCardsFromUser(String userId) {
+    public Optional<List<Card>> getCardsFromUser(String userId) throws SQLException {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -101,13 +101,13 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
 
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
-    public void updateCardOwner(String cardId, String userId) {
+    public void updateCardOwner(String cardId, String userId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_CARD_OWNER_SQL)
@@ -117,11 +117,11 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch(SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public Optional<List<Card>> getDeck(String userId) {
+    public Optional<List<Card>> getDeck(String userId) throws SQLException {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -135,12 +135,12 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
-    public Optional<Card> checkForOwnership(String cardId, String userId) {
+    public Optional<Card> checkForOwnership(String cardId, String userId) throws SQLException {
         Optional<Card> card = Optional.empty();
         try (
                 Connection con = database.getConnection();
@@ -157,12 +157,12 @@ public class DatabaseCardRepository {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return card;
     }
 
-    public void addCardToDeck(String cardId) {
+    public void addCardToDeck(String cardId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(ADD_CARD_TO_DECK)
@@ -171,11 +171,11 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public boolean isInDeck(String cardId) {
+    public boolean isInDeck(String cardId) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(IS_IN_DECK_SQL)
@@ -185,9 +185,8 @@ public class DatabaseCardRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
-        return false;
     }
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {

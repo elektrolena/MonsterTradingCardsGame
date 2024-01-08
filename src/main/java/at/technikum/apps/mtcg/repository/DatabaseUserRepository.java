@@ -24,8 +24,7 @@ public class DatabaseUserRepository {
 
     private final Database database = new Database();
 
-    // TODO: Handle SQL Exceptions
-    public User save(User user) {
+    public User save(User user) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
@@ -42,12 +41,12 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return user;
     }
 
-    public Optional<User> findWithUsername(String username) {
+    public Optional<User> findWithUsername(String username) throws SQLException {
         Optional<User> user = Optional.empty();
 
         try (
@@ -62,12 +61,12 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
         return user;
     }
 
-    public Optional<User> findWithToken(String token) {
+    public Optional<User> findWithToken(String token) throws SQLException {
         Optional<User> user = Optional.empty();
 
         try (
@@ -82,23 +81,8 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
-        return user;
-    }
-
-    private User mapResultSetToUser(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getString("id"));
-        user.setToken(rs.getString("token"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setBio(rs.getString("bio"));
-        user.setImage(rs.getString("image"));
-        user.setCoins(rs.getInt("coins"));
-        user.setElo(rs.getInt("elo"));
-        user.setWins(rs.getInt("wins"));
-        user.setLosses(rs.getInt("losses"));
         return user;
     }
 
@@ -121,7 +105,7 @@ public class DatabaseUserRepository {
         return user;
     }
 
-    public void updateCoins(String userId, int sum) {
+    public void updateCoins(String userId, int sum) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_COINS_SQL)
@@ -131,11 +115,11 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    public Optional<User> validateLogin(User user) {
+    public Optional<User> validateLogin(User user) throws SQLException {
         Optional <User> userToReturn = Optional.empty();
 
         try (
@@ -152,13 +136,13 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
 
         return userToReturn;
     }
 
-    public void addToken(User user) {
+    public void addToken(User user) throws SQLException {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(ADD_TOKEN_SQL)
@@ -169,7 +153,7 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
@@ -184,7 +168,7 @@ public class DatabaseUserRepository {
         }
     }
 
-    public List<User> getUserScoreBoard() {
+    public List<User> getUserScoreBoard() throws SQLException {
         List<User> users = new ArrayList<>();
 
         try (
@@ -197,9 +181,24 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
 
         return users;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getString("id"));
+        user.setToken(rs.getString("token"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setBio(rs.getString("bio"));
+        user.setImage(rs.getString("image"));
+        user.setCoins(rs.getInt("coins"));
+        user.setElo(rs.getInt("elo"));
+        user.setWins(rs.getInt("wins"));
+        user.setLosses(rs.getInt("losses"));
+        return user;
     }
 }

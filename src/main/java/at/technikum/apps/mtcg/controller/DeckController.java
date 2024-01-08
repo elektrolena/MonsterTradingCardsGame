@@ -7,6 +7,7 @@ import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class DeckController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws SQLException {
         if(request.getMethod().equals("GET")) {
             return getDeck(request);
         } else if(request.getMethod().equals("PUT")) {
@@ -36,7 +37,7 @@ public class DeckController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response getDeck(Request request) {
+    Response getDeck(Request request) throws SQLException {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -57,7 +58,7 @@ public class DeckController extends Controller {
         }
     }
 
-    Response updateDeck(Request request) {
+    Response updateDeck(Request request) throws SQLException {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

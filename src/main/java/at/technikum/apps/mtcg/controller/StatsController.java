@@ -8,6 +8,7 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class StatsController extends Controller {
@@ -25,7 +26,7 @@ public class StatsController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) {
+    public Response handle(Request request) throws SQLException {
         if(request.getRoute().equals("/stats")) {
             if(request.getMethod().equals("GET")) {
                 return getUserStats(request);
@@ -38,7 +39,7 @@ public class StatsController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response getUserStats(Request request) {
+    Response getUserStats(Request request) throws SQLException {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -48,7 +49,7 @@ public class StatsController extends Controller {
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserStats(user));
     }
 
-    Response getScoreBoard(Request request) {
+    Response getScoreBoard(Request request) throws SQLException {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
