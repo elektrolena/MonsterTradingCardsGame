@@ -53,7 +53,7 @@ public class UserController extends Controller {
         User user = userOptional.get();
 
         if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -67,6 +67,7 @@ public class UserController extends Controller {
         }
 
         User currentUser = userOptional.get();
+        System.out.println(currentUser);
 
         if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);
@@ -75,7 +76,7 @@ public class UserController extends Controller {
                 return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
             }
         }
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.INTERNAL_ERROR, HttpStatus.INTERNAL_ERROR.getMessage());
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
     Response create(Request request) throws SQLException {

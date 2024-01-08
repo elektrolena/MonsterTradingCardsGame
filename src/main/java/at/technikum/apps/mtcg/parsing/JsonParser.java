@@ -96,18 +96,18 @@ public class JsonParser {
     }
 
     private String createUserDataString(User user) {
-        return "Username: " + user.getUsername() + "\nBio: " + user.getBio() + "\nImage: " + user.getImage();
+        return "Name: " + user.getName() + "\nBio: " + user.getBio() + "\nImage: " + user.getImage();
     }
 
     private String createUserStatsString(User user) {
-        return "Username: " + user.getUsername() + "\nElo: " + user.getElo() + "\nWins: " + user.getWins() + "\nLosses: " + user.getLosses();
+        return "Name: " + user.getName() + "\nElo: " + user.getElo() + "\nWins: " + user.getWins() + "\nLosses: " + user.getLosses();
     }
 
     private String createUserStatsArrayString(List<User> users) {
         StringBuilder userString = new StringBuilder();
 
         for (User user : users) {
-            userString.append("Username: ").append(user.getUsername()).append("\n");
+            userString.append("Name: ").append(user.getName()).append("\n");
             userString.append("Elo: ").append(user.getElo()).append("\n");
             userString.append("Wins: ").append(user.getWins()).append("\n");
             userString.append("Losses: ").append(user.getLosses()).append("\n\n");

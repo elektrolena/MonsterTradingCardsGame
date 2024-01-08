@@ -14,8 +14,8 @@ import java.util.Optional;
 public class DatabaseUserRepository {
     private final String FIND_WITH_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
     private final String FIND_WITH_TOKEN_SQL = "SELECT * FROM users WHERE token = ?";
-    private final String SAVE_SQL = "INSERT INTO users(id, username, password, bio, image, coins, elo, wins, losses) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, bio = ?, image = ? WHERE id = ?";
+    private final String SAVE_SQL = "INSERT INTO users(id, username, password, name, bio, image, coins, elo, wins, losses) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private final String UPDATE_SQL = "UPDATE users SET name = ?, password = ?, bio = ?, image = ? WHERE id = ?";
     private final String UPDATE_COINS_SQL = "UPDATE users SET coins = ? WHERE id = ?";
     private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
     private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
@@ -32,12 +32,13 @@ public class DatabaseUserRepository {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getUsername());
             pstmt.setString(3, user.getPassword());
-            pstmt.setString(4, user.getBio());
-            pstmt.setString(5, user.getImage());
-            pstmt.setInt(6, user.getCoins());
-            pstmt.setInt(7, user.getElo());
-            pstmt.setInt(8, user.getWins());
-            pstmt.setInt(9, user.getLosses());
+            pstmt.setString(4, user.getName());
+            pstmt.setString(5, user.getBio());
+            pstmt.setString(6, user.getImage());
+            pstmt.setInt(7, user.getCoins());
+            pstmt.setInt(8, user.getElo());
+            pstmt.setInt(9, user.getWins());
+            pstmt.setInt(10, user.getLosses());
 
             pstmt.execute();
         } catch (SQLException e) {
@@ -91,7 +92,7 @@ public class DatabaseUserRepository {
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL)
         ) {
-            pstmt.setString(1, user.getUsername());
+            pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getPassword());
             pstmt.setString(3, user.getBio());
             pstmt.setString(4, user.getImage());
@@ -164,7 +165,6 @@ public class DatabaseUserRepository {
         ) {
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -193,6 +193,7 @@ public class DatabaseUserRepository {
         user.setToken(rs.getString("token"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
+        user.setName(rs.getString("name"));
         user.setBio(rs.getString("bio"));
         user.setImage(rs.getString("image"));
         user.setCoins(rs.getInt("coins"));

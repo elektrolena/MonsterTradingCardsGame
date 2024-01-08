@@ -27,25 +27,23 @@ public class BattleService {
     }
 
     public String createBattleLog(User user, UserService userService, List<Card> deck) {
+        System.out.println("Test" + user.getUsername());
         if (isUserInQueue(user)) {
             return "You are already in the queue.";
         }
 
-        User otherUser = getOtherUserInQueue();
-        if (otherUser != null) {
-            removeUserFromQueue(otherUser);
-            waitForBattle = false;
-            return this.battle.startBattle(user, otherUser);
-        }
-
-        queueLock.lock();
         addUserToQueue(user, deck);
         waitForBattle = true;
         scheduleRemoval(user);
-        queueLock.unlock();
 
         while(waitForBattle) {
-
+            User otherUser = getOtherUserInQueue();
+            if (otherUser != null) {
+                removeUserFromQueue(user);
+                removeUserFromQueue(otherUser);
+                waitForBattle = false;
+                return this.battle.startBattle(user, otherUser);
+            }
         }
 
         return "No other user has joined the queue in the last 60 seconds.";
@@ -83,8 +81,9 @@ public class BattleService {
     }
 
     private void removeUserFromQueue(User user) {
-        queue.remove(user);
-        waitForBattle = false;
-        System.out.println("User " + user.getUsername() + " removed from the queue after 60 seconds.");
+        if(isUserInQueue(user)) {
+            queue.remove(user);
+            waitForBattle = false;
+        }
     }
 }

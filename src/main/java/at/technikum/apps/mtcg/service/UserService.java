@@ -25,8 +25,8 @@ public class UserService {
     }
 
     public User update(User user, User updatedUser) throws SQLException {
-        if (updatedUser.getUsername() != null) {
-            user.setUsername(updatedUser.getUsername());
+        if (updatedUser.getName() != null) {
+            user.setName(updatedUser.getName());
         }
         if (updatedUser.getPassword() != null) {
             user.setPassword(updatedUser.getPassword());
