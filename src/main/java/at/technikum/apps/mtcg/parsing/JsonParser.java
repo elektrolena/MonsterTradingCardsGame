@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.List;
 
+// TODO: ask if there is a better place for the parser package
 public class JsonParser {
     public User getUserFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();

@@ -2,6 +2,10 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Package;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
+import at.technikum.server.http.HttpStatusException;
+import at.technikum.server.http.HttpStatusMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +20,7 @@ public class DatabasePackageRepository {
 
     private final Database database = new Database();
 
-    public void savePackage(Package cardPackage) throws SQLException {
+    public void savePackage(Package cardPackage) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_PACKAGE_SQL)
@@ -26,10 +30,11 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
-    public Optional<Package> getPackage() throws SQLException {
+    public Optional<Package> getPackage() {
         Optional<Package> cardPackage = Optional.empty();
 
         try (
@@ -43,12 +48,13 @@ public class DatabasePackageRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return cardPackage;
     }
 
-    public void deletePackage(String packageId) throws SQLException {
+    public void deletePackage(String packageId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DELETE_PACKAGE_SQL)
@@ -57,7 +63,8 @@ public class DatabasePackageRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 

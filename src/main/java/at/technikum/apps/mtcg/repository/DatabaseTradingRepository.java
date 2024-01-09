@@ -2,6 +2,10 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.TradingDeal;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
+import at.technikum.server.http.HttpStatusException;
+import at.technikum.server.http.HttpStatusMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +23,7 @@ public class DatabaseTradingRepository {
     private final String DELETE_TRADING_DEAL_SQL = "DELETE FROM tradings WHERE id = ?";
     private final Database database = new Database();
 
-    public Optional<List<TradingDeal>> getAllTradingDeals() throws SQLException {
+    public Optional<List<TradingDeal>> getAllTradingDeals() {
         List<TradingDeal> tradingDeals = new ArrayList<>();
 
         try (
@@ -32,13 +36,14 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
     }
 
-    public Optional<TradingDeal> getTradingDeal(String tradingDealId) throws SQLException {
+    public Optional<TradingDeal> getTradingDeal(String tradingDealId) {
         Optional<TradingDeal> tradingDeal = Optional.empty();
 
         try (
@@ -53,12 +58,13 @@ public class DatabaseTradingRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return tradingDeal;
     }
 
-    public boolean doesTradingDealExist(String tradingDealId) throws SQLException {
+    public boolean doesTradingDealExist(String tradingDealId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DOES_TRADING_DEAL_EXIST_SQL)
@@ -68,11 +74,12 @@ public class DatabaseTradingRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public void saveTradingDeal(TradingDeal tradingDeal) throws SQLException {
+    public void saveTradingDeal(TradingDeal tradingDeal) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_TRADING_DEAL_SQL)
@@ -85,11 +92,12 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public void deleteTradingDeal(String tradingDealId) throws SQLException {
+    public void deleteTradingDeal(String tradingDealId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(DELETE_TRADING_DEAL_SQL)
@@ -98,7 +106,8 @@ public class DatabaseTradingRepository {
 
             pstmt.execute();
         } catch(SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -1,12 +1,8 @@
 package at.technikum.apps.mtcg;
 
 import at.technikum.apps.mtcg.controller.*;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.server.ServerApplication;
-import at.technikum.server.http.HttpContentType;
-import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.Request;
-import at.technikum.server.http.Response;
+import at.technikum.server.http.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,11 +28,11 @@ public class MtcgApp implements ServerApplication {
 
             try {
                 return controller.handle(request);
-            } catch(SQLException e) {
+            } catch(HttpStatusException e) {
                 Response response = new Response();
-                response.setStatus(HttpStatus.INTERNAL_ERROR);
-                response.setContentType(HttpContentType.TEXT_PLAIN);
-                response.setBody("Internal Server Error. Please try again later.");
+                response.setStatus(e.getHttpStatus());
+                response.setContentType(e.getHttpContentType());
+                response.setBody(e.getHttpStatusMessage().toString());
 
                 return response;
             }

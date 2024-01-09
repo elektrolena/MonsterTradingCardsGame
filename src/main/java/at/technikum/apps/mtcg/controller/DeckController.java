@@ -54,7 +54,7 @@ public class DeckController extends Controller {
             }
 
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
         }
     }
 

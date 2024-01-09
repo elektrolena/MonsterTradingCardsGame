@@ -2,6 +2,10 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
+import at.technikum.server.http.HttpStatusException;
+import at.technikum.server.http.HttpStatusMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +28,7 @@ public class DatabaseUserRepository {
 
     private final Database database = new Database();
 
-    public User save(User user) throws SQLException {
+    public User save(User user) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
@@ -42,12 +46,13 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
 
-    public Optional<User> findWithUsername(String username) throws SQLException {
+    public Optional<User> findWithUsername(String username) {
         Optional<User> user = Optional.empty();
 
         try (
@@ -62,12 +67,13 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
 
-    public Optional<User> findWithToken(String token) throws SQLException {
+    public Optional<User> findWithToken(String token) {
         Optional<User> user = Optional.empty();
 
         try (
@@ -82,12 +88,13 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
 
-    public User update(User user) throws SQLException {
+    public User update(User user) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL)
@@ -100,13 +107,14 @@ public class DatabaseUserRepository {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return user;
     }
 
-    public void updateCoins(String userId, int sum) throws SQLException {
+    public void updateCoins(String userId, int sum) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_COINS_SQL)
@@ -116,11 +124,12 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public Optional<User> validateLogin(User user) throws SQLException {
+    public Optional<User> validateLogin(User user) {
         Optional <User> userToReturn = Optional.empty();
 
         try (
@@ -137,13 +146,14 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return userToReturn;
     }
 
-    public void addToken(User user) throws SQLException {
+    public void addToken(User user) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(ADD_TOKEN_SQL)
@@ -154,7 +164,8 @@ public class DatabaseUserRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -168,7 +179,7 @@ public class DatabaseUserRepository {
         }
     }
 
-    public List<User> getUserScoreBoard() throws SQLException {
+    public List<User> getUserScoreBoard() {
         List<User> users = new ArrayList<>();
 
         try (
@@ -181,7 +192,8 @@ public class DatabaseUserRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return users;

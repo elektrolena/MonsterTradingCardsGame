@@ -45,12 +45,23 @@ CREATE TABLE IF NOT EXISTS tradings (
     FOREIGN KEY (userId_fk) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS battles (
+    id VARCHAR(255) PRIMARY KEY,
+    winnerId_fk VARCHAR(255),
+    loserId_fk VARCHAR(255),
+    log VARCHAR(255),
+    FOREIGN KEY (winnerId_fk) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (loserId_fk) REFERENCES users(id) ON DELETE SET NULL
+);
+
 DELETE FROM users;
 DELETE FROM packages;
 DELETE FROM cards;
 DELETE FROM tradings;
+DELETE FROM battles;
 
 DROP TABLE users;
 DROP TABLE packages;
 DROP TABLE cards;
 DROP TABLE tradings;
+DROP TABLE battles;

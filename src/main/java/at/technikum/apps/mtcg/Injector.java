@@ -52,7 +52,7 @@ public class Injector {
         // JsonParser
         JsonParser jsonParser = new JsonParser();
 
-        // TODO: ask if there is a better place for this
+        // TODO: ask if there is a better place for this: app startup logic
         // delete all Session Tokens
         databaseUserRepository.deleteTokens();
 

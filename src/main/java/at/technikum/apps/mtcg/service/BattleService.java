@@ -26,7 +26,7 @@ public class BattleService {
         this.waitForBattle = false;
     }
 
-    public String createBattleLog(User user, UserService userService, List<Card> deck) {
+    public synchronized String createBattleLog(User user, UserService userService, List<Card> deck) {
         System.out.println("Test" + user.getUsername());
         if (isUserInQueue(user)) {
             return "You are already in the queue.";

@@ -21,7 +21,7 @@ public abstract class Controller {
 
     public abstract boolean supports(String route);
 
-    public abstract Response handle(Request request) throws SQLException;
+    public abstract Response handle(Request request);
 
     protected Response createResponse(HttpContentType contentType, HttpStatus status, String body) {
         Response response = new Response();

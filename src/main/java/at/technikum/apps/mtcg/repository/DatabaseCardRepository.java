@@ -2,6 +2,10 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Card;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
+import at.technikum.server.http.HttpStatusMessage;
+import at.technikum.server.http.HttpStatusException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +28,7 @@ public class DatabaseCardRepository {
 
     private final Database database = new Database();
 
-    public void save(Card card) throws SQLException {
+    public void save(Card card) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(SAVE_SQL)
@@ -40,11 +44,12 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public Optional<Card> findWithId(String id) throws SQLException {
+    public Optional<Card> findWithId(String id) {
         Optional<Card> card = Optional.empty();
 
         try (
@@ -59,12 +64,13 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return card;
     }
 
-    public List<Card> getCardsFromPackage(String packageId) throws SQLException {
+    public List<Card> getCardsFromPackage(String packageId) {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -81,12 +87,13 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return cards;
     }
 
-    public Optional<List<Card>> getCardsFromUser(String userId) throws SQLException {
+    public Optional<List<Card>> getCardsFromUser(String userId) {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -101,13 +108,14 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
-    public void updateCardOwner(String cardId, String userId) throws SQLException {
+    public void updateCardOwner(String cardId, String userId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_CARD_OWNER_SQL)
@@ -117,11 +125,12 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch(SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public Optional<List<Card>> getDeck(String userId) throws SQLException {
+    public Optional<List<Card>> getDeck(String userId) {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -135,12 +144,13 @@ public class DatabaseCardRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
 
-    public Optional<Card> checkForOwnership(String cardId, String userId) throws SQLException {
+    public Optional<Card> checkForOwnership(String cardId, String userId) {
         Optional<Card> card = Optional.empty();
         try (
                 Connection con = database.getConnection();
@@ -157,12 +167,13 @@ public class DatabaseCardRepository {
             }
 
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return card;
     }
 
-    public void addCardToDeck(String cardId) throws SQLException {
+    public void addCardToDeck(String cardId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(ADD_CARD_TO_DECK)
@@ -171,11 +182,12 @@ public class DatabaseCardRepository {
 
             pstmt.execute();
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public boolean isInDeck(String cardId) throws SQLException {
+    public boolean isInDeck(String cardId) {
         try (
                 Connection con = database.getConnection();
                 PreparedStatement pstmt = con.prepareStatement(IS_IN_DECK_SQL)
@@ -185,7 +197,8 @@ public class DatabaseCardRepository {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            throw new SQLException(e);
+            e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
