@@ -26,7 +26,7 @@ public class StatsController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if(request.getRoute().equals("/stats")) {
             if(request.getMethod().equals("GET")) {
                 return getUserStats(request);
@@ -39,7 +39,7 @@ public class StatsController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response getUserStats(Request request) throws SQLException {
+    Response getUserStats(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -49,7 +49,7 @@ public class StatsController extends Controller {
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserStats(user));
     }
 
-    Response getScoreBoard(Request request) throws SQLException {
+    Response getScoreBoard(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

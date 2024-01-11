@@ -14,7 +14,7 @@ public class CardService {
         this.databaseCardRepository = databaseCardRepository;
     }
 
-    public Optional<List<Card>> getAllCardsFromUser(String userId) throws SQLException {
+    public Optional<List<Card>> getAllCardsFromUser(String userId) {
         return this.databaseCardRepository.getCardsFromUser(userId);
     }
 }

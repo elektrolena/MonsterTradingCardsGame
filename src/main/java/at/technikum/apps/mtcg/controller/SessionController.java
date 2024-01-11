@@ -23,14 +23,14 @@ public class SessionController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if (request.getMethod().equals("POST")) {
             return start(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response start(Request request) throws SQLException {
+    Response start(Request request) {
         User user = this.parser.getUserFromBody(request);
 
         Optional<User> foundUser = sessionService.login(user);

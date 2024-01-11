@@ -28,7 +28,7 @@ public class DeckController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if(request.getMethod().equals("GET")) {
             return getDeck(request);
         } else if(request.getMethod().equals("PUT")) {
@@ -37,7 +37,7 @@ public class DeckController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response getDeck(Request request) throws SQLException {
+    Response getDeck(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -58,7 +58,7 @@ public class DeckController extends Controller {
         }
     }
 
-    Response updateDeck(Request request) throws SQLException {
+    Response updateDeck(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

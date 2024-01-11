@@ -16,15 +16,15 @@ public class UserService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> findWithUsername(String username) throws SQLException {
+    public Optional<User> findWithUsername(String username) {
         return databaseUserRepository.findWithUsername(username);
     }
 
-    public Optional<User> findWithToken(String token) throws SQLException {
+    public Optional<User> findWithToken(String token) {
         return databaseUserRepository.findWithToken(token);
     }
 
-    public User update(User user, User updatedUser) throws SQLException {
+    public User update(User user, User updatedUser) {
         if (updatedUser.getName() != null) {
             user.setName(updatedUser.getName());
         }
@@ -41,11 +41,11 @@ public class UserService {
         return databaseUserRepository.update(user);
     }
 
-    public void updateCoins(String userId, int sum) throws SQLException {
+    public void updateCoins(String userId, int sum) {
         this.databaseUserRepository.updateCoins(userId, sum);
     }
 
-    public User save(User user) throws SQLException {
+    public User save(User user) {
         user.setId(UUID.randomUUID().toString());
         user.setCoins(20);
         user.setElo(100);
@@ -54,7 +54,7 @@ public class UserService {
         return databaseUserRepository.save(user);
     }
 
-    public List<User> getUserScoreBoard() throws SQLException {
+    public List<User> getUserScoreBoard() {
         return databaseUserRepository.getUserScoreBoard();
     }
 }

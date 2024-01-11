@@ -47,7 +47,7 @@ public class Injector {
         CardService cardService = new CardService(databaseCardRepository);
         DeckService deckService = new DeckService(databaseCardRepository);
         TradingService tradingService = new TradingService(databaseCardRepository, databaseTradingRepository);
-        BattleService battleService = new BattleService(battle, cardService, queue, queueLock);
+        BattleService battleService = new BattleService(battle, cardService, queue);
 
         // JsonParser
         JsonParser jsonParser = new JsonParser();

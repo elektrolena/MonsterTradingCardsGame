@@ -4,7 +4,6 @@ import at.technikum.apps.mtcg.controller.*;
 import at.technikum.server.ServerApplication;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

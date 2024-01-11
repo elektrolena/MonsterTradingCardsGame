@@ -16,11 +16,11 @@ public class DeckService {
         this.cardRepository = cardRepository;
     }
 
-    public Optional<List<Card>> getDeck(User user) throws SQLException {
+    public Optional<List<Card>> getDeck(User user) {
         return this.cardRepository.getDeck(user.getId());
     }
 
-    public int updateDeck(User user, Card[] cards) throws SQLException {
+    public int updateDeck(User user, Card[] cards) {
         if(cards.length != 4) {
             return 400;
         }

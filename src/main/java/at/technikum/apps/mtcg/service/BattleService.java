@@ -13,40 +13,38 @@ public class BattleService {
     private final Battle battle;
     private final CardService cardService;
     private final ConcurrentHashMap<User, List<Card>> queue;
-    private final ReentrantLock queueLock;
     private final ScheduledExecutorService scheduler;
-    private boolean waitForBattle;
 
-    public BattleService(Battle battle, CardService cardService, ConcurrentHashMap<User, List<Card>> queue, ReentrantLock queueLock) {
+    public BattleService(Battle battle, CardService cardService, ConcurrentHashMap<User, List<Card>> queue) {
         this.battle = battle;
         this.cardService = cardService;
         this.queue = queue;
-        this.queueLock = queueLock;
         this.scheduler = Executors.newScheduledThreadPool(1);
-        this.waitForBattle = false;
     }
 
     public synchronized String createBattleLog(User user, UserService userService, List<Card> deck) {
-        System.out.println("Test" + user.getUsername());
         if (isUserInQueue(user)) {
             return "You are already in the queue.";
         }
 
-        addUserToQueue(user, deck);
-        waitForBattle = true;
-        scheduleRemoval(user);
-
-        while(waitForBattle) {
-            User otherUser = getOtherUserInQueue();
-            if (otherUser != null) {
+        User otherUser = getOtherUserInQueue();
+        if(otherUser != null) {
+            notify();
+            removeUserFromQueue(user);
+            removeUserFromQueue(otherUser);
+            return this.battle.startBattle(user, otherUser);
+        } else {
+            addUserToQueue(user, deck);
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
                 removeUserFromQueue(user);
-                removeUserFromQueue(otherUser);
-                waitForBattle = false;
-                return this.battle.startBattle(user, otherUser);
+                throw new RuntimeException();
             }
         }
 
-        return "No other user has joined the queue in the last 60 seconds.";
+        return "Get battle log from database.";
     }
 
     private boolean isUserInQueue(User user) {
@@ -55,10 +53,7 @@ public class BattleService {
 
     private User getOtherUserInQueue() {
         for (Map.Entry<User, List<Card>> entry : queue.entrySet()) {
-            User currentUser = entry.getKey();
-            if (!currentUser.equals(queue.keySet().iterator().next())) {
-                return currentUser;
-            }
+            return entry.getKey();
         }
         return null;
     }
@@ -69,21 +64,9 @@ public class BattleService {
         }
     }
 
-    private void scheduleRemoval(User user) {
-        scheduler.schedule(() -> {
-            try {
-                queueLock.lock();
-                removeUserFromQueue(user);
-            } finally {
-                queueLock.unlock();
-            }
-        }, 60, TimeUnit.SECONDS);
-    }
-
     private void removeUserFromQueue(User user) {
         if(isUserInQueue(user)) {
             queue.remove(user);
-            waitForBattle = false;
         }
     }
 }

@@ -33,7 +33,7 @@ public abstract class Controller {
         return response;
     }
 
-    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) throws SQLException {
+    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) {
         if(request.getAuthorizationToken() == null) {
             return Optional.empty();
         }

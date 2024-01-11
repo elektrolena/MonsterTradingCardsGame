@@ -26,14 +26,14 @@ public class PackageController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if (request.getMethod().equals("POST")) {
             return createPackage(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response createPackage(Request request) throws SQLException {
+    Response createPackage(Request request) {
         Optional <User> optionalUser = checkForAuthorizedRequest(request, this.userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

@@ -18,7 +18,7 @@ public class TransactionService {
         this.databasePackageRepository = databasePackageRepository;
     }
 
-    public Optional<Package> buyPackage(User user, UserService userService) throws SQLException {
+    public Optional<Package> buyPackage(User user, UserService userService) {
         Optional<Package> cardPackage = Optional.empty();
         cardPackage = databasePackageRepository.getPackage();
         if(cardPackage.isPresent()) {

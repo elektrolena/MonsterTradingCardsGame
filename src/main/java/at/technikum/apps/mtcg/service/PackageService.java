@@ -23,7 +23,7 @@ public class PackageService {
         this.databasePackageRepository = databasePackageRepository;
     }
 
-    public boolean save(Card[] cards) throws SQLException {
+    public boolean save(Card[] cards) {
 
         for(Card card : cards) {
             Optional<Card> existingCard = this.databaseCardRepository.findWithId(card.getId());

@@ -29,14 +29,14 @@ public class CardController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if(request.getMethod().equals("GET")) {
             return getAllCards(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response getAllCards(Request request) throws SQLException {
+    Response getAllCards(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

@@ -14,7 +14,7 @@ public class SessionService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> login(User user) throws SQLException {
+    public Optional<User> login(User user) {
         Optional<User> foundUser = databaseUserRepository.validateLogin(user);
 
         if(foundUser.isPresent()) {

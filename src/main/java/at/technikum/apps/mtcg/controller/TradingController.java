@@ -28,7 +28,7 @@ public class TradingController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, this.userService);
         if(optionalUser.isEmpty()){
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
@@ -52,7 +52,7 @@ public class TradingController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response getOpenTradingDeals() throws SQLException {
+    private Response getOpenTradingDeals() {
         Optional<List<TradingDeal>> openTradingDeals = this.tradingService.getAllTradingDeals();
         if(openTradingDeals.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_TRADING.getStatusMessage());
@@ -60,7 +60,7 @@ public class TradingController extends Controller {
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getTradingDeals(openTradingDeals.get()));
     }
 
-    private Response openTradingDeal(Request request, User user) throws SQLException {
+    private Response openTradingDeal(Request request, User user) {
         switch(this.tradingService.openTradingDeal(this.parser.getTradingDealFromBody(request), user)) {
             case 201:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.CREATED, HttpStatusMessage.CREATED_TRADING.getStatusMessage());
@@ -73,7 +73,7 @@ public class TradingController extends Controller {
         }
     }
 
-    private Response deleteTradingDeal(User user, String tradingDealId) throws SQLException {
+    private Response deleteTradingDeal(User user, String tradingDealId) {
         switch(this.tradingService.deleteOpenTradingDeal(tradingDealId, user)) {
             case 200:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_TRADING_DELETE.getStatusMessage());
@@ -86,7 +86,7 @@ public class TradingController extends Controller {
         }
     }
 
-    private Response finishTradingDeal(Request request, User offeringUser, String tradeDealId) throws SQLException {
+    private Response finishTradingDeal(Request request, User offeringUser, String tradeDealId) {
         switch(this.tradingService.finishTradingDeal(this.parser.getCardFromBody(request), offeringUser, tradeDealId)) {
             case 200:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_TRADING_EXECUTE.getStatusMessage());

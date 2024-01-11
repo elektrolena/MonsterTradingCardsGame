@@ -23,7 +23,7 @@ public class UserController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         String route = request.getRoute();
 
         if (route.matches("/users/\\w+")) {
@@ -43,7 +43,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response read(String username, Request request) throws SQLException {
+    Response read(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -59,7 +59,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    Response update(String username, Request request) throws SQLException {
+    Response update(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
         if(userOptional.isEmpty()) {
@@ -79,7 +79,7 @@ public class UserController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    Response create(Request request) throws SQLException {
+    Response create(Request request) {
 
         User user = this.parser.getUserFromBody(request);
 

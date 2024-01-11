@@ -31,14 +31,14 @@ public class BattleController extends Controller {
     }
 
     @Override
-    public Response handle(Request request) throws SQLException {
+    public Response handle(Request request) {
         if (request.getMethod().equals("POST")) {
             return battle(request);
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    Response battle(Request request) throws SQLException {
+    Response battle(Request request) {
         Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
         if (optionalUser.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());

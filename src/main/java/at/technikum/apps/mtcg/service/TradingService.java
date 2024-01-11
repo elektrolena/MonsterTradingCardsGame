@@ -19,10 +19,10 @@ public class TradingService {
         this.databaseTradingRepository = databaseTradingRepository;
     }
 
-    public Optional<List<TradingDeal>> getAllTradingDeals() throws SQLException {
+    public Optional<List<TradingDeal>> getAllTradingDeals() {
         return this.databaseTradingRepository.getAllTradingDeals();
     }
-    public int openTradingDeal(TradingDeal tradingDeal, User user) throws SQLException {
+    public int openTradingDeal(TradingDeal tradingDeal, User user) {
         if(this.databaseCardRepository.checkForOwnership(tradingDeal.getCardId(), user.getId()).isEmpty() || this.databaseCardRepository.isInDeck(tradingDeal.getCardId())) {
             return 403;
         }
@@ -35,7 +35,7 @@ public class TradingService {
         return 201;
     }
 
-    public int deleteOpenTradingDeal(String tradingDealId, User user) throws SQLException {
+    public int deleteOpenTradingDeal(String tradingDealId, User user) {
         Optional<TradingDeal> foundDeal = this.databaseTradingRepository.getTradingDeal(tradingDealId);
         if(foundDeal.isEmpty()) {
             return 404;
@@ -48,7 +48,7 @@ public class TradingService {
         return 200;
     }
 
-    public int finishTradingDeal(Card offeredCard, User offeringUser, String tradingDealId) throws SQLException {
+    public int finishTradingDeal(Card offeredCard, User offeringUser, String tradingDealId) {
         Optional<TradingDeal> foundDeal = this.databaseTradingRepository.getTradingDeal(tradingDealId);
         if(foundDeal.isEmpty()) {
             return 404;
