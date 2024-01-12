@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-public class BattleControllerTest {
+public class BattleLogControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidBattleRoute() {
         // Arrange

@@ -2,16 +2,25 @@ package at.technikum.apps.mtcg.game;
 
 import at.technikum.apps.mtcg.dto.BattleLog;
 import at.technikum.apps.mtcg.dto.BattleRoundResult;
+import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.repository.DatabaseBattleRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-public class Battle {
-    public String startBattle(User user1, List<Card> deck1, User user2, List<Card> deck2) {
+public class BattleLogic {
 
-        BattleLog battleLog = new BattleLog();
+    private final DatabaseBattleRepository databaseBattleRepository;
+
+    public BattleLogic(DatabaseBattleRepository databaseBattleRepository) {
+        this.databaseBattleRepository = databaseBattleRepository;
+    }
+
+    public Battle startBattle(User user1, List<Card> deck1, User user2, List<Card> deck2) {
+        BattleLog battleLog = new BattleLog(user1, user2);
         int round = 0;
         while(round < 100 && !deck1.isEmpty() && !deck2.isEmpty()) {
             Card card1 = getRandomCard(deck1);
@@ -50,9 +59,21 @@ public class Battle {
             battleLog.addRound(round, result);
         }
 
+        Battle battle = new Battle();
+        battle.setId(UUID.randomUUID().toString());
+        battle.setWinner(user1.getId());
+        battle.setLoser(user2.getId());
+        if(!deck1.isEmpty() && !deck2.isEmpty()) {
+            battle.setDraw(true);
+        } else if(deck1.isEmpty()) {
+            battle.setWinner(user2.getId());
+            battle.setLoser(user1.getId());
+        }
+        battle.setLog(battleLog.getLog());
         // TODO: save in database (wins, losses, battle)
+        this.databaseBattleRepository.save(battle);
 
-        return battleLog.getLog();
+        return battle;
     }
 
     private Card getRandomCard(List<Card> deck) {
@@ -64,6 +85,7 @@ public class Battle {
         String spellElement = card1.getElement();
         String opponentElement = card2.getElement();
 
+        // TODO: add this to log
         switch (spellElement) {
             case "Water":
                 if ("Fire".equalsIgnoreCase(opponentElement)) {
@@ -94,24 +116,25 @@ public class Battle {
         }
     }
 
-    private static double specialCalculation(Card card, Card opponentCard) {
-        String cardType = getTypeFromCardName(card.getName());
-        String opponentType = getTypeFromCardName(opponentCard.getName());
-        String opponentElement = opponentCard.getElement();
+    private static double specialCalculation(Card card1, Card card2) {
+        String card1Type = getTypeFromCardName(card1.getName());
+        String card2Type = getTypeFromCardName(card2.getName());
+        String card2Element = card2.getElement();
 
-        switch (cardType) {
+        // TODO: add this to log
+        switch (card1Type) {
             case "Goblin":
-                return "Dragon".equalsIgnoreCase(opponentType) ? 0 : card.getDamage();
+                return "Dragon".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
             case "Ork":
-                return "Wizard".equalsIgnoreCase(opponentType) ? 0 : card.getDamage();
+                return "Wizard".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
             case "Knight":
-                return "Spell".equalsIgnoreCase(opponentType) && "Water".equalsIgnoreCase(opponentElement) ? 0 : card.getDamage();
+                return "Spell".equalsIgnoreCase(card2Type) && "Water".equalsIgnoreCase(card2Element) ? 0 : card1.getDamage();
             case "Spell":
-                return "Kraken".equalsIgnoreCase(opponentType) ? 0 : card.getDamage();
+                return "Kraken".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
             case "Dragon":
-                return "Elv".equalsIgnoreCase(opponentType) && "Fire".equalsIgnoreCase(opponentElement) ? 0 : card.getDamage();
+                return "Elv".equalsIgnoreCase(card2Type) && "Fire".equalsIgnoreCase(card2Element) ? 0 : card1.getDamage();
             default:
-                return card.getDamage();
+                return card1.getDamage();
         }
     }
 

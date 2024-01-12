@@ -1,25 +1,25 @@
 package at.technikum.apps.mtcg.service;
 
+import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.game.Battle;
+import at.technikum.apps.mtcg.game.BattleLogic;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class BattleService {
-    private final Battle battle;
+    private Battle battle;
+    private final BattleLogic battleLogic;
     private final CardService cardService;
     private final ConcurrentHashMap<User, List<Card>> queue;
-    private final ScheduledExecutorService scheduler;
 
-    public BattleService(Battle battle, CardService cardService, ConcurrentHashMap<User, List<Card>> queue) {
+    public BattleService(Battle battle, BattleLogic battleLogic, CardService cardService, ConcurrentHashMap<User, List<Card>> queue) {
         this.battle = battle;
+        this.battleLogic = battleLogic;
         this.cardService = cardService;
         this.queue = queue;
-        this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
     public synchronized String createBattleLog(User user, UserService userService, List<Card> deck) {
@@ -33,7 +33,7 @@ public class BattleService {
             notify();
             removeUserFromQueue(user);
             removeUserFromQueue(otherUser);
-            return this.battle.startBattle(user, deck, otherUser, otherDeck);
+            this.battle = this.battleLogic.startBattle(user, deck, otherUser, otherDeck);
         } else {
             addUserToQueue(user, deck);
             try {
@@ -45,7 +45,7 @@ public class BattleService {
             }
         }
 
-        return "Get battle log from database.";
+        return this.battle.getLog();
     }
 
     private boolean isUserInQueue(User user) {

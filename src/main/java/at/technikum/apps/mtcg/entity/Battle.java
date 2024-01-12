@@ -4,7 +4,12 @@ public class Battle {
     private String id;
     private String winner;
     private String loser;
+    private boolean isDraw;
     private String log;
+
+    public Battle() {
+        this.isDraw = false;
+    }
 
     public String getId() {
         return id;
@@ -28,6 +33,14 @@ public class Battle {
 
     public void setLoser(String loser) {
         this.loser = loser;
+    }
+
+    public boolean isDraw() {
+        return isDraw;
+    }
+
+    public void setDraw(boolean draw) {
+        isDraw = draw;
     }
 
     public String getLog() {
