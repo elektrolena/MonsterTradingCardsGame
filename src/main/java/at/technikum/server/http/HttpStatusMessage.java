@@ -22,7 +22,8 @@ public enum HttpStatusMessage {
     NOT_FOUND_USER("User not found in app!"),
     ALREADY_EXISTS_PACKAGE("At least one card in the package already exists."),
     ALREADY_EXISTS_TRADING("A deal with this deal ID already exists."),
-    ALREADY_EXISTS_USER("User with same username already registered!");
+    ALREADY_EXISTS_USER("User with same username already registered!"),
+    INTERNAL_SERVER_ERROR("Internal Server Error. Please try again later.");
 
     private final String statusMessage;
 

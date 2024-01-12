@@ -4,6 +4,7 @@ import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 public class SessionServiceTest {
     @Test
-    public void whenLoginSuccessful_ShouldReturnOptionalOfUser() {
+    public void whenLoginSuccessful_ShouldReturnOptionalOfUser() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepository = mock(DatabaseUserRepository.class);
         SessionService sessionService = new SessionService(databaseUserRepository);
@@ -39,7 +40,7 @@ public class SessionServiceTest {
     }
 
     @Test
-    public void whenLoginNotSuccessful_ShouldReturnOptionalEmpty() {
+    public void whenLoginNotSuccessful_ShouldReturnOptionalEmpty() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepository = mock(DatabaseUserRepository.class);
         SessionService sessionService = new SessionService(databaseUserRepository);

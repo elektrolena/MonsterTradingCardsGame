@@ -8,14 +8,15 @@ import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 public abstract class Controller {
 
     protected final JsonParser parser;
 
-    protected Controller() {
-        this.parser = new JsonParser();
+    protected Controller(JsonParser parser) {
+        this.parser = parser;
     }
 
     public abstract boolean supports(String route);

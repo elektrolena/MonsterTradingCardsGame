@@ -5,6 +5,7 @@ public class User {
     private String id;
     private String token;
     private String username;
+    private String name;
     private String password;
     private String bio;
     private String image;
@@ -15,10 +16,11 @@ public class User {
 
     public User() {}
 
-    public User(String id, String username, String password, String bio, String image, int coins, int elo, int wins, int losses) {
+    public User(String id, String username, String name, String password, String bio, String image, int coins, int elo, int wins, int losses) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.name = name;
         this.bio = bio;
         this.image = image;
         this.coins = coins;
@@ -49,6 +51,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBio() {

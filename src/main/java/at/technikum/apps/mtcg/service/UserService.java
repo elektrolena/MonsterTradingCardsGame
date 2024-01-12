@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.service;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.entity.User;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,8 +25,8 @@ public class UserService {
     }
 
     public User update(User user, User updatedUser) {
-        if (updatedUser.getUsername() != null) {
-            user.setUsername(updatedUser.getUsername());
+        if (updatedUser.getName() != null) {
+            user.setName(updatedUser.getName());
         }
         if (updatedUser.getPassword() != null) {
             user.setPassword(updatedUser.getPassword());

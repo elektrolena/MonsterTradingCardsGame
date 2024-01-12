@@ -3,6 +3,7 @@ package at.technikum.apps.mtcg.repository;
 import at.technikum.apps.mtcg.entity.User;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DatabaseUserRepositoryTest {
 
     @Test
-    public void whenAddOneUser_ThenFindShouldReturnUser() {
+    public void whenAddOneUser_ThenFindShouldReturnUser() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
@@ -39,7 +40,7 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenAddOneUser_ThenFindShouldNotReturnFalseUserCredentials() {
+    public void whenAddOneUser_ThenFindShouldNotReturnFalseUserCredentials() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
@@ -67,7 +68,7 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenUpdateOneUser_ThenFindShouldReturnNewUser() {
+    public void whenUpdateOneUser_ThenFindShouldReturnNewUser() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
@@ -97,7 +98,7 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenUpdateOneUser_ThenFindShouldNotReturnOldUser() {
+    public void whenUpdateOneUser_ThenFindShouldNotReturnOldUser() throws SQLException {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 

@@ -2,6 +2,10 @@ package at.technikum.apps.mtcg.repository;
 
 import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Card;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
+import at.technikum.server.http.HttpStatusMessage;
+import at.technikum.server.http.HttpStatusException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,6 +45,7 @@ public class DatabaseCardRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -60,6 +65,7 @@ public class DatabaseCardRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return card;
     }
@@ -82,6 +88,7 @@ public class DatabaseCardRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return cards;
     }
@@ -102,6 +109,7 @@ public class DatabaseCardRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
 
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
@@ -118,6 +126,7 @@ public class DatabaseCardRepository {
             pstmt.execute();
         } catch(SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -136,6 +145,7 @@ public class DatabaseCardRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
     }
@@ -158,6 +168,7 @@ public class DatabaseCardRepository {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
         return card;
     }
@@ -172,6 +183,7 @@ public class DatabaseCardRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -186,8 +198,8 @@ public class DatabaseCardRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
         }
-        return false;
     }
 
     private Card mapResultSetToCard(ResultSet rs) throws SQLException {

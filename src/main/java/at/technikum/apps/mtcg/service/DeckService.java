@@ -4,6 +4,7 @@ import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,10 +1,11 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,9 +13,9 @@ public class UserController extends Controller {
 
     private final UserService userService;
 
-    public UserController() {
-        super();
-        this.userService = new UserService(new DatabaseUserRepository());
+    public UserController(JsonParser parser, UserService userService) {
+        super(parser);
+        this.userService = userService;
     }
     @Override
     public boolean supports(String route) {
@@ -52,13 +53,12 @@ public class UserController extends Controller {
         User user = userOptional.get();
 
         if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(user));
         }
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 
-    // TODO: add admin access?
     Response update(String username, Request request) {
         Optional<User> userOptional = userService.findWithUsername(username);
 
@@ -68,12 +68,13 @@ public class UserController extends Controller {
 
         User currentUser = userOptional.get();
 
-        if(Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) && currentUser.getToken() != null) {
+        if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);
             updatedUser = userService.update(currentUser, updatedUser);
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
+            if(updatedUser != null) {
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
+            }
         }
-
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
     }
 

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class PackageService {
         } else if (name.contains("Fire")) {
             return "fire";
         } else {
-            return null;
+            return "normal";
         }
     }
 

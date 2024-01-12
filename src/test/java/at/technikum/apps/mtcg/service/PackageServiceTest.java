@@ -5,6 +5,7 @@ import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 public class PackageServiceTest {
     @Test
-    public void shouldReturnTrue_WhenSavedCards() {
+    public void shouldReturnTrue_WhenSavedCards() throws SQLException {
         // Arrange
         DatabaseCardRepository databaseCardRepository = mock(DatabaseCardRepository.class);
         DatabasePackageRepository databasePackageRepository = mock(DatabasePackageRepository.class);
@@ -34,7 +35,7 @@ public class PackageServiceTest {
     }
 
     @Test
-    public void shouldReturnFalse_WhenNotSavedCards() {
+    public void shouldReturnFalse_WhenNotSavedCards() throws SQLException {
         // Arrange
         DatabaseCardRepository databaseCardRepository = mock(DatabaseCardRepository.class);
         DatabasePackageRepository databasePackageRepository = mock(DatabasePackageRepository.class);

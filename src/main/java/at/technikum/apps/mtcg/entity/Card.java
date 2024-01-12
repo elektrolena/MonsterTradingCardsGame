@@ -90,4 +90,8 @@ public class Card {
     public void setPackageId(String packageId) {
         this.packageId = packageId;
     }
+
+    public boolean isSpell() {
+        return this.type.equals("spell");
+    }
 }

@@ -1,8 +1,14 @@
 package at.technikum.apps.mtcg.controller;
 
+import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.CardService;
+import at.technikum.apps.mtcg.service.DeckService;
+import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,7 +19,10 @@ public class DeckControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidDeckRoute() {
         // Arrange
-        DeckController deckController = new DeckController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        DeckService deckService = mock(DeckService.class);
+        DeckController deckController = new DeckController(parser, deckService, userService);
         String firstRoute = "/deck";
         String secondRoute = "/deck?format=plain";
 
@@ -32,7 +41,10 @@ public class DeckControllerTest {
     @Test
     public void shouldNotSupportRoute_WhenInvalidDeckRoute() {
         // Arrange
-        DeckController deckController = new DeckController();
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        DeckService deckService = mock(DeckService.class);
+        DeckController deckController = new DeckController(parser, deckService, userService);
         String route = "/users";
         boolean doesSupport = false;
 
@@ -44,9 +56,12 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidDeckMethod() {
+    public void shouldSupportRequestMethod_WhenValidDeckMethod() throws SQLException {
         // Arrange
-        DeckController deckController = spy(new DeckController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        DeckService deckService = mock(DeckService.class);
+        DeckController deckController = spy(new DeckController(parser, deckService, userService));
         Request getRequest = mock(Request.class);
         Request putRequest = mock(Request.class);
         Response response = mock(Response.class);
@@ -67,9 +82,12 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() {
+    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() throws SQLException {
         // Arrange
-        DeckController deckController = spy(new DeckController());
+        JsonParser parser = mock(JsonParser.class);
+        UserService userService = mock(UserService.class);
+        DeckService deckService = mock(DeckService.class);
+        DeckController deckController = spy(new DeckController(parser, deckService, userService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

@@ -1,16 +1,13 @@
 package at.technikum.apps.mtcg.controller;
 
-import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.entity.Package;
-import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
-import at.technikum.apps.mtcg.repository.DatabasePackageRepository;
-import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.TransactionService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.util.List;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionController extends Controller {
@@ -18,10 +15,10 @@ public class TransactionController extends Controller {
     private final UserService userService;
     private final TransactionService transactionService;
 
-    public TransactionController() {
-        super();
-        this.userService = new UserService(new DatabaseUserRepository());
-        this.transactionService = new TransactionService(new DatabaseCardRepository(), new DatabasePackageRepository());
+    public TransactionController(JsonParser parser, UserService userService, TransactionService transactionService) {
+        super(parser);
+        this.userService = userService;
+        this.transactionService = transactionService;
     }
 
     @Override

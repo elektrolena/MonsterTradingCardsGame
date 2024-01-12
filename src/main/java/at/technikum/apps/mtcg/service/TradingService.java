@@ -6,6 +6,7 @@ import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.apps.mtcg.repository.DatabaseTradingRepository;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class TradingService {
         this.databaseTradingRepository = databaseTradingRepository;
     }
 
+    // liste reicht, kein optional
     public Optional<List<TradingDeal>> getAllTradingDeals() {
         return this.databaseTradingRepository.getAllTradingDeals();
     }
