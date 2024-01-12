@@ -29,10 +29,11 @@ public class BattleService {
 
         User otherUser = getOtherUserInQueue();
         if(otherUser != null) {
+            List<Card> otherDeck = getOtherUsersDeck();
             notify();
             removeUserFromQueue(user);
             removeUserFromQueue(otherUser);
-            return this.battle.startBattle(user, otherUser);
+            return this.battle.startBattle(user, deck, otherUser, otherDeck);
         } else {
             addUserToQueue(user, deck);
             try {
@@ -54,6 +55,13 @@ public class BattleService {
     private User getOtherUserInQueue() {
         for (Map.Entry<User, List<Card>> entry : queue.entrySet()) {
             return entry.getKey();
+        }
+        return null;
+    }
+
+    private List<Card> getOtherUsersDeck() {
+        for (Map.Entry<User, List<Card>> entry : queue.entrySet()) {
+            return entry.getValue();
         }
         return null;
     }

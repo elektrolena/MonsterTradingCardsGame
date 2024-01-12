@@ -44,7 +44,6 @@ public class BattleController extends Controller {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
         }
         User user = optionalUser.get();
-        System.out.println(user);
         Optional<List<Card>> retrievedDeck = this.deckService.getDeck(user);
         if (retrievedDeck.isEmpty()) {
             return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());

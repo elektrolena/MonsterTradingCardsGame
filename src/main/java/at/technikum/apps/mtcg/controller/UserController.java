@@ -67,7 +67,6 @@ public class UserController extends Controller {
         }
 
         User currentUser = userOptional.get();
-        System.out.println(currentUser);
 
         if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);

@@ -56,7 +56,7 @@ public class PackageService {
         } else if (name.contains("Fire")) {
             return "fire";
         } else {
-            return null;
+            return "normal";
         }
     }
 

@@ -19,6 +19,7 @@ public class TradingService {
         this.databaseTradingRepository = databaseTradingRepository;
     }
 
+    // liste reicht, kein optional
     public Optional<List<TradingDeal>> getAllTradingDeals() {
         return this.databaseTradingRepository.getAllTradingDeals();
     }
