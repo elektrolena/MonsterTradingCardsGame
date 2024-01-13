@@ -1,11 +1,11 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,13 +44,7 @@ public class UserController extends Controller {
     }
 
     Response read(String username, Request request) {
-        Optional<User> userOptional = userService.findWithUsername(username);
-
-        if(userOptional.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NOT_FOUND_USER.getStatusMessage());
-        }
-
-        User user = userOptional.get();
+        User user = userService.findWithUsername(username);
 
         if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(user));
@@ -60,13 +54,7 @@ public class UserController extends Controller {
     }
 
     Response update(String username, Request request) {
-        Optional<User> userOptional = userService.findWithUsername(username);
-
-        if(userOptional.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND,HttpStatusMessage.NOT_FOUND_USER.getStatusMessage());
-        }
-
-        User currentUser = userOptional.get();
+        User currentUser = userService.findWithUsername(username);
 
         if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
             User updatedUser = this.parser.getUserFromBody(request);
@@ -79,14 +67,7 @@ public class UserController extends Controller {
     }
 
     Response create(Request request) {
-
         User user = this.parser.getUserFromBody(request);
-
-        Optional<User> userOptional= userService.findWithUsername(user.getUsername());
-
-        if(userOptional.isPresent()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS,HttpStatusMessage.ALREADY_EXISTS_USER.getStatusMessage());
-        }
 
         user = userService.save(user);
 

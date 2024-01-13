@@ -2,12 +2,12 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.TradingService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +55,7 @@ public class TradingController extends Controller {
     private Response getOpenTradingDeals() {
         Optional<List<TradingDeal>> openTradingDeals = this.tradingService.getAllTradingDeals();
         if(openTradingDeals.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_TRADING.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, ExceptionMessage.NO_CONTENT_TRADING.getStatusMessage());
         }
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getTradingDeals(openTradingDeals.get()));
     }
@@ -63,11 +63,11 @@ public class TradingController extends Controller {
     private Response openTradingDeal(Request request, User user) {
         switch(this.tradingService.openTradingDeal(this.parser.getTradingDealFromBody(request), user)) {
             case 201:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.CREATED, HttpStatusMessage.CREATED_TRADING.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.CREATED, ExceptionMessage.CREATED_TRADING.getStatusMessage());
             case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_TRADING_OPEN.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_TRADING_OPEN.getStatusMessage());
             case 409:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, HttpStatusMessage.ALREADY_EXISTS_TRADING.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, ExceptionMessage.ALREADY_EXISTS_TRADING.getStatusMessage());
             default:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
         }
@@ -76,11 +76,11 @@ public class TradingController extends Controller {
     private Response deleteTradingDeal(User user, String tradingDealId) {
         switch(this.tradingService.deleteOpenTradingDeal(tradingDealId, user)) {
             case 200:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_TRADING_DELETE.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_TRADING_DELETE.getStatusMessage());
             case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_TRADING_DELETE.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_TRADING_DELETE.getStatusMessage());
             case 404:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NOT_FOUND_TRADING.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, ExceptionMessage.NOT_FOUND_TRADING.getStatusMessage());
             default:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
         }
@@ -89,11 +89,11 @@ public class TradingController extends Controller {
     private Response finishTradingDeal(Request request, User offeringUser, String tradeDealId) {
         switch(this.tradingService.finishTradingDeal(this.parser.getCardFromBody(request), offeringUser, tradeDealId)) {
             case 200:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_TRADING_EXECUTE.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_TRADING_EXECUTE.getStatusMessage());
             case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_TRADING_EXECUTE.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_TRADING_EXECUTE.getStatusMessage());
             case 404:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NOT_FOUND_TRADING.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, ExceptionMessage.NOT_FOUND_TRADING.getStatusMessage());
             default:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
 

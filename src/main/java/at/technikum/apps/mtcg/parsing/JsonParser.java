@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.parsing;
 
+import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
@@ -92,6 +93,10 @@ public class JsonParser {
         return convertStringToJson(createTradingsArrayString(tradingDeals));
     }
 
+    public String getBattle(Battle battle, User user) {
+        return createBattleHistoryString(battle, user);
+    }
+
     private String createUserCredentialsString(User user) {
         return "Username: " + user.getUsername() + "\nPassword: " + user.getPassword();
     }
@@ -140,6 +145,26 @@ public class JsonParser {
         }
 
         return tradingString.toString();
+    }
+
+    private String createBattleHistoryString(Battle battle, User user) {
+        StringBuilder battleString = new StringBuilder();
+        if(battle.isDraw()) {
+            battleString.append("+++ DRAW +++\n");
+            if(battle.getWinner().equals(user.getUsername())) {
+                battleString.append("  - Opponent: ").append(battle.getLoser());
+            } else {
+                battleString.append("  - Opponent: ").append(battle.getWinner());
+            }
+        } else if(battle.getWinner().equals(user.getUsername())) {
+            battleString.append("*** VICTORY ***\n");
+            battleString.append("  - Opponent: ").append(battle.getLoser());
+        } else {
+            battleString.append("--- DEFEAT ---");
+            battleString.append("  - Opponent: ").append(battle.getWinner());
+        }
+        battleString.append("\n\n");
+        return battleString.toString();
     }
 
     private String convertStringToJson(String inputString) {

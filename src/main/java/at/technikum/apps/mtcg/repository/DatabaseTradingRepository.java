@@ -4,8 +4,8 @@ import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.HttpStatusException;
-import at.technikum.server.http.HttpStatusMessage;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,7 +37,7 @@ public class DatabaseTradingRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
         return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
@@ -59,7 +59,7 @@ public class DatabaseTradingRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
         return tradingDeal;
     }
@@ -75,7 +75,7 @@ public class DatabaseTradingRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,7 +93,7 @@ public class DatabaseTradingRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -107,7 +107,7 @@ public class DatabaseTradingRepository {
             pstmt.execute();
         } catch(SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 

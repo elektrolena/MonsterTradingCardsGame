@@ -2,12 +2,12 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.entity.Package;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.TransactionService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionController extends Controller {
@@ -42,11 +42,11 @@ public class TransactionController extends Controller {
 
         User user = optionalUser.get();
         if(user.getCoins() < 5) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_TRANSACTION.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_TRANSACTION.getStatusMessage());
         }
         Optional<Package> cardPackage = this.transactionService.buyPackage(user, userService);
         if(cardPackage.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, HttpStatusMessage.NOT_FOUND_TRANSACTION.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NOT_FOUND, ExceptionMessage.NOT_FOUND_TRANSACTION.getStatusMessage());
         } else {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(cardPackage.get().getCards()));
         }

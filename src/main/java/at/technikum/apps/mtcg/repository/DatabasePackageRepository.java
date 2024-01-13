@@ -4,8 +4,8 @@ import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.Package;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.HttpStatusException;
-import at.technikum.server.http.HttpStatusMessage;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,7 +31,7 @@ public class DatabasePackageRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
     public Optional<Package> getPackage() {
@@ -49,7 +49,7 @@ public class DatabasePackageRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
         return cardPackage;
     }
@@ -64,7 +64,7 @@ public class DatabasePackageRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 

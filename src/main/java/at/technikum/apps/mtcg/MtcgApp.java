@@ -1,6 +1,7 @@
 package at.technikum.apps.mtcg;
 
 import at.technikum.apps.mtcg.controller.*;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
 import at.technikum.server.ServerApplication;
 import at.technikum.server.http.*;
 

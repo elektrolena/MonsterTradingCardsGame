@@ -12,6 +12,10 @@ public class BattleLog {
         return log;
     }
 
+    public void addString(String string) {
+        this.log = this.log + string;
+    }
+
     public void addRound(int round, BattleRoundResult result) {
         if(result.isDraw()) {
             this.log = this.log

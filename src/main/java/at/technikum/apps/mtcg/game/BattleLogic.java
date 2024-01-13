@@ -61,13 +61,13 @@ public class BattleLogic {
 
         Battle battle = new Battle();
         battle.setId(UUID.randomUUID().toString());
-        battle.setWinner(user1.getId());
-        battle.setLoser(user2.getId());
+        battle.setWinner(user1.getUsername());
+        battle.setLoser(user2.getUsername());
         if(!deck1.isEmpty() && !deck2.isEmpty()) {
             battle.setDraw(true);
         } else if(deck1.isEmpty()) {
-            battle.setWinner(user2.getId());
-            battle.setLoser(user1.getId());
+            battle.setWinner(user2.getUsername());
+            battle.setLoser(user1.getUsername());
         }
         battle.setLog(battleLog.getLog());
         // TODO: save in database (wins, losses, battle)

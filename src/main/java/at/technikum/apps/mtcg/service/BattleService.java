@@ -30,10 +30,10 @@ public class BattleService {
         User otherUser = getOtherUserInQueue();
         if(otherUser != null) {
             List<Card> otherDeck = getOtherUsersDeck();
-            notify();
             removeUserFromQueue(user);
             removeUserFromQueue(otherUser);
             this.battle = this.battleLogic.startBattle(user, deck, otherUser, otherDeck);
+            notify();
         } else {
             addUserToQueue(user, deck);
             try {
@@ -44,7 +44,6 @@ public class BattleService {
                 throw new RuntimeException();
             }
         }
-
         return this.battle.getLog();
     }
 
