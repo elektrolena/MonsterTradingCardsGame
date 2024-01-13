@@ -1,15 +1,17 @@
-package at.technikum.server.http;
+package at.technikum.apps.mtcg.exceptions;
 
-public enum HttpStatusMessage {
+public enum ExceptionMessage {
     OK_DECK("The deck has been successfully configured."),
     OK_TRADING_DELETE("Trading deal successfully deleted."),
     OK_TRADING_EXECUTE("Trading deal successfully executed."),
     CREATED_PACKAGE("Package and cards successfully created."),
     CREATED_TRADING("Trading deal successfully created."),
+    NO_CONTENT_BATTLE("The request was fine but the user has not participated in any battles in the past."),
     NO_CONTENT_CARD("The request was fine, but the user doesn't have any cards."),
     NO_CONTENT_DECK("The request was fine, but the deck doesn't have any cards."),
     NO_CONTENT_TRADING("The request was fine, but there are no trading deals available."),
     BAD_REQUEST_DECK("The provided deck did not include the required amount of cards."),
+    UNAUTHORIZED_ACCESS("Unauthorized access."),
     UNAUTHORIZED_SESSION("Invalid username/password provided."),
     FORBIDDEN_DECK("At least one of the provided cards does not belong to the user or is not available."),
     FORBIDDEN_PACKAGE("Provided user is not 'admin'."),
@@ -27,7 +29,7 @@ public enum HttpStatusMessage {
 
     private final String statusMessage;
 
-    HttpStatusMessage(String statusMessage) {
+    ExceptionMessage(String statusMessage) {
         this.statusMessage = statusMessage;
     }
 

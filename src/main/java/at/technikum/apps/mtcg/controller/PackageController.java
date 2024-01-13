@@ -1,12 +1,12 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.PackageService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,13 +42,13 @@ public class PackageController extends Controller {
         User admin = optionalUser.get();
 
         if(!Objects.equals(admin.getUsername(), "admin")) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_PACKAGE.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_PACKAGE.getStatusMessage());
         }
         if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
             if(this.packageService.save(this.parser.getCardsFromBody(request))) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, HttpStatusMessage.CREATED_PACKAGE.getStatusMessage());
+                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, ExceptionMessage.CREATED_PACKAGE.getStatusMessage());
             } else {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, HttpStatusMessage.ALREADY_EXISTS_PACKAGE.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, ExceptionMessage.ALREADY_EXISTS_PACKAGE.getStatusMessage());
             }
         }
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());

@@ -1,13 +1,16 @@
-package at.technikum.server.http;
+package at.technikum.apps.mtcg.exceptions;
+
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
 
 public class HttpStatusException extends RuntimeException {
     private HttpStatus httpStatus;
     private HttpContentType httpContentType;
-    private HttpStatusMessage httpStatusMessage;
-    public HttpStatusException(HttpStatus httpStatus, HttpContentType httpContentType, HttpStatusMessage httpStatusMessage) {
+    private ExceptionMessage exceptionMessage;
+    public HttpStatusException(HttpStatus httpStatus, HttpContentType httpContentType, ExceptionMessage exceptionMessage) {
         this.httpStatus = httpStatus;
         this.httpContentType = httpContentType;
-        this.httpStatusMessage = httpStatusMessage;
+        this.exceptionMessage = exceptionMessage;
     }
 
     public HttpStatus getHttpStatus() {
@@ -26,11 +29,11 @@ public class HttpStatusException extends RuntimeException {
         this.httpContentType = httpContentType;
     }
 
-    public HttpStatusMessage getHttpStatusMessage() {
-        return httpStatusMessage;
+    public ExceptionMessage getHttpStatusMessage() {
+        return exceptionMessage;
     }
 
-    public void setHttpStatusMessage(HttpStatusMessage httpStatusMessage) {
-        this.httpStatusMessage = httpStatusMessage;
+    public void setHttpStatusMessage(ExceptionMessage exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 }

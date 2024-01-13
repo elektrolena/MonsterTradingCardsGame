@@ -2,12 +2,12 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.CardService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class CardController extends Controller {
         if(cards.isPresent()) {
             return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(cards.get()));
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_CARD.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, ExceptionMessage.NO_CONTENT_CARD.getStatusMessage());
         }
     }
 }

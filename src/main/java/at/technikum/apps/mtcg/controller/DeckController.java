@@ -2,12 +2,12 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ public class DeckController extends Controller {
             }
 
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, HttpStatusMessage.NO_CONTENT_DECK.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, ExceptionMessage.NO_CONTENT_DECK.getStatusMessage());
         }
     }
 
@@ -68,11 +68,11 @@ public class DeckController extends Controller {
 
         switch(this.deckService.updateDeck(user, this.parser.getCardsFromBody(request))) {
             case 200:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, HttpStatusMessage.OK_DECK.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_DECK.getStatusMessage());
             case 400:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatusMessage.BAD_REQUEST_DECK.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, ExceptionMessage.BAD_REQUEST_DECK.getStatusMessage());
             case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, HttpStatusMessage.FORBIDDEN_DECK.getStatusMessage());
+                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_DECK.getStatusMessage());
             default:
                 return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
         }

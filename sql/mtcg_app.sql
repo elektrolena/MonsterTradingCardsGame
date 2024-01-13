@@ -47,12 +47,12 @@ CREATE TABLE IF NOT EXISTS tradings (
 
 CREATE TABLE IF NOT EXISTS battles (
     id VARCHAR(255) PRIMARY KEY,
-    winnerId_fk VARCHAR(255),
-    loserId_fk VARCHAR(255),
+    winnerUsername_fk VARCHAR(255),
+    loserUsername_fk VARCHAR(255),
     log VARCHAR,
     is_draw BOOLEAN,
-    FOREIGN KEY (winnerId_fk) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (loserId_fk) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (winnerUsername_fk) REFERENCES users(username) ON DELETE SET NULL,
+    FOREIGN KEY (loserUsername_fk) REFERENCES users(username) ON DELETE SET NULL
 );
 
 DELETE FROM users;

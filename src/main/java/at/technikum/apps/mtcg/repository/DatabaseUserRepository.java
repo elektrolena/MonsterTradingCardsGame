@@ -4,8 +4,8 @@ import at.technikum.apps.mtcg.data.Database;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
-import at.technikum.server.http.HttpStatusException;
-import at.technikum.server.http.HttpStatusMessage;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,7 +47,7 @@ public class DatabaseUserRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
@@ -68,7 +68,7 @@ public class DatabaseUserRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
@@ -89,7 +89,7 @@ public class DatabaseUserRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
@@ -108,7 +108,7 @@ public class DatabaseUserRepository {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
         return user;
@@ -125,7 +125,7 @@ public class DatabaseUserRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -147,7 +147,7 @@ public class DatabaseUserRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
         return userToReturn;
@@ -165,7 +165,7 @@ public class DatabaseUserRepository {
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -193,7 +193,7 @@ public class DatabaseUserRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, HttpStatusMessage.INTERNAL_SERVER_ERROR);
+            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
         return users;

@@ -24,6 +24,9 @@ public class Injector {
 
         List<Controller> controllerList = new ArrayList<>();
 
+        // JsonParser
+        JsonParser jsonParser = new JsonParser();
+
         // repositories
         DatabaseUserRepository databaseUserRepository = new DatabaseUserRepository();
         DatabaseCardRepository databaseCardRepository = new DatabaseCardRepository();
@@ -45,9 +48,7 @@ public class Injector {
         DeckService deckService = new DeckService(databaseCardRepository);
         TradingService tradingService = new TradingService(databaseCardRepository, databaseTradingRepository);
         BattleService battleService = new BattleService(battle, battleLogic, cardService, queue);
-
-        // JsonParser
-        JsonParser jsonParser = new JsonParser();
+        HistoryService historyService = new HistoryService(jsonParser, userService, databaseBattleRepository);
 
         // TODO: ask if there is a better place for this: app startup logic
         // delete all Session Tokens
@@ -63,6 +64,7 @@ public class Injector {
         controllerList.add(new StatsController(jsonParser, userService));
         controllerList.add(new BattleController(jsonParser, userService, battleService, deckService));
         controllerList.add(new TradingController(jsonParser, userService, tradingService));
+        controllerList.add(new HistoryController(jsonParser, historyService));
 
         return controllerList;
     }

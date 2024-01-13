@@ -1,7 +1,11 @@
 package at.technikum.apps.mtcg.service;
 
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,8 +20,12 @@ public class UserService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> findWithUsername(String username) {
-        return databaseUserRepository.findWithUsername(username);
+    public User findWithUsername(String username) {
+        Optional<User> user = databaseUserRepository.findWithUsername(username);
+        if(user.isEmpty()) {
+            throw new HttpStatusException(HttpStatus.NOT_FOUND, HttpContentType.TEXT_PLAIN, ExceptionMessage.NOT_FOUND_USER);
+        }
+        return user.get();
     }
 
     public Optional<User> findWithToken(String token) {
@@ -46,6 +54,9 @@ public class UserService {
     }
 
     public User save(User user) {
+        if(this.databaseUserRepository.findWithUsername(user.getUsername()).isPresent()) {
+            throw new HttpStatusException(HttpStatus.ALREADY_EXISTS, HttpContentType.TEXT_PLAIN, ExceptionMessage.ALREADY_EXISTS_USER);
+        }
         user.setId(UUID.randomUUID().toString());
         user.setCoins(20);
         user.setElo(100);
