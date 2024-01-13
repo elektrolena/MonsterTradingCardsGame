@@ -20,16 +20,26 @@ public class UserService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public User findWithUsername(String username) {
-        Optional<User> user = databaseUserRepository.findWithUsername(username);
-        if(user.isEmpty()) {
+    public User findWithUsername(String username, String authorizationToken) {
+        Optional<User> userOptional = databaseUserRepository.findWithUsername(username);
+        if(userOptional.isEmpty()) {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, HttpContentType.TEXT_PLAIN, ExceptionMessage.NOT_FOUND_USER);
         }
-        return user.get();
+
+        User user = userOptional.get();
+        if(authorizationToken == null || user.getToken() == null || (!authorizationToken.equals(user.getToken()) && !user.getUsername().equals("admin"))) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
+        }
+
+        return user;
     }
 
-    public Optional<User> findWithToken(String token) {
-        return databaseUserRepository.findWithToken(token);
+    public User findWithToken(String token) {
+        Optional<User> user = databaseUserRepository.findWithToken(token);
+        if(user.isEmpty()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
+        }
+        return user.get();
     }
 
     public User update(User user, User updatedUser) {

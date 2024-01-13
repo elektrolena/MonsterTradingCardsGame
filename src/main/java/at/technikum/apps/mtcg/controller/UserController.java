@@ -44,27 +44,20 @@ public class UserController extends Controller {
     }
 
     Response read(String username, Request request) {
-        User user = userService.findWithUsername(username);
+        User user = userService.findWithUsername(username, request.getAuthorizationToken());
 
-        if(Objects.equals(request.getAuthorizationToken(), user.getToken()) && user.getToken() != null) {
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(user));
-        }
-
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(user));
     }
 
     Response update(String username, Request request) {
-        User currentUser = userService.findWithUsername(username);
+        User currentUser = userService.findWithUsername(username, request.getAuthorizationToken());
 
-        if((Objects.equals(request.getAuthorizationToken(), currentUser.getToken()) || Objects.equals(request.getAuthorizationToken(), "admin-mtcgToken")) && currentUser.getToken() != null) {
-            User updatedUser = this.parser.getUserFromBody(request);
-            updatedUser = userService.update(currentUser, updatedUser);
-            if(updatedUser != null) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
-            }
-        }
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
+        User updatedUser = this.parser.getUserFromBody(request);
+        updatedUser = userService.update(currentUser, updatedUser);
+
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
     }
+
 
     Response create(Request request) {
         User user = this.parser.getUserFromBody(request);

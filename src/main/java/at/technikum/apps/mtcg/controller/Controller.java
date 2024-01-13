@@ -33,7 +33,7 @@ public abstract class Controller {
         return response;
     }
 
-    protected Optional<User> checkForAuthorizedRequest(Request request, UserService userService) {
+    protected User checkForAuthorizedRequest(Request request, UserService userService) {
         if(request.getAuthorizationToken() == null) {
             return Optional.empty();
         }
