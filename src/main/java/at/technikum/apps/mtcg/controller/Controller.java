@@ -33,14 +33,6 @@ public abstract class Controller {
         return response;
     }
 
-    protected User checkForAuthorizedRequest(Request request, UserService userService) {
-        if(request.getAuthorizationToken() == null) {
-            return Optional.empty();
-        }
-
-        return userService.findWithToken(request.getAuthorizationToken());
-    }
-
     protected String extractLastRoutePart(String route) {
         String[] routeParts = route.split("/");
         return routeParts[2];

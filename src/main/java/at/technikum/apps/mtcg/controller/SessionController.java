@@ -33,12 +33,6 @@ public class SessionController extends Controller {
     Response start(Request request) {
         User user = this.parser.getUserFromBody(request);
 
-        Optional<User> foundUser = sessionService.login(user);
-        if(foundUser.isPresent()) {
-            user = foundUser.get();
-            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(user));
-        }
-
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, ExceptionMessage.UNAUTHORIZED_SESSION.getStatusMessage());
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserCredentials(sessionService.login(user)));
     }
 }
