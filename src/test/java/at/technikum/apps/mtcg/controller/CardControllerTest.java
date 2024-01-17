@@ -2,12 +2,9 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.CardService;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,9 +16,8 @@ public class CardControllerTest {
     public void shouldSupportRoute_WhenValidCardRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         CardService cardService = mock(CardService.class);
-        CardController cardController = new CardController(parser, userService, cardService);
+        CardController cardController = new CardController(parser, cardService);
         String route = "/cards";
         boolean doesSupport = false;
 
@@ -36,9 +32,8 @@ public class CardControllerTest {
     public void shouldNotSupportRoute_WhenInvalidCardRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         CardService cardService = mock(CardService.class);
-        CardController cardController = new CardController(parser, userService, cardService);
+        CardController cardController = new CardController(parser, cardService);
         String route = "/users";
         boolean doesSupport = false;
 
@@ -53,9 +48,8 @@ public class CardControllerTest {
     public void shouldSupportRequestMethod_WhenValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         CardService cardService = mock(CardService.class);
-        CardController cardController = spy(new CardController(parser, userService, cardService));
+        CardController cardController = spy(new CardController(parser, cardService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
@@ -74,9 +68,8 @@ public class CardControllerTest {
     public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         CardService cardService = mock(CardService.class);
-        CardController cardController = spy(new CardController(parser, userService, cardService));
+        CardController cardController = spy(new CardController(parser, cardService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

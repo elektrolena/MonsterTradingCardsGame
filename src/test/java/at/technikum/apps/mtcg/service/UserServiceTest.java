@@ -5,7 +5,6 @@ import at.technikum.apps.mtcg.exceptions.HttpStatusException;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

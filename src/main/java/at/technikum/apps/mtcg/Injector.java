@@ -58,10 +58,10 @@ public class Injector {
         controllerList.add(new SessionController(jsonParser, sessionService));
         controllerList.add(new PackageController(jsonParser, packageService));
         controllerList.add(new TransactionController(jsonParser, userService, transactionService));
-        controllerList.add(new CardController(jsonParser, userService, cardService));
+        controllerList.add(new CardController(jsonParser, cardService));
         controllerList.add(new DeckController(jsonParser, deckService));
         controllerList.add(new StatsController(jsonParser, userService, statsService));
-        controllerList.add(new BattleController(jsonParser, userService, battleService, deckService));
+        controllerList.add(new BattleController(jsonParser, battleService));
         controllerList.add(new TradingController(jsonParser, tradingService));
         controllerList.add(new HistoryController(jsonParser, historyService));
 

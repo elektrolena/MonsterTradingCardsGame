@@ -3,7 +3,6 @@ package at.technikum.apps.mtcg.repository;
 import at.technikum.apps.mtcg.entity.User;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
