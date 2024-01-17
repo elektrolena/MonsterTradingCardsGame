@@ -1,16 +1,10 @@
 package at.technikum.apps.mtcg.controller;
 
-import at.technikum.apps.mtcg.entity.Card;
-import at.technikum.apps.mtcg.entity.User;
-import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.BattleService;
 import at.technikum.apps.mtcg.service.DeckService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
-
-import java.util.List;
-import java.util.Optional;
 
 public class BattleController extends Controller {
 
@@ -39,16 +33,8 @@ public class BattleController extends Controller {
     }
 
     Response battle(Request request) {
-        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-        if (optionalUser.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
-        User user = optionalUser.get();
-        Optional<List<Card>> retrievedDeck = this.deckService.getDeck(user);
-        if (retrievedDeck.isEmpty()) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, ExceptionMessage.NO_CONTENT_DECK.getStatusMessage());
-        }
-        List<Card> deck = retrievedDeck.get();
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.battleService.createBattleLog(user, userService, deck));
+        String battleLog = this.battleService.createBattleLog(request.getAuthorizationToken());
+
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, battleLog);
     }
 }

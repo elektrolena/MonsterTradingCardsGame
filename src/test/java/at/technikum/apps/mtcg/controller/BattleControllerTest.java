@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
-public class BattleLogControllerTest {
+public class BattleControllerTest {
     @Test
     public void shouldSupportRoute_WhenValidBattleRoute() {
         // Arrange
@@ -53,7 +53,7 @@ public class BattleLogControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidBattleMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidBattleMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -75,7 +75,7 @@ public class BattleLogControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

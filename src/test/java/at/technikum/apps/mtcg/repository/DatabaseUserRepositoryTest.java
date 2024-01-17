@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class DatabaseUserRepositoryTest {
 
     @Test
-    public void whenAddOneUser_ThenFindShouldReturnUser() throws SQLException {
+    public void whenAddOneUser_ThenFindShouldReturnUser() {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
+        User userToAdd = new User("id", "username", "password", "name", "bio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
@@ -31,6 +31,7 @@ class DatabaseUserRepositoryTest {
         User userMock = retrievedUserMock.get();
         assertEquals("username", userMock.getUsername());
         assertEquals("password", userMock.getPassword());
+        assertEquals("name", userMock.getName());
         assertEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
         assertEquals(20, userMock.getCoins());
@@ -40,11 +41,11 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenAddOneUser_ThenFindShouldNotReturnFalseUserCredentials() throws SQLException {
+    public void whenAddOneUser_ThenFindShouldNotReturnFalseUserCredentials() {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
+        User userToAdd = new User("id", "username", "password", "name", "bio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
 
@@ -59,6 +60,7 @@ class DatabaseUserRepositoryTest {
         User userMock = retrievedUserMock.get();
         assertNotEquals("falseUsername", userMock.getUsername());
         assertNotEquals("falsePassword", userMock.getPassword());
+        assertNotEquals("falseName", userMock.getName());
         assertNotEquals("falseBio", userMock.getBio());
         assertNotEquals("falseImage", userMock.getImage());
         assertNotEquals(0, userMock.getCoins());
@@ -68,12 +70,12 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenUpdateOneUser_ThenFindShouldReturnNewUser() throws SQLException {
+    public void whenUpdateOneUser_ThenFindShouldReturnNewUser() {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
-        User updatedUser = new User("id", "username", "newPassword", "newBio", "image", 20, 100, 0, 0);
+        User userToAdd = new User("id", "username", "password", "name", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id", "username", "newPassword", "newName", "newBio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
@@ -89,6 +91,7 @@ class DatabaseUserRepositoryTest {
         User userMock = retrievedUpdatedUserMock.get();
         assertEquals("username", userMock.getUsername());
         assertEquals("newPassword", userMock.getPassword());
+        assertEquals("newName", userMock.getName());
         assertEquals("newBio", userMock.getBio());
         assertEquals("image", userMock.getImage());
         assertEquals(20, userMock.getCoins());
@@ -98,12 +101,12 @@ class DatabaseUserRepositoryTest {
     }
 
     @Test
-    public void whenUpdateOneUser_ThenFindShouldNotReturnOldUser() throws SQLException {
+    public void whenUpdateOneUser_ThenFindShouldNotReturnOldUser() {
         // Arrange
         DatabaseUserRepository databaseUserRepositoryMock = mock(DatabaseUserRepository.class);
 
-        User userToAdd = new User("id", "username", "password", "bio", "image", 20, 100, 0, 0);
-        User updatedUser = new User("id", "username", "newPassword", "newBio", "image", 20, 100, 0, 0);
+        User userToAdd = new User("id", "username", "password", "name", "bio", "image", 20, 100, 0, 0);
+        User updatedUser = new User("id", "username", "newPassword", "newName", "newBio", "image", 20, 100, 0, 0);
 
         when(databaseUserRepositoryMock.save(userToAdd)).thenReturn(userToAdd);
         when(databaseUserRepositoryMock.update(updatedUser)).thenReturn(updatedUser);
@@ -119,6 +122,7 @@ class DatabaseUserRepositoryTest {
         User userMock = retrievedUpdatedUserMock.get();
         assertEquals("username", userMock.getUsername());
         assertNotEquals("password", userMock.getPassword());
+        assertNotEquals("name", userMock.getName());
         assertNotEquals("bio", userMock.getBio());
         assertEquals("image", userMock.getImage());
         assertEquals(20, userMock.getCoins());

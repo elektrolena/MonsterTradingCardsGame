@@ -50,7 +50,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidCardMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -71,7 +71,7 @@ public class CardControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

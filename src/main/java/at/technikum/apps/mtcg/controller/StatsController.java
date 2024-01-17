@@ -2,22 +2,23 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.parsing.JsonParser;
+import at.technikum.apps.mtcg.service.StatsService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 
-import java.sql.SQLException;
-import java.util.Optional;
+import java.util.List;
 
 public class StatsController extends Controller {
-
     private final UserService userService;
+    private final StatsService statsService;
 
-    public StatsController(JsonParser parser, UserService userService) {
+    public StatsController(JsonParser parser, UserService userService, StatsService statsService) {
         super(parser);
         this.userService = userService;
+        this.statsService = statsService;
     }
 
     @Override
@@ -40,22 +41,14 @@ public class StatsController extends Controller {
     }
 
     Response getUserStats(Request request) {
-        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-        if(optionalUser.isEmpty()){
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
+        User user = userService.findWithToken(request.getAuthorizationToken());
 
-        User user = optionalUser.get();
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserStats(user));
     }
 
     Response getScoreBoard(Request request) {
-        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-        if(optionalUser.isEmpty()){
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
+        List<User> users = this.statsService.getUserScoreBoard(request.getAuthorizationToken());
 
-        User user = optionalUser.get();
-        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUsers(this.userService.getUserScoreBoard()));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUsers(users));
     }
 }

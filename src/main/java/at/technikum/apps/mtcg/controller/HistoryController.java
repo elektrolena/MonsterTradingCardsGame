@@ -30,7 +30,7 @@ public class HistoryController extends Controller {
     }
 
     Response getBattleHistory(Request request) {
-        String responseBody = this.historyService.getBattleHistory(request);
+        String responseBody = this.historyService.getBattleHistory(request.getAuthorizationToken());
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, responseBody);
     }
 }

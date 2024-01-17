@@ -20,9 +20,8 @@ public class DeckControllerTest {
     public void shouldSupportRoute_WhenValidDeckRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         DeckService deckService = mock(DeckService.class);
-        DeckController deckController = new DeckController(parser, deckService, userService);
+        DeckController deckController = new DeckController(parser, deckService);
         String firstRoute = "/deck";
         String secondRoute = "/deck?format=plain";
 
@@ -42,9 +41,8 @@ public class DeckControllerTest {
     public void shouldNotSupportRoute_WhenInvalidDeckRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         DeckService deckService = mock(DeckService.class);
-        DeckController deckController = new DeckController(parser, deckService, userService);
+        DeckController deckController = new DeckController(parser, deckService);
         String route = "/users";
         boolean doesSupport = false;
 
@@ -56,12 +54,11 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidDeckMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidDeckMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         DeckService deckService = mock(DeckService.class);
-        DeckController deckController = spy(new DeckController(parser, deckService, userService));
+        DeckController deckController = spy(new DeckController(parser, deckService));
         Request getRequest = mock(Request.class);
         Request putRequest = mock(Request.class);
         Response response = mock(Response.class);
@@ -82,12 +79,11 @@ public class DeckControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         DeckService deckService = mock(DeckService.class);
-        DeckController deckController = spy(new DeckController(parser, deckService, userService));
+        DeckController deckController = spy(new DeckController(parser, deckService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

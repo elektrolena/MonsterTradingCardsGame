@@ -93,7 +93,7 @@ public class DatabaseCardRepository {
         return cards;
     }
 
-    public Optional<List<Card>> getCardsFromUser(String userId) {
+    public List<Card> getCardsFromUser(String userId) {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -112,7 +112,7 @@ public class DatabaseCardRepository {
             throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
-        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
+        return cards;
     }
 
     public void updateCardOwner(String cardId, String userId) {
@@ -130,7 +130,7 @@ public class DatabaseCardRepository {
         }
     }
 
-    public Optional<List<Card>> getDeck(String userId) {
+    public List<Card> getDeck(String userId) {
         List<Card> cards = new ArrayList<>();
 
         try (
@@ -147,7 +147,7 @@ public class DatabaseCardRepository {
             e.printStackTrace();
             throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
-        return cards.isEmpty() ? Optional.empty() : Optional.of(cards);
+        return cards;
     }
 
     public Optional<Card> checkForOwnership(String cardId, String userId) {

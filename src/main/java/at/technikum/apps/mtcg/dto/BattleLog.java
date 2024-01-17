@@ -12,32 +12,32 @@ public class BattleLog {
         return log;
     }
 
+    public void addRound(int round) {
+        this.log = this.log + "~~~~~~~~~~~~~~~ " + round + ". Round: ~~~~~~~~~~~~~~~\n\n";
+    }
+
     public void addString(String string) {
         this.log = this.log + string;
     }
 
-    public void addRound(int round, BattleRoundResult result) {
+    public void addRoundResult(BattleRoundResult result) {
         if(result.isDraw()) {
             this.log = this.log
-                    + round
-                    + ". Round:\n"
-                    + " +++ DRAW +++\n"
+                    + " \n +++++ DRAW +++++\n"
                     + " Name: " + result.getWinner().getName() + "\n"
                     + " Card: " + result.getWinnerCard().getName() + "\n"
-                    + " Damage: " + result.getWinnerCard().getDamage() + "\n"
-                    + " +++ DRAW +++\n"
+                    + " Damage: " + result.getWinnerCard().getDamage() + "\n\n"
+                    + " +++++ DRAW +++++\n"
                     + " Name: " + result.getLoser().getName() + "\n"
                     + " Card: " + result.getLoserCard().getName() + "\n"
                     + " Damage: " + result.getLoserCard().getDamage() + "\n\n";
         } else {
             this.log = this.log
-                    + round
-                    + ". Round:\n"
-                    + " *** WINNER ***\n"
+                    + " \n ***** WINNER *****\n"
                     + " Name: " + result.getWinner().getName() + "\n"
                     + " Card: " + result.getWinnerCard().getName() + "\n"
-                    + " Damage: " + result.getWinnerCard().getDamage() + "\n"
-                    + " --- LOSER ---\n"
+                    + " Damage: " + result.getWinnerCard().getDamage() + "\n\n"
+                    + " ----- LOSER -----\n"
                     + " Name: " + result.getLoser().getName() + "\n"
                     + " Card: " + result.getLoserCard().getName() + "\n"
                     + " Damage: " + result.getLoserCard().getDamage() + "\n\n";

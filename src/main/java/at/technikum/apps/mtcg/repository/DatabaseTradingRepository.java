@@ -23,7 +23,7 @@ public class DatabaseTradingRepository {
     private final String DELETE_TRADING_DEAL_SQL = "DELETE FROM tradings WHERE id = ?";
     private final Database database = new Database();
 
-    public Optional<List<TradingDeal>> getAllTradingDeals() {
+    public List<TradingDeal> getAllTradingDeals() {
         List<TradingDeal> tradingDeals = new ArrayList<>();
 
         try (
@@ -40,7 +40,7 @@ public class DatabaseTradingRepository {
             throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
         }
 
-        return tradingDeals.isEmpty() ? Optional.empty() : Optional.of(tradingDeals);
+        return tradingDeals;
     }
 
     public Optional<TradingDeal> getTradingDeal(String tradingDealId) {

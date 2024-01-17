@@ -1,9 +1,13 @@
 package at.technikum.apps.mtcg.service;
 
 import at.technikum.apps.mtcg.entity.User;
+import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
+import at.technikum.apps.mtcg.exceptions.HttpStatusException;
 import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
+import at.technikum.server.http.HttpContentType;
+import at.technikum.server.http.HttpStatus;
 
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 public class SessionService {
@@ -14,15 +18,19 @@ public class SessionService {
         this.databaseUserRepository = databaseUserRepository;
     }
 
-    public Optional<User> login(User user) {
+    public User login(User user) {
         Optional<User> foundUser = databaseUserRepository.validateLogin(user);
 
-        if(foundUser.isPresent()) {
-            user = foundUser.get();
-            user.setToken(user.getUsername() + "-mtcgToken");
-            databaseUserRepository.addToken(user);
-            foundUser = Optional.of(user);
+        if(foundUser.isEmpty()) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_SESSION);
         }
-        return foundUser;
+        user = foundUser.get();
+
+        user.setToken(user.getUsername() + "-mtcgToken");
+        user.setLoginTimestamp(new Timestamp(System.currentTimeMillis()));
+
+        databaseUserRepository.addToken(user);
+
+        return user;
     }
 }

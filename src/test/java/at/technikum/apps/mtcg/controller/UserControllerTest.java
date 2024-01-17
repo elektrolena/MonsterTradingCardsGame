@@ -51,7 +51,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidUserMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidUserMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -87,7 +87,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidDeckMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

@@ -20,9 +20,8 @@ public class PackageControllerTest {
     public void shouldSupportRoute_WhenValidPackageRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         PackageService packageService = mock(PackageService.class);
-        PackageController packageController = new PackageController(parser, userService, packageService);
+        PackageController packageController = new PackageController(parser, packageService);
         String route = "/packages";
 
         boolean doesSupport = false;
@@ -38,9 +37,8 @@ public class PackageControllerTest {
     public void shouldNotSupportRoute_WhenInvalidPackageRoute() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         PackageService packageService = mock(PackageService.class);
-        PackageController packageController = new PackageController(parser, userService, packageService);
+        PackageController packageController = new PackageController(parser, packageService);
         String route = "/users";
         boolean doesSupport = false;
 
@@ -52,12 +50,11 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidPackageMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidPackageMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         PackageService packageService = mock(PackageService.class);
-        PackageController packageController = spy(new PackageController(parser, userService, packageService));
+        PackageController packageController = spy(new PackageController(parser, packageService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 
@@ -73,12 +70,11 @@ public class PackageControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidPackaeMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidPackageMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
-        UserService userService = mock(UserService.class);
         PackageService packageService = mock(PackageService.class);
-        PackageController packageController = spy(new PackageController(parser, userService, packageService));
+        PackageController packageController = spy(new PackageController(parser, packageService));
         Request request = mock(Request.class);
         Response response = mock(Response.class);
 

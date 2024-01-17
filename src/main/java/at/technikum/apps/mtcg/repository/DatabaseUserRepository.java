@@ -19,11 +19,9 @@ public class DatabaseUserRepository {
     private final String FIND_WITH_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
     private final String FIND_WITH_TOKEN_SQL = "SELECT * FROM users WHERE token = ?";
     private final String SAVE_SQL = "INSERT INTO users(id, username, password, name, bio, image, coins, elo, wins, losses) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE users SET name = ?, password = ?, bio = ?, image = ? WHERE id = ?";
-    private final String UPDATE_COINS_SQL = "UPDATE users SET coins = ? WHERE id = ?";
+    private final String UPDATE_SQL = "UPDATE users SET name = ?, bio = ?, image = ?, coins = ?, elo = ?, wins = ?, losses = ? WHERE id = ?";
     private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
-    private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
-    private final String DELETE_ALL_TOKENS_SQL = "UPDATE users SET token = NULL";
+    private final String ADD_TOKEN_SQL = "UPDATE users SET token = ?, loginTime = ? WHERE username = ? AND password = ?";
     private final String GET_USER_SCOREBOARD_SQL = "SELECT * FROM users ORDER BY elo DESC";
 
     private final Database database = new Database();
@@ -100,10 +98,13 @@ public class DatabaseUserRepository {
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL)
         ) {
             pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getBio());
-            pstmt.setString(4, user.getImage());
-            pstmt.setString(5, user.getId());
+            pstmt.setString(2, user.getBio());
+            pstmt.setString(3, user.getImage());
+            pstmt.setInt(4, user.getCoins());
+            pstmt.setInt(5, user.getElo());
+            pstmt.setInt(6, user.getWins());
+            pstmt.setInt(7, user.getLosses());
+            pstmt.setString(8, user.getId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -112,21 +113,6 @@ public class DatabaseUserRepository {
         }
 
         return user;
-    }
-
-    public void updateCoins(String userId, int sum) {
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(UPDATE_COINS_SQL)
-        ) {
-            pstmt.setInt(1, sum);
-            pstmt.setString(2, userId);
-
-            pstmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
-        }
     }
 
     public Optional<User> validateLogin(User user) {
@@ -159,23 +145,14 @@ public class DatabaseUserRepository {
                 PreparedStatement pstmt = con.prepareStatement(ADD_TOKEN_SQL)
         ) {
             pstmt.setString(1, user.getToken());
-            pstmt.setString(2, user.getUsername());
-            pstmt.setString(3, user.getPassword());
+            pstmt.setTimestamp(2, user.getLoginTimestamp());
+            pstmt.setString(3, user.getUsername());
+            pstmt.setString(4, user.getPassword());
 
             pstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public void deleteTokens() {
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(DELETE_ALL_TOKENS_SQL)
-        ) {
-            pstmt.execute();
-        } catch (SQLException e) {
         }
     }
 
@@ -203,6 +180,7 @@ public class DatabaseUserRepository {
         User user = new User();
         user.setId(rs.getString("id"));
         user.setToken(rs.getString("token"));
+        user.setLoginTimestamp(rs.getTimestamp("loginTime"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
         user.setName(rs.getString("name"));

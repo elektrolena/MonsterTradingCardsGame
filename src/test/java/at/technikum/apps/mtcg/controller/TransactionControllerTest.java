@@ -50,7 +50,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidTransactionMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidTransactionMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -71,7 +71,7 @@ public class TransactionControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidTransactionMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidTransactionMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

@@ -2,6 +2,7 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.SessionService;
+import at.technikum.apps.mtcg.service.StatsService;
 import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
@@ -20,7 +21,8 @@ public class StatsControllerTest {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
-        StatsController statsController = new StatsController(parser, userService);
+        StatsService statsService = mock(StatsService.class);
+        StatsController statsController = new StatsController(parser, userService, statsService);
         String firstRoute = "/stats";
         String secondRoute = "/scoreboard";
 
@@ -41,7 +43,8 @@ public class StatsControllerTest {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
-        StatsController statsController = new StatsController(parser, userService);
+        StatsService statsService = mock(StatsService.class);
+        StatsController statsController = new StatsController(parser, userService, statsService);
         String route = "/scores";
         boolean doesSupport = false;
 
@@ -53,11 +56,12 @@ public class StatsControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidStatsMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidStatsMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
-        StatsController statsController = spy(new StatsController(parser, userService));
+        StatsService statsService = mock(StatsService.class);
+        StatsController statsController = spy(new StatsController(parser, userService, statsService));
         Request getStatsRequest = mock(Request.class);
         Request getScoreBoardRequest = mock(Request.class);
         Response response = mock(Response.class);
@@ -81,11 +85,12 @@ public class StatsControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidStatsMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidStatsMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
-        StatsController statsController = spy(new StatsController(parser, userService));
+        StatsService statsService = mock(StatsService.class);
+        StatsController statsController = spy(new StatsController(parser, userService, statsService));
         Request getStatsRequest = mock(Request.class);
         Request getScoreBoardRequest = mock(Request.class);
         Response response = mock(Response.class);
