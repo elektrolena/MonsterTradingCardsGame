@@ -1,9 +1,12 @@
 package at.technikum.apps.mtcg.entity;
 
+import java.sql.Timestamp;
+
 public class User {
 
     private String id;
     private String token;
+    private Timestamp loginTimestamp;
     private String username;
     private String name;
     private String password;
@@ -35,6 +38,22 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Timestamp getLoginTimestamp() {
+        return loginTimestamp;
+    }
+
+    public void setLoginTimestamp(Timestamp loginTimestamp) {
+        this.loginTimestamp = loginTimestamp;
     }
 
     public String getUsername() {
@@ -75,14 +94,6 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public int getCoins() {

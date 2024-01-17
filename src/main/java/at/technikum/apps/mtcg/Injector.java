@@ -53,10 +53,6 @@ public class Injector {
         BattleService battleService = new BattleService(authorizationService, deckService, battle, battleLogic, queue);
         HistoryService historyService = new HistoryService(authorizationService, databaseBattleRepository);
 
-        // TODO: move this to app startup logic
-        // delete all Session Tokens
-        databaseUserRepository.deleteTokens();
-
         // controllers
         controllerList.add(new UserController(jsonParser, userService));
         controllerList.add(new SessionController(jsonParser, sessionService));

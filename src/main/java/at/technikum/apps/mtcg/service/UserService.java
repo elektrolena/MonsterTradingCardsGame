@@ -7,6 +7,8 @@ import at.technikum.apps.mtcg.entity.User;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,11 +39,21 @@ public class UserService {
     }
 
     public User findWithToken(String token) {
-        Optional<User> user = databaseUserRepository.findWithToken(token);
-        if(user.isEmpty()) {
+        Optional<User> optionalUser = databaseUserRepository.findWithToken(token);
+        if(optionalUser.isEmpty()) {
             throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
         }
-        return user.get();
+        User user = optionalUser.get();
+
+        Timestamp loginTimeStamp = user.getLoginTimestamp();
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+
+        long millisecondsDifference = currentTimestamp.getTime() - loginTimeStamp.getTime();
+
+        if(millisecondsDifference > 30000) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
+        }
+        return user;
     }
 
     public User update(String authorizationToken, String username, User updatedUser) {
