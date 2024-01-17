@@ -7,13 +7,10 @@ import at.technikum.apps.mtcg.entity.User;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
-
     private final DatabaseUserRepository databaseUserRepository;
 
     public UserService(DatabaseUserRepository databaseUserRepository) {
@@ -73,9 +70,5 @@ public class UserService {
         user.setWins(0);
         user.setLosses(0);
         return databaseUserRepository.save(user);
-    }
-
-    public List<User> getUserScoreBoard() {
-        return databaseUserRepository.getUserScoreBoard();
     }
 }

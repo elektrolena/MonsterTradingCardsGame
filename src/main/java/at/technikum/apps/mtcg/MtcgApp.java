@@ -32,7 +32,7 @@ public class MtcgApp implements ServerApplication {
                 Response response = new Response();
                 response.setStatus(e.getHttpStatus());
                 response.setContentType(e.getHttpContentType());
-                response.setBody(e.getHttpStatusMessage().toString());
+                response.setBody(e.getHttpStatusMessage().getStatusMessage());
 
                 return response;
             }

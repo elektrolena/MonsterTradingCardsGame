@@ -1,22 +1,15 @@
 package at.technikum.apps.mtcg.controller;
 
-import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.PackageService;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
-
-import java.util.Objects;
-import java.util.Optional;
 
 public class PackageController extends Controller {
 
-    private final UserService userService;
     private final PackageService packageService;
-    public PackageController(JsonParser parser, UserService userService, PackageService packageService) {
+    public PackageController(JsonParser parser, PackageService packageService) {
         super(parser);
-        this.userService = userService;
         this.packageService = packageService;
     }
 
@@ -34,23 +27,7 @@ public class PackageController extends Controller {
     }
 
     Response createPackage(Request request) {
-        Optional <User> optionalUser = checkForAuthorizedRequest(request, this.userService);
-        if(optionalUser.isEmpty()){
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
-
-        User admin = optionalUser.get();
-
-        if(!Objects.equals(admin.getUsername(), "admin")) {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_PACKAGE.getStatusMessage());
-        }
-        if(Objects.equals(admin.getToken(), "admin-mtcgToken")) {
-            if(this.packageService.save(this.parser.getCardsFromBody(request))) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, ExceptionMessage.CREATED_PACKAGE.getStatusMessage());
-            } else {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.ALREADY_EXISTS, ExceptionMessage.ALREADY_EXISTS_PACKAGE.getStatusMessage());
-            }
-        }
-        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
+        this.packageService.save(request.getAuthorizationToken(), this.parser.getCardsFromBody(request));
+        return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.CREATED, ExceptionMessage.CREATED_PACKAGE.getStatusMessage());
     }
 }

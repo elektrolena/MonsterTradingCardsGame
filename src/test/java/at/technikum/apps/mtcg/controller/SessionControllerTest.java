@@ -46,7 +46,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidSessionMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidSessionMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         SessionService sessionService = mock(SessionService.class);
@@ -66,7 +66,7 @@ public class SessionControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidSessionMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidSessionMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         SessionService sessionService = mock(SessionService.class);

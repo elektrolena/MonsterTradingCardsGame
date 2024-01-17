@@ -1,6 +1,5 @@
 package at.technikum.apps.mtcg.parsing;
 
-import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.TradingDeal;
 import at.technikum.apps.mtcg.entity.User;
@@ -11,9 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
-// TODO: ask if there is a better place for the parser package
 public class JsonParser {
     public User getUserFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();
@@ -40,18 +39,22 @@ public class JsonParser {
         return cards;
     }
 
-    public Card[] getCardsFromBody(Request request) {
+    public List<Card> getCardsFromBody(Request request) {
         ObjectMapper objectMapper = new ObjectMapper();
-        Card[] cards = null;
+        List<Card> cards = new ArrayList<>();
         try {
             JsonNode jsonNode = objectMapper.readTree(request.getBody());
-            cards = objectMapper.treeToValue(jsonNode, Card[].class);
+            for (JsonNode cardNode : jsonNode) {
+                Card card = objectMapper.treeToValue(cardNode, Card.class);
+                cards.add(card);
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
         return cards;
     }
+
 
     public TradingDeal getTradingDealFromBody(Request request) {
         ObjectMapper objectmapper = new ObjectMapper();
@@ -91,10 +94,6 @@ public class JsonParser {
 
     public String getTradingDeals(List<TradingDeal> tradingDeals) {
         return convertStringToJson(createTradingsArrayString(tradingDeals));
-    }
-
-    public String getBattle(Battle battle, User user) {
-        return createBattleHistoryString(battle, user);
     }
 
     private String createUserCredentialsString(User user) {
@@ -145,26 +144,6 @@ public class JsonParser {
         }
 
         return tradingString.toString();
-    }
-
-    private String createBattleHistoryString(Battle battle, User user) {
-        StringBuilder battleString = new StringBuilder();
-        if(battle.isDraw()) {
-            battleString.append("+++ DRAW +++\n");
-            if(battle.getWinner().equals(user.getUsername())) {
-                battleString.append("  - Opponent: ").append(battle.getLoser());
-            } else {
-                battleString.append("  - Opponent: ").append(battle.getWinner());
-            }
-        } else if(battle.getWinner().equals(user.getUsername())) {
-            battleString.append("*** VICTORY ***\n");
-            battleString.append("  - Opponent: ").append(battle.getLoser());
-        } else {
-            battleString.append("--- DEFEAT ---");
-            battleString.append("  - Opponent: ").append(battle.getWinner());
-        }
-        battleString.append("\n\n");
-        return battleString.toString();
     }
 
     private String convertStringToJson(String inputString) {

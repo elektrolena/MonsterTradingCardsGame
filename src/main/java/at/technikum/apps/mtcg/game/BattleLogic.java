@@ -68,9 +68,14 @@ public class BattleLogic {
         } else if(deck1.isEmpty()) {
             battle.setWinner(user2.getUsername());
             battle.setLoser(user1.getUsername());
+            user2.setElo(user2.getElo() + 3);
+            user1.setElo(user1.getElo() - 5);
+        } else {
+            user1.setElo(user1.getElo() + 3);
+            user2.setElo(user2.getElo() - 5);
         }
         battle.setLog(battleLog.getLog());
-        // TODO: save in database (wins, losses, battle)
+        // TODO: change users in database (no wins and losses)
         this.databaseBattleRepository.save(battle);
 
         return battle;

@@ -42,13 +42,15 @@ public class Injector {
         // services
         UserService userService = new UserService(databaseUserRepository);
         SessionService sessionService = new SessionService(databaseUserRepository);
-        PackageService packageService = new PackageService(databaseCardRepository, databasePackageRepository);
-        TransactionService transactionService = new TransactionService(databaseCardRepository, databasePackageRepository);
-        CardService cardService = new CardService(databaseCardRepository);
-        DeckService deckService = new DeckService(databaseCardRepository);
-        TradingService tradingService = new TradingService(databaseCardRepository, databaseTradingRepository);
-        BattleService battleService = new BattleService(battle, battleLogic, cardService, queue);
-        HistoryService historyService = new HistoryService(jsonParser, userService, databaseBattleRepository);
+        AuthorizationService authorizationService = new AuthorizationService(userService);
+        PackageService packageService = new PackageService(authorizationService, databaseCardRepository, databasePackageRepository);
+        TransactionService transactionService = new TransactionService(authorizationService, databaseCardRepository, databasePackageRepository);
+        CardService cardService = new CardService(authorizationService, databaseCardRepository);
+        DeckService deckService = new DeckService(authorizationService, databaseCardRepository);
+        StatsService statsService = new StatsService(authorizationService, databaseUserRepository);
+        TradingService tradingService = new TradingService(authorizationService, databaseCardRepository, databaseTradingRepository);
+        BattleService battleService = new BattleService(authorizationService, deckService, battle, battleLogic, queue);
+        HistoryService historyService = new HistoryService(authorizationService, databaseBattleRepository);
 
         // TODO: ask if there is a better place for this: app startup logic
         // delete all Session Tokens
@@ -57,13 +59,13 @@ public class Injector {
         // controllers
         controllerList.add(new UserController(jsonParser, userService));
         controllerList.add(new SessionController(jsonParser, sessionService));
-        controllerList.add(new PackageController(jsonParser, userService, packageService));
+        controllerList.add(new PackageController(jsonParser, packageService));
         controllerList.add(new TransactionController(jsonParser, userService, transactionService));
         controllerList.add(new CardController(jsonParser, userService, cardService));
-        controllerList.add(new DeckController(jsonParser, deckService, userService));
-        controllerList.add(new StatsController(jsonParser, userService));
+        controllerList.add(new DeckController(jsonParser, deckService));
+        controllerList.add(new StatsController(jsonParser, userService, statsService));
         controllerList.add(new BattleController(jsonParser, userService, battleService, deckService));
-        controllerList.add(new TradingController(jsonParser, userService, tradingService));
+        controllerList.add(new TradingController(jsonParser, tradingService));
         controllerList.add(new HistoryController(jsonParser, historyService));
 
         return controllerList;

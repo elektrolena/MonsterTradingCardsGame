@@ -1,25 +1,20 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.entity.Card;
-import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.exceptions.ExceptionMessage;
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.DeckService;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public class DeckController extends Controller {
 
     private final DeckService deckService;
-    private final UserService userService;
 
-    public DeckController(JsonParser parser, DeckService deckService, UserService userService) {
+    public DeckController(JsonParser parser, DeckService deckService) {
         super(parser);
         this.deckService = deckService;
-        this.userService = userService;
     }
 
     @Override
@@ -38,43 +33,18 @@ public class DeckController extends Controller {
     }
 
     Response getDeck(Request request) {
-        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-        if(optionalUser.isEmpty()){
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
+        List<Card> deck = this.deckService.getDeck(request.getAuthorizationToken());
 
-        User user = optionalUser.get();
-        Optional<List<Card>> deck = this.deckService.getDeck(user);
-
-        if(deck.isPresent()) {
-            if(request.getRoute().equals("/deck")) {
-                return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(deck.get()));
-            } else {
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.parser.getCardsPlain(deck.get()));
-            }
-
+        if(request.getRoute().equals("/deck")) {
+            return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getCards(deck));
         } else {
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.NO_CONTENT, ExceptionMessage.NO_CONTENT_DECK.getStatusMessage());
+            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, this.parser.getCardsPlain(deck));
         }
     }
 
     Response updateDeck(Request request) {
-        Optional<User> optionalUser = checkForAuthorizedRequest(request, userService);
-        if(optionalUser.isEmpty()){
-            return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED_ACCESS.getMessage());
-        }
+        this.deckService.updateDeck(request.getAuthorizationToken(), this.parser.getCardsFromBody(request));
 
-        User user = optionalUser.get();
-
-        switch(this.deckService.updateDeck(user, this.parser.getCardsFromBody(request))) {
-            case 200:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_DECK.getStatusMessage());
-            case 400:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, ExceptionMessage.BAD_REQUEST_DECK.getStatusMessage());
-            case 403:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.FORBIDDEN, ExceptionMessage.FORBIDDEN_DECK.getStatusMessage());
-            default:
-                return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
-        }
+        return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_DECK.getStatusMessage());
     }
 }

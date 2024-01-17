@@ -1,15 +1,10 @@
 package at.technikum.apps.mtcg.controller;
 
-import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.parsing.JsonParser;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
-
-import java.sql.SQLException;
-import java.util.Optional;
 
 public abstract class Controller {
 
