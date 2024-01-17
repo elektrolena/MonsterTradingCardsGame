@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class BattleLogic {
+    private BattleLog battleLog;
     private final DatabaseUserRepository databaseUserRepository;
     private final DatabaseBattleRepository databaseBattleRepository;
 
@@ -21,10 +22,14 @@ public class BattleLogic {
         this.databaseBattleRepository = databaseBattleRepository;
     }
 
+    public void setBattleLog(BattleLog battleLog) {
+        this.battleLog = battleLog;
+    }
+
     public Battle startBattle(User user1, List<Card> deck1, User user2, List<Card> deck2) {
-        BattleLog battleLog = new BattleLog(user1, user2);
-        int round = 0;
-        while(round < 100 && !deck1.isEmpty() && !deck2.isEmpty()) {
+        int round = 1;
+        while(round <= 100 && !deck1.isEmpty() && !deck2.isEmpty()) {
+            this.battleLog.addRound(round);
             Card card1 = getRandomCard(deck1);
             Card card2 = getRandomCard(deck2);
 
@@ -58,13 +63,13 @@ public class BattleLogic {
                 result.setLoserCard(card2);
             }
             round++;
-            battleLog.addRound(round, result);
+            this.battleLog.addRoundResult(result);
         }
 
-        return saveBattle(user1, user2, deck1, deck2, battleLog);
+        return saveBattle(user1, user2, deck1, deck2);
     }
 
-    private Battle saveBattle(User user1, User user2, List<Card> deck1, List<Card> deck2, BattleLog battleLog) {
+    private Battle saveBattle(User user1, User user2, List<Card> deck1, List<Card> deck2) {
         Battle battle = new Battle();
         battle.setId(UUID.randomUUID().toString());
         battle.setWinner(user1.getUsername());
@@ -82,14 +87,16 @@ public class BattleLogic {
             user1.setLosses(user1.getLosses() + 1);
         } else {
             user1.setElo(user1.getElo() + 3);
-            user2.setElo(user2.getElo() - 5);
-        }
-        battle.setLog(battleLog.getLog());
+            user1.setWins(user1.getWins() + 1);
 
-        // TODO: change update user in service
+            user2.setElo(user2.getElo() - 5);
+            user2.setLosses(user2.getLosses() + 1);
+        }
+        battle.setLog(this.battleLog.getLog());
+
         this.databaseBattleRepository.save(battle);
         this.databaseUserRepository.update(user1);
-        this.databaseUserRepository.update(user1);
+        this.databaseUserRepository.update(user2);
         return battle;
     }
 
@@ -98,61 +105,80 @@ public class BattleLogic {
         return deck.getFirst();
     }
 
-    private static double calculateDamage(Card card1, Card card2) {
+    private double calculateDamage(Card card1, Card card2) {
         String spellElement = card1.getElement();
         String opponentElement = card2.getElement();
 
-        // TODO: add this to log
         switch (spellElement) {
-            case "Water":
-                if ("Fire".equalsIgnoreCase(opponentElement)) {
+            case "water":
+                if (opponentElement.equals("fire")) {
+                    this.battleLog.addString("The damage of the WaterCard was doubled.\n");
                     return card1.getDamage() * 2;
-                } else if ("Regular".equalsIgnoreCase(opponentElement)) {
+                } else if (opponentElement.equals("normal")) {
+                    this.battleLog.addString("The damage of the WaterCard was halved.\n");
                     return card1.getDamage() * 0.5;
-                } else {
-                    return card1.getDamage();
                 }
-            case "Fire":
-                if ("Regular".equalsIgnoreCase(opponentElement)) {
+                break;
+            case "fire":
+                if (opponentElement.equals("normal")) {
+                    this.battleLog.addString("The damage of the FireCard was doubled.\n");
                     return card1.getDamage() * 2;
-                } else if ("Water".equalsIgnoreCase(opponentElement)) {
+                } else if (opponentElement.equals("water")) {
+                    this.battleLog.addString("The damage of the FireCard was halved.\n");
                     return card1.getDamage() * 0.5;
-                } else {
-                    return card1.getDamage();
                 }
-            case "Regular":
-                if ("Water".equalsIgnoreCase(opponentElement)) {
+                break;
+            case "normal":
+                if (opponentElement.equals("water")) {
+                    this.battleLog.addString("The damage of the RegularCard was doubled.\n");
                     return card1.getDamage() * 2;
-                } else if ("Fire".equalsIgnoreCase(opponentElement)) {
+                } else if (opponentElement.equals("fire")) {
+                    this.battleLog.addString("The damage of the RegularCard was halved.\n");
                     return card1.getDamage() * 0.5;
-                } else {
-                    return card1.getDamage();
                 }
-            default:
-                return card1.getDamage();
+                break;
         }
+        return card1.getDamage();
     }
 
-    private static double specialCalculation(Card card1, Card card2) {
+    private double specialCalculation(Card card1, Card card2) {
         String card1Type = getTypeFromCardName(card1.getName());
         String card2Type = getTypeFromCardName(card2.getName());
         String card2Element = card2.getElement();
 
-        // TODO: add this to log
         switch (card1Type) {
             case "Goblin":
-                return "Dragon".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
+                if (card2Type.equals("Dragon")) {
+                    this.battleLog.addString("The Goblin was too afraid to attack the Dragon, so the Goblin did not deal any damage.\n");
+                    return 0;
+                }
+                break;
             case "Ork":
-                return "Wizard".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
+                if (card2Type.equals("Wizard")) {
+                    this.battleLog.addString("The Wizard controlled the Ork, so the Ork did not deal any damage.\n");
+                    return 0;
+                }
+                break;
             case "Knight":
-                return "Spell".equalsIgnoreCase(card2Type) && "Water".equalsIgnoreCase(card2Element) ? 0 : card1.getDamage();
+                if (card2Type.equals("Spell") && card2Element.equals("water")) {
+                    this.battleLog.addString("The Knight's armor was too heavy so the WaterSpell made it drown and the Knight did not deal any damage.\n");
+                    return 0;
+                }
+                break;
             case "Spell":
-                return "Kraken".equalsIgnoreCase(card2Type) ? 0 : card1.getDamage();
+                if (card2Type.equals("Kraken")) {
+                    this.battleLog.addString("The Kraken is immune against spells, so the Spell did not deal any damage.\n");
+                    return 0;
+                }
+                break;
             case "Dragon":
-                return "Elv".equalsIgnoreCase(card2Type) && "Fire".equalsIgnoreCase(card2Element) ? 0 : card1.getDamage();
-            default:
-                return card1.getDamage();
+                if (card2Type.equals("Elv") && card2Element.equals("fire")) {
+                    this.battleLog.addString("The FireElv knows Dragons since it was little, so it evaded the Dragon's attack.\n");
+                    return 0;
+                }
+                break;
         }
+        return card1.getDamage();
     }
 
     public static String getTypeFromCardName(String cardName) {

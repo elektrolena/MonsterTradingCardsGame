@@ -16,7 +16,7 @@ public class User {
 
     public User() {}
 
-    public User(String id, String username, String name, String password, String bio, String image, int coins, int elo, int wins, int losses) {
+    public User(String id, String username, String password, String name, String bio, String image, int coins, int elo, int wins, int losses) {
         this.id = id;
         this.username = username;
         this.password = password;

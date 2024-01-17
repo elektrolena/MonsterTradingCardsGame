@@ -53,7 +53,7 @@ public class BattleControllerTest {
     }
 
     @Test
-    public void shouldSupportRequestMethod_WhenValidBattleMethod() throws SQLException {
+    public void shouldSupportRequestMethod_WhenValidBattleMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);
@@ -75,7 +75,7 @@ public class BattleControllerTest {
     }
 
     @Test
-    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() throws SQLException {
+    public void shouldNotSupportRequestMethod_WhenInValidCardMethod() {
         // Arrange
         JsonParser parser = mock(JsonParser.class);
         UserService userService = mock(UserService.class);

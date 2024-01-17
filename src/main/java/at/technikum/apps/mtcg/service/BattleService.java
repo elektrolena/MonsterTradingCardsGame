@@ -1,5 +1,6 @@
 package at.technikum.apps.mtcg.service;
 
+import at.technikum.apps.mtcg.dto.BattleLog;
 import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
@@ -46,6 +47,7 @@ public class BattleService {
             List<Card> otherDeck = getOtherUsersDeck();
             removeUserFromQueue(user);
             removeUserFromQueue(otherUser);
+            this.battleLogic.setBattleLog(new BattleLog(user, otherUser));
             this.battle = this.battleLogic.startBattle(user, deck, otherUser, otherDeck);
             notify();
         } else {

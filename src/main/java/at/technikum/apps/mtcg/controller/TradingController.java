@@ -39,26 +39,26 @@ public class TradingController extends Controller {
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.getMessage());
     }
 
-    private Response getOpenTradingDeals(Request request) {
+    Response getOpenTradingDeals(Request request) {
         List<TradingDeal> openTradingDeals = this.tradingService.getAllTradingDeals(request.getAuthorizationToken());
 
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getTradingDeals(openTradingDeals));
     }
 
-    private Response openTradingDeal(Request request) {
+    Response openTradingDeal(Request request) {
         this.tradingService.openTradingDeal(request.getAuthorizationToken(), this.parser.getTradingDealFromBody(request));
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.CREATED, ExceptionMessage.CREATED_TRADING.getStatusMessage());
     }
 
-    private Response deleteTradingDeal(Request request, String tradingDealId) {
+    Response deleteTradingDeal(Request request, String tradingDealId) {
         this.tradingService.deleteOpenTradingDeal(request.getAuthorizationToken(), tradingDealId);
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_TRADING_DELETE.getStatusMessage());
 
     }
 
-    private Response finishTradingDeal(Request request, String tradingDealId) {
+    Response finishTradingDeal(Request request, String tradingDealId) {
         this.tradingService.finishTradingDeal(request.getAuthorizationToken(), this.parser.getCardFromBody(request), tradingDealId);
 
         return createResponse(HttpContentType.TEXT_PLAIN, HttpStatus.OK, ExceptionMessage.OK_TRADING_EXECUTE.getStatusMessage());
