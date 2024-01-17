@@ -50,7 +50,7 @@ public class UserService {
 
         long millisecondsDifference = currentTimestamp.getTime() - loginTimeStamp.getTime();
 
-        if(millisecondsDifference > 30000) {
+        if(millisecondsDifference > 3600000) {
             throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
         }
         return user;
