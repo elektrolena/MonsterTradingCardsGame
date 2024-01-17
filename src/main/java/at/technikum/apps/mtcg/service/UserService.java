@@ -11,10 +11,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
+    private AuthorizationService authorizationService;
     private final DatabaseUserRepository databaseUserRepository;
 
     public UserService(DatabaseUserRepository databaseUserRepository) {
         this.databaseUserRepository = databaseUserRepository;
+    }
+
+    public void setAuthorizationService(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 
     public User findWithUsername(String username, String authorizationToken) {
@@ -39,12 +44,14 @@ public class UserService {
         return user.get();
     }
 
-    public User update(User user, User updatedUser) {
+    public User update(String authorizationToken, String username, User updatedUser) {
+        User user = this.authorizationService.getLoggedInUser(authorizationToken);
+        if(!user.getUsername().equals(username)) {
+            throw new HttpStatusException(HttpStatus.UNAUTHORIZED_ACCESS, HttpContentType.TEXT_PLAIN, ExceptionMessage.UNAUTHORIZED_ACCESS);
+        }
+
         if (updatedUser.getName() != null) {
             user.setName(updatedUser.getName());
-        }
-        if (updatedUser.getPassword() != null) {
-            user.setPassword(updatedUser.getPassword());
         }
         if (updatedUser.getBio() != null) {
             user.setBio(updatedUser.getBio());
@@ -52,12 +59,17 @@ public class UserService {
         if (updatedUser.getImage() != null) {
             user.setImage(updatedUser.getImage());
         }
+        user.setCoins(user.getCoins());
+        user.setElo(user.getElo());
+        user.setWins(user.getWins());
+        user.setLosses(user.getLosses());
 
         return databaseUserRepository.update(user);
     }
 
-    public void updateCoins(String userId, int sum) {
-        this.databaseUserRepository.updateCoins(userId, sum);
+    public void updateCoins(User user, int sum) {
+        user.setCoins(sum);
+        this.databaseUserRepository.update(user);
     }
 
     public User save(User user) {

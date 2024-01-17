@@ -6,16 +6,18 @@ import at.technikum.apps.mtcg.entity.Battle;
 import at.technikum.apps.mtcg.entity.Card;
 import at.technikum.apps.mtcg.entity.User;
 import at.technikum.apps.mtcg.repository.DatabaseBattleRepository;
+import at.technikum.apps.mtcg.repository.DatabaseUserRepository;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class BattleLogic {
-
+    private final DatabaseUserRepository databaseUserRepository;
     private final DatabaseBattleRepository databaseBattleRepository;
 
-    public BattleLogic(DatabaseBattleRepository databaseBattleRepository) {
+    public BattleLogic(DatabaseUserRepository databaseUserRepository, DatabaseBattleRepository databaseBattleRepository) {
+        this.databaseUserRepository = databaseUserRepository;
         this.databaseBattleRepository = databaseBattleRepository;
     }
 
@@ -59,25 +61,35 @@ public class BattleLogic {
             battleLog.addRound(round, result);
         }
 
+        return saveBattle(user1, user2, deck1, deck2, battleLog);
+    }
+
+    private Battle saveBattle(User user1, User user2, List<Card> deck1, List<Card> deck2, BattleLog battleLog) {
         Battle battle = new Battle();
         battle.setId(UUID.randomUUID().toString());
         battle.setWinner(user1.getUsername());
         battle.setLoser(user2.getUsername());
+
         if(!deck1.isEmpty() && !deck2.isEmpty()) {
             battle.setDraw(true);
         } else if(deck1.isEmpty()) {
             battle.setWinner(user2.getUsername());
-            battle.setLoser(user1.getUsername());
             user2.setElo(user2.getElo() + 3);
+            user2.setWins(user2.getWins() + 1);
+
+            battle.setLoser(user1.getUsername());
             user1.setElo(user1.getElo() - 5);
+            user1.setLosses(user1.getLosses() + 1);
         } else {
             user1.setElo(user1.getElo() + 3);
             user2.setElo(user2.getElo() - 5);
         }
         battle.setLog(battleLog.getLog());
-        // TODO: change users in database (no wins and losses)
-        this.databaseBattleRepository.save(battle);
 
+        // TODO: change update user in service
+        this.databaseBattleRepository.save(battle);
+        this.databaseUserRepository.update(user1);
+        this.databaseUserRepository.update(user1);
         return battle;
     }
 

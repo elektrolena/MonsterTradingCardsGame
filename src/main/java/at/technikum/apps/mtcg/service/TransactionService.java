@@ -42,7 +42,7 @@ public class TransactionService {
             this.databaseCardRepository.updateCardOwner(card.getId(), user.getId());
         }
 
-        userService.updateCoins(user.getId(), user.getCoins() - 5);
+        userService.updateCoins(user, user.getCoins() - 5);
         this.databasePackageRepository.deletePackage(selectedCardPackage.getId());
 
         return selectedCardPackage;

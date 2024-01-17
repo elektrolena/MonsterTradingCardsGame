@@ -36,13 +36,14 @@ public class Injector {
 
         // battle
         Battle battle = new Battle();
-        BattleLogic battleLogic = new BattleLogic(databaseBattleRepository);
+        BattleLogic battleLogic = new BattleLogic(databaseUserRepository, databaseBattleRepository);
         ConcurrentHashMap<User, List<Card>> queue = new ConcurrentHashMap<>();
 
         // services
         UserService userService = new UserService(databaseUserRepository);
-        SessionService sessionService = new SessionService(databaseUserRepository);
         AuthorizationService authorizationService = new AuthorizationService(userService);
+        userService.setAuthorizationService(authorizationService);
+        SessionService sessionService = new SessionService(databaseUserRepository);
         PackageService packageService = new PackageService(authorizationService, databaseCardRepository, databasePackageRepository);
         TransactionService transactionService = new TransactionService(authorizationService, databaseCardRepository, databasePackageRepository);
         CardService cardService = new CardService(authorizationService, databaseCardRepository);
@@ -52,7 +53,7 @@ public class Injector {
         BattleService battleService = new BattleService(authorizationService, deckService, battle, battleLogic, queue);
         HistoryService historyService = new HistoryService(authorizationService, databaseBattleRepository);
 
-        // TODO: ask if there is a better place for this: app startup logic
+        // TODO: move this to app startup logic
         // delete all Session Tokens
         databaseUserRepository.deleteTokens();
 

@@ -61,8 +61,8 @@ DELETE FROM cards;
 DELETE FROM tradings;
 DELETE FROM battles;
 
-DROP TABLE users;
-DROP TABLE packages;
-DROP TABLE cards;
-DROP TABLE tradings;
 DROP TABLE battles;
+DROP TABLE tradings;
+DROP TABLE cards;
+DROP TABLE packages;
+DROP TABLE users;

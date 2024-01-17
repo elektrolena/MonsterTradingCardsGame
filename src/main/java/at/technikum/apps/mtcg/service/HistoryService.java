@@ -52,7 +52,7 @@ public class HistoryService {
             battleString.append("*** VICTORY ***\n");
             battleString.append("  - Opponent: ").append(battle.getLoser());
         } else {
-            battleString.append("--- DEFEAT ---");
+            battleString.append("--- DEFEAT ---\n");
             battleString.append("  - Opponent: ").append(battle.getWinner());
         }
         battleString.append("\n\n");

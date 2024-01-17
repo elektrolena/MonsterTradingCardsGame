@@ -46,10 +46,8 @@ public class UserController extends Controller {
     }
 
     Response update(String username, Request request) {
-        User currentUser = userService.findWithUsername(username, request.getAuthorizationToken());
-
         User updatedUser = this.parser.getUserFromBody(request);
-        updatedUser = userService.update(currentUser, updatedUser);
+        updatedUser = userService.update(request.getAuthorizationToken(), username, updatedUser);
 
         return createResponse(HttpContentType.APPLICATION_JSON, HttpStatus.OK, this.parser.getUserData(updatedUser));
     }

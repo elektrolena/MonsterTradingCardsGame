@@ -19,8 +19,7 @@ public class DatabaseUserRepository {
     private final String FIND_WITH_USERNAME_SQL = "SELECT * FROM users WHERE username = ?";
     private final String FIND_WITH_TOKEN_SQL = "SELECT * FROM users WHERE token = ?";
     private final String SAVE_SQL = "INSERT INTO users(id, username, password, name, bio, image, coins, elo, wins, losses) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private final String UPDATE_SQL = "UPDATE users SET name = ?, password = ?, bio = ?, image = ? WHERE id = ?";
-    private final String UPDATE_COINS_SQL = "UPDATE users SET coins = ? WHERE id = ?";
+    private final String UPDATE_SQL = "UPDATE users SET name = ?, bio = ?, image = ?, coins = ?, elo = ?, wins = ?, losses = ? WHERE id = ?";
     private final String VALIDATE_LOGIN_SQL = "SELECT * FROM users WHERE username = ? AND password = ?";
     private final String ADD_TOKEN_SQL = "UPDATE users SET token = ? WHERE username = ? AND password = ?";
     private final String DELETE_ALL_TOKENS_SQL = "UPDATE users SET token = NULL";
@@ -100,10 +99,13 @@ public class DatabaseUserRepository {
                 PreparedStatement pstmt = con.prepareStatement(UPDATE_SQL)
         ) {
             pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getBio());
-            pstmt.setString(4, user.getImage());
-            pstmt.setString(5, user.getId());
+            pstmt.setString(2, user.getBio());
+            pstmt.setString(3, user.getImage());
+            pstmt.setInt(4, user.getCoins());
+            pstmt.setInt(5, user.getElo());
+            pstmt.setInt(6, user.getWins());
+            pstmt.setInt(7, user.getLosses());
+            pstmt.setString(8, user.getId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -112,21 +114,6 @@ public class DatabaseUserRepository {
         }
 
         return user;
-    }
-
-    public void updateCoins(String userId, int sum) {
-        try (
-                Connection con = database.getConnection();
-                PreparedStatement pstmt = con.prepareStatement(UPDATE_COINS_SQL)
-        ) {
-            pstmt.setInt(1, sum);
-            pstmt.setString(2, userId);
-
-            pstmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new HttpStatusException(HttpStatus.INTERNAL_ERROR, HttpContentType.TEXT_PLAIN, ExceptionMessage.INTERNAL_SERVER_ERROR);
-        }
     }
 
     public Optional<User> validateLogin(User user) {
