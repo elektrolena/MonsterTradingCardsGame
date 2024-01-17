@@ -1,14 +1,10 @@
 package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.parsing.JsonParser;
-import at.technikum.apps.mtcg.service.CardService;
 import at.technikum.apps.mtcg.service.DeckService;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.Request;
 import at.technikum.server.http.Response;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

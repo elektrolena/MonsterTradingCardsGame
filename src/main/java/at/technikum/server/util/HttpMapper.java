@@ -6,9 +6,6 @@ import at.technikum.server.http.Response;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-// THOUGHT: Maybe divide the HttpMatter into two classes (single responsibility)
-// THOUGHT: Dont use static methods (non-static is better for testing)
 public class HttpMapper {
 
     public static Request toRequestObject(String httpRequest) {
@@ -52,11 +49,9 @@ public class HttpMapper {
                 response.getBody();
     }
 
-    // THOUGHT: Maybe some better place for this logic?
     private static HttpMethod getHttpMethod(String httpRequest) {
         String httpMethod = httpRequest.split(" ")[0];
 
-        // THOUGHT: Use constants instead of hardcoded strings
         return switch (httpMethod) {
             case "GET" -> HttpMethod.GET;
             case "POST" -> HttpMethod.POST;

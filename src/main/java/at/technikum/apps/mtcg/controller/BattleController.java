@@ -2,21 +2,14 @@ package at.technikum.apps.mtcg.controller;
 
 import at.technikum.apps.mtcg.parsing.JsonParser;
 import at.technikum.apps.mtcg.service.BattleService;
-import at.technikum.apps.mtcg.service.DeckService;
-import at.technikum.apps.mtcg.service.UserService;
 import at.technikum.server.http.*;
 
 public class BattleController extends Controller {
-
-    private final UserService userService;
     private final BattleService battleService;
-    private final DeckService deckService;
 
-    public BattleController(JsonParser parser, UserService userService, BattleService battleService, DeckService deckService) {
+    public BattleController(JsonParser parser, BattleService battleService) {
         super(parser);
-        this.userService = userService;
         this.battleService = battleService;
-        this.deckService = deckService;
     }
 
     @Override

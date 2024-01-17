@@ -1,6 +1,5 @@
 package at.technikum.server.http;
 
-// THOUGHT: add relevant content types
 public enum HttpContentType {
     TEXT_PLAIN("text/plain"),
     APPLICATION_JSON("application/json");

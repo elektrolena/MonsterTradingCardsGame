@@ -10,7 +10,6 @@ import at.technikum.apps.mtcg.repository.DatabaseCardRepository;
 import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionService {

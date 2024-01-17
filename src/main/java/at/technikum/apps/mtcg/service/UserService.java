@@ -8,7 +8,6 @@ import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 

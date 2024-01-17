@@ -4,9 +4,9 @@ import at.technikum.server.http.HttpContentType;
 import at.technikum.server.http.HttpStatus;
 
 public class HttpStatusException extends RuntimeException {
-    private HttpStatus httpStatus;
-    private HttpContentType httpContentType;
-    private ExceptionMessage exceptionMessage;
+    private final HttpStatus httpStatus;
+    private final HttpContentType httpContentType;
+    private final ExceptionMessage exceptionMessage;
     public HttpStatusException(HttpStatus httpStatus, HttpContentType httpContentType, ExceptionMessage exceptionMessage) {
         this.httpStatus = httpStatus;
         this.httpContentType = httpContentType;
@@ -17,23 +17,11 @@ public class HttpStatusException extends RuntimeException {
         return httpStatus;
     }
 
-    public void setHttpStatus(HttpStatus httpStatus) {
-        this.httpStatus = httpStatus;
-    }
-
     public HttpContentType getHttpContentType() {
         return httpContentType;
     }
 
-    public void setHttpContentType(HttpContentType httpContentType) {
-        this.httpContentType = httpContentType;
-    }
-
     public ExceptionMessage getHttpStatusMessage() {
         return exceptionMessage;
-    }
-
-    public void setHttpStatusMessage(ExceptionMessage exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
     }
 }

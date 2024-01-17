@@ -12,7 +12,6 @@ import at.technikum.server.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.*;
 
 public class BattleService {
