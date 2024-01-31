@@ -60,7 +60,7 @@ It took some time for me to manage the mocking of different data, but after a fe
 
 ## Unit Tests  
 Unit Tests test single methods for their correct behaviour. In order to do so, other classes are mocked using the Mockito library.
-For certain tests, it was necessary to user a spy of a class, to enable mocking single methods in the same class of the method that is tested.  
+For certain tests, it was necessary to use a spy of a class, to enable mocking single methods in the same class of the method that is tested.  
 ### Controllers  
   The supports and handle method of each controller are tested with both positive and negative tests. To do so, the tests mock different routes and request methods to check whether the controller can support and handle the correct ones and rejects false ones.
 ### Services  
